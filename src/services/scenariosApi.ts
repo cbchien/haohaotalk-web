@@ -34,6 +34,7 @@ export interface ScenariosListParams {
   search?: string
   page?: number
   limit?: number
+  language?: string
 }
 
 export interface ScenariosListResponse {
@@ -53,6 +54,7 @@ class ScenariosApiService {
     if (params.search) searchParams.append('search', params.search)
     if (params.page) searchParams.append('page', params.page.toString())
     if (params.limit) searchParams.append('limit', params.limit.toString())
+    if (params.language) searchParams.append('language', params.language)
 
     const endpoint = searchParams.toString() 
       ? `scenarios?${searchParams.toString()}` 
@@ -69,16 +71,29 @@ class ScenariosApiService {
     return apiClient.get<ScenarioRole[]>(`scenarios/${scenarioId}/roles`)
   }
 
-  async getFeaturedScenarios(): Promise<ApiResponse<Scenario[]>> {
-    return apiClient.get<Scenario[]>('scenarios?featured=true&limit=10')
+  async getFeaturedScenarios(language?: string): Promise<ApiResponse<Scenario[]>> {
+    const params = new URLSearchParams()
+    params.append('featured', 'true')
+    params.append('limit', '10')
+    if (language) params.append('language', language)
+    
+    return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 
-  async getScenariosByCategory(category: string): Promise<ApiResponse<Scenario[]>> {
-    return apiClient.get<Scenario[]>(`scenarios?category=${category}`)
+  async getScenariosByCategory(category: string, language?: string): Promise<ApiResponse<Scenario[]>> {
+    const params = new URLSearchParams()
+    params.append('category', category)
+    if (language) params.append('language', language)
+    
+    return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 
-  async searchScenarios(query: string): Promise<ApiResponse<Scenario[]>> {
-    return apiClient.get<Scenario[]>(`scenarios?search=${encodeURIComponent(query)}`)
+  async searchScenarios(query: string, language?: string): Promise<ApiResponse<Scenario[]>> {
+    const params = new URLSearchParams()
+    params.append('search', encodeURIComponent(query))
+    if (language) params.append('language', language)
+    
+    return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 }
 
