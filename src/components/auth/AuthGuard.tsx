@@ -18,6 +18,9 @@ export const AuthGuard = ({
     // Check if we need to show authentication
     if (requireAuth && !isAuthenticated) {
       setShowAuthModal(true)
+    } else if (isAuthenticated) {
+      // Close modal when user becomes authenticated
+      setShowAuthModal(false)
     }
 
     // Initialize auth check (simulate checking stored token)
@@ -26,15 +29,21 @@ export const AuthGuard = ({
     }
   }, [requireAuth, isAuthenticated, user, setLoading])
 
-  // For now, show auth modal on app start if no user
+  // Show auth modal on app start if no user, hide when authenticated
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!user && !showAuthModal) {
-        setShowAuthModal(true)
-      }
-    }, 1000) // Brief delay to show the app loading
+    if (user) {
+      // User is authenticated, make sure modal is closed
+      setShowAuthModal(false)
+    } else {
+      // No user, show modal after brief delay
+      const timer = setTimeout(() => {
+        if (!user && !showAuthModal) {
+          setShowAuthModal(true)
+        }
+      }, 1000) // Brief delay to show the app loading
 
-    return () => clearTimeout(timer)
+      return () => clearTimeout(timer)
+    }
   }, [user, showAuthModal])
 
   return (

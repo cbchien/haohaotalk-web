@@ -58,8 +58,14 @@ export const ProfileScreen = () => {
             onClick={handleLogout}
             className="w-full py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition-colors"
           >
-            Logout
+            {user?.account_type === 'guest' ? 'Start Fresh Session' : 'Logout'}
           </button>
+          
+          {user?.account_type === 'guest' && (
+            <p className="text-gray-500 text-xs mt-2 text-center">
+              This will clear your current session and start over
+            </p>
+          )}
         </div>
       </div>
     </div>

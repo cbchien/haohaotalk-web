@@ -110,11 +110,18 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'haohaotalk-auth',
-      partialize: state => ({
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-        authToken: state.authToken,
-      }),
+      partialize: state => {
+        // Only persist registered users, not guest users
+        // Guest sessions should start fresh each browser session
+        if (state.user?.account_type === 'guest') {
+          return {}
+        }
+        return {
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+          authToken: state.authToken,
+        }
+      },
     }
   )
 )
