@@ -7,8 +7,10 @@ const mockScenarios = [
     id: '1',
     title: '約會遲到的她',
     title_en: 'Late for a Date',
-    description: '週末約好一起去看電影，你在車站等了一個小時，她終於走上時並沒有多說什麼。你心裡有些不開心，但又不知道該不該表達出來。',
-    description_en: 'Practice apologizing and explaining when running late for a romantic date.',
+    description:
+      '週末約好一起去看電影，你在車站等了一個小時，她終於走上時並沒有多說什麼。你心裡有些不開心，但又不知道該不該表達出來。',
+    description_en:
+      'Practice apologizing and explaining when running late for a romantic date.',
     category: 'relationships',
     illustration: '/scenarios/late-date.png',
     action_buttons: ['傾聽', '表達需求'],
@@ -18,11 +20,13 @@ const mockScenarios = [
     chat_count: 5245,
   },
   {
-    id: '2', 
+    id: '2',
     title: '那句點股本法的訊息',
     title_en: 'Investment Advice Message',
-    description: '你最近發了好幾次訊息，對方都已讀不回或只回一兩個字。當你終於見到他時...',
-    description_en: 'Navigate difficult conversations about unresponsive communication.',
+    description:
+      '你最近發了好幾次訊息，對方都已讀不回或只回一兩個字。當你終於見到他時...',
+    description_en:
+      'Navigate difficult conversations about unresponsive communication.',
     category: 'relationships',
     illustration: '/scenarios/phone-message.png',
     action_buttons: ['誠實表達', '同理'],
@@ -33,8 +37,10 @@ const mockScenarios = [
     id: '3',
     title: '考試不及格的孩子',
     title_en: 'Child Failed Exam',
-    description: '你在氣頭上說了「你怎麼這麼不董事」，孩子哭間安靜下來，低頭不語。你想挽回剛才說的話，但又不知道該怎麼開始。孩子的眼淚讓你意識到自己的話語可能傷害了他，你想要修復這段親子關係，重新建立溝通的橋樑。',
-    description_en: 'Learn to handle disappointment and guide children constructively.',
+    description:
+      '你在氣頭上說了「你怎麼這麼不董事」，孩子哭間安靜下來，低頭不語。你想挽回剛才說的話，但又不知道該怎麼開始。孩子的眼淚讓你意識到自己的話語可能傷害了他，你想要修復這段親子關係，重新建立溝通的橋樑。',
+    description_en:
+      'Learn to handle disappointment and guide children constructively.',
     category: 'family',
     illustration: '/scenarios/sad-child.png',
     action_buttons: ['修復', '親子關係'],
@@ -48,7 +54,8 @@ const mockScenarios = [
     title: '無預警加班',
     title_en: 'Unexpected Overtime',
     description: '快下班時，主管突然丟了一份文件，要你「今天弄完」。',
-    description_en: 'Handle unexpected work demands while managing personal commitments.',
+    description_en:
+      'Handle unexpected work demands while managing personal commitments.',
     category: 'workplace',
     illustration: '/scenarios/overtime.png',
     action_buttons: ['同理', '表達需求'],
@@ -59,7 +66,8 @@ const mockScenarios = [
     id: '5',
     title: '室友的音樂太大聲',
     title_en: 'Roommate Music Too Loud',
-    description: '已經晚上11點了，隔壁室友還在放音樂，你明天有重要會議需要早起。你不想破壞室友關係，但也需要充足的睡眠。',
+    description:
+      '已經晚上11點了，隔壁室友還在放音樂，你明天有重要會議需要早起。你不想破壞室友關係，但也需要充足的睡眠。',
     description_en: 'Practice setting boundaries with roommates respectfully.',
     category: 'social',
     illustration: '/scenarios/loud-music.png',
@@ -71,7 +79,8 @@ const mockScenarios = [
     id: '6',
     title: '朋友借錢不還',
     title_en: 'Friend Not Returning Money',
-    description: '三個月前借給朋友的錢到現在還沒還，你不知道該怎麼開口。每次見面都想提，但又怕傷害友誼。',
+    description:
+      '三個月前借給朋友的錢到現在還沒還，你不知道該怎麼開口。每次見面都想提，但又怕傷害友誼。',
     description_en: 'Navigate sensitive money conversations with friends.',
     category: 'social',
     illustration: '/scenarios/money-friend.png',
@@ -88,7 +97,7 @@ export const ScenarioGrid = () => {
     <div className="px-4 pb-4">
       {/* Pinterest-style masonry layout using CSS columns */}
       <div className="columns-2 gap-3">
-        {mockScenarios.map((scenario) => (
+        {mockScenarios.map(scenario => (
           <div
             key={scenario.id}
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer break-inside-avoid mb-3"
@@ -99,18 +108,20 @@ export const ScenarioGrid = () => {
                 <span className="text-xl">🤖</span>
               </div>
             </div>
-            
+
             {/* Content - Height determined by content length */}
             <div className="p-4 relative">
               <h3 className="font-bold text-gray-900 text-sm mb-2 leading-tight">
                 {currentLanguage === 'zh' ? scenario.title : scenario.title_en}
               </h3>
-              
+
               {/* Description with natural line wrapping - no line-clamp */}
               <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                {currentLanguage === 'zh' ? scenario.description : scenario.description_en}
+                {currentLanguage === 'zh'
+                  ? scenario.description
+                  : scenario.description_en}
               </p>
-              
+
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-1 mb-8">
                 {scenario.action_buttons.map((button, index) => (
@@ -118,21 +129,27 @@ export const ScenarioGrid = () => {
                     key={index}
                     className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full border"
                   >
-                    {currentLanguage === 'zh' ? button : scenario.action_buttons_en[index]}
+                    {currentLanguage === 'zh'
+                      ? button
+                      : scenario.action_buttons_en[index]}
                   </span>
                 ))}
                 {scenario.extra_button && (
                   <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full border">
-                    {currentLanguage === 'zh' ? scenario.extra_button : scenario.extra_button_en}
+                    {currentLanguage === 'zh'
+                      ? scenario.extra_button
+                      : scenario.extra_button_en}
                   </span>
                 )}
               </div>
-              
+
               {/* Chat Count - positioned at bottom right */}
               <div className="absolute bottom-3 right-3">
                 <div className="flex items-center space-x-1 text-gray-500">
                   <ChatBubbleLeftIcon className="w-4 h-4" />
-                  <span className="text-xs font-medium">{scenario.chat_count}</span>
+                  <span className="text-xs font-medium">
+                    {scenario.chat_count}
+                  </span>
                 </div>
               </div>
             </div>

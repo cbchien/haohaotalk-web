@@ -12,7 +12,9 @@ function App() {
       <AuthGuard>
         <div className="min-h-screen bg-gray-50">
           {/* Main Content */}
-          <main className="pb-16"> {/* Bottom padding for tab bar */}
+          <main className="pb-16">
+            {' '}
+            {/* Bottom padding for tab bar */}
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/search" element={<SearchScreen />} />

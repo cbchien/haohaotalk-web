@@ -6,7 +6,7 @@ interface AuthState {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
-  
+
   // Actions
   setUser: (user: User) => void
   clearUser: () => void
@@ -21,21 +21,23 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
 
-      setUser: (user) => set({ 
-        user, 
-        isAuthenticated: true,
-        isLoading: false 
-      }),
+      setUser: user =>
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+        }),
 
-      clearUser: () => set({ 
-        user: null, 
-        isAuthenticated: false,
-        isLoading: false 
-      }),
+      clearUser: () =>
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        }),
 
-      setLoading: (loading) => set({ isLoading: loading }),
+      setLoading: loading => set({ isLoading: loading }),
 
-      updateUserProfile: (updates) => {
+      updateUserProfile: updates => {
         const { user } = get()
         if (user) {
           set({ user: { ...user, ...updates } })
@@ -44,9 +46,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'haohaotalk-auth',
-      partialize: (state) => ({ 
+      partialize: state => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated 
+        isAuthenticated: state.isAuthenticated,
       }),
     }
   )

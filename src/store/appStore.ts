@@ -5,22 +5,22 @@ interface AppState {
   // UI State
   currentLanguage: 'en' | 'zh'
   isOffline: boolean
-  
+
   // Scenarios
   scenarios: Scenario[]
   popularScenarios: Scenario[]
   featuredScenarios: Scenario[]
   isLoadingScenarios: boolean
-  
+
   // Current Session
   activeSession: ChatSession | null
   isLoadingSession: boolean
-  
+
   // Search & Filters
   searchQuery: string
   selectedCategories: string[]
   selectedDifficulty: string[]
-  
+
   // Actions
   setLanguage: (language: 'en' | 'zh') => void
   setOfflineStatus: (isOffline: boolean) => void
@@ -36,7 +36,7 @@ interface AppState {
   clearFilters: () => void
 }
 
-export const useAppStore = create<AppState>()((set, get) => ({
+export const useAppStore = create<AppState>()(set => ({
   // Initial state
   currentLanguage: 'zh',
   isOffline: false,
@@ -51,20 +51,21 @@ export const useAppStore = create<AppState>()((set, get) => ({
   selectedDifficulty: [],
 
   // Actions
-  setLanguage: (language) => set({ currentLanguage: language }),
-  setOfflineStatus: (isOffline) => set({ isOffline }),
-  setScenarios: (scenarios) => set({ scenarios }),
-  setPopularScenarios: (scenarios) => set({ popularScenarios: scenarios }),
-  setFeaturedScenarios: (scenarios) => set({ featuredScenarios: scenarios }),
-  setScenariosLoading: (loading) => set({ isLoadingScenarios: loading }),
-  setActiveSession: (session) => set({ activeSession: session }),
-  setSessionLoading: (loading) => set({ isLoadingSession: loading }),
-  setSearchQuery: (query) => set({ searchQuery: query }),
-  setSelectedCategories: (categories) => set({ selectedCategories: categories }),
-  setSelectedDifficulty: (difficulty) => set({ selectedDifficulty: difficulty }),
-  clearFilters: () => set({ 
-    searchQuery: '', 
-    selectedCategories: [], 
-    selectedDifficulty: [] 
-  }),
+  setLanguage: language => set({ currentLanguage: language }),
+  setOfflineStatus: isOffline => set({ isOffline }),
+  setScenarios: scenarios => set({ scenarios }),
+  setPopularScenarios: scenarios => set({ popularScenarios: scenarios }),
+  setFeaturedScenarios: scenarios => set({ featuredScenarios: scenarios }),
+  setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
+  setActiveSession: session => set({ activeSession: session }),
+  setSessionLoading: loading => set({ isLoadingSession: loading }),
+  setSearchQuery: query => set({ searchQuery: query }),
+  setSelectedCategories: categories => set({ selectedCategories: categories }),
+  setSelectedDifficulty: difficulty => set({ selectedDifficulty: difficulty }),
+  clearFilters: () =>
+    set({
+      searchQuery: '',
+      selectedCategories: [],
+      selectedDifficulty: [],
+    }),
 }))

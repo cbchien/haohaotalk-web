@@ -9,11 +9,12 @@ const categories = [
 ]
 
 export const CategoryChips = () => {
-  const { selectedCategories, setSelectedCategories, currentLanguage } = useAppStore()
+  const { selectedCategories, setSelectedCategories, currentLanguage } =
+    useAppStore()
 
   const handleCategoryToggle = (categoryId: string) => {
     const isSelected = selectedCategories.includes(categoryId)
-    
+
     if (isSelected) {
       setSelectedCategories(selectedCategories.filter(id => id !== categoryId))
     } else {
@@ -25,10 +26,10 @@ export const CategoryChips = () => {
   return (
     <div className="px-4 py-4 bg-white">
       <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
-        {categories.map((category) => {
+        {categories.map(category => {
           const isSelected = selectedCategories.includes(category.id)
           const isFirst = category.id === 'featured'
-          
+
           return (
             <button
               key={category.id}

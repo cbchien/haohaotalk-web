@@ -20,7 +20,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const handleGuestAccess = async () => {
     setIsLoading(true)
     setLoading(true)
-    
+
     // Simulate API call for guest user creation
     setTimeout(() => {
       const guestUser = {
@@ -31,7 +31,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         join_date: new Date(),
         preferred_language: 'en' as const,
       }
-      
+
       setUser(guestUser)
       setIsLoading(false)
       onClose()
@@ -54,7 +54,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         join_date: new Date(),
         preferred_language: 'en' as const,
       }
-      
+
       setUser(user)
       setIsLoading(false)
       onClose()
@@ -69,8 +69,11 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900">
-            {mode === 'guest' ? 'Continue as Guest' : 
-             mode === 'register' ? 'Create Account' : 'Welcome Back'}
+            {mode === 'guest'
+              ? 'Continue as Guest'
+              : mode === 'register'
+                ? 'Create Account'
+                : 'Welcome Back'}
           </h2>
           <button
             onClick={onClose}
@@ -85,7 +88,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           {mode === 'guest' ? (
             <>
               <p className="text-gray-600 text-sm">
-                Start practicing conversations right away. You can create an account later to save your progress.
+                Start practicing conversations right away. You can create an
+                account later to save your progress.
               </p>
               <button
                 onClick={handleGuestAccess}
@@ -112,13 +116,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     <input
                       type="text"
                       value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
+                      onChange={e => setDisplayName(e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
                       placeholder="Your name"
                     />
                   </div>
                 )}
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email
@@ -126,7 +130,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
                     placeholder="your@email.com"
                     required
@@ -140,7 +144,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <input
                     type="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
                     placeholder="••••••••"
                     required
@@ -152,17 +156,24 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   disabled={isLoading}
                   className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {isLoading ? 'Please wait...' : 
-                   mode === 'register' ? 'Create Account' : 'Sign In'}
+                  {isLoading
+                    ? 'Please wait...'
+                    : mode === 'register'
+                      ? 'Create Account'
+                      : 'Sign In'}
                 </button>
               </form>
 
               <div className="text-center">
                 <button
-                  onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+                  onClick={() =>
+                    setMode(mode === 'login' ? 'register' : 'login')
+                  }
                   className="text-blue-100 text-sm hover:underline"
                 >
-                  {mode === 'login' ? 'Create new account' : 'Already have an account?'}
+                  {mode === 'login'
+                    ? 'Create new account'
+                    : 'Already have an account?'}
                 </button>
               </div>
 

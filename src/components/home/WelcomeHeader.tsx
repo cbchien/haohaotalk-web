@@ -2,7 +2,7 @@ import { useAuthStore } from '@/store'
 
 export const WelcomeHeader = () => {
   const { user } = useAuthStore()
-  
+
   const getGreeting = () => {
     const hour = new Date().getHours()
     if (hour < 12) return 'Good morning'
@@ -15,17 +15,18 @@ export const WelcomeHeader = () => {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {getGreeting()}{user?.display_name ? `, ${user.display_name}` : ''}!
+            {getGreeting()}
+            {user?.display_name ? `, ${user.display_name}` : ''}!
           </h1>
           <p className="text-gray-600 mt-1">
             Ready to practice some conversations?
           </p>
         </div>
-        
+
         {user?.avatar_url ? (
-          <img 
-            src={user.avatar_url} 
-            alt={user.display_name || 'User'} 
+          <img
+            src={user.avatar_url}
+            alt={user.display_name || 'User'}
             className="w-12 h-12 rounded-full bg-blue-10 border-2 border-blue-25"
           />
         ) : (

@@ -1,8 +1,8 @@
-import { 
-  MagnifyingGlassIcon, 
-  ChartBarIcon, 
+import {
+  MagnifyingGlassIcon,
+  ChartBarIcon,
   BookOpenIcon,
-  SparklesIcon 
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 
 const quickActions = [
@@ -57,23 +57,19 @@ export const QuickActions = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-      
+
       <div className="grid grid-cols-2 gap-3">
-        {quickActions.map((action) => {
+        {quickActions.map(action => {
           const Icon = action.icon
-          
+
           return (
             <button
               key={action.id}
               className={`p-4 rounded-2xl border-2 text-left transition-all hover:scale-105 active:scale-95 ${getColorClasses(action.color)}`}
             >
               <Icon className="w-6 h-6 mb-3" />
-              <h3 className="font-semibold text-sm mb-1">
-                {action.title}
-              </h3>
-              <p className="text-xs opacity-80">
-                {action.description}
-              </p>
+              <h3 className="font-semibold text-sm mb-1">{action.title}</h3>
+              <p className="text-xs opacity-80">{action.description}</p>
             </button>
           )
         })}

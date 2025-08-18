@@ -7,7 +7,10 @@ interface AuthGuardProps {
   requireAuth?: boolean
 }
 
-export const AuthGuard = ({ children, requireAuth = false }: AuthGuardProps) => {
+export const AuthGuard = ({
+  children,
+  requireAuth = false,
+}: AuthGuardProps) => {
   const { user, isAuthenticated, setLoading } = useAuthStore()
   const [showAuthModal, setShowAuthModal] = useState(false)
 
@@ -16,7 +19,7 @@ export const AuthGuard = ({ children, requireAuth = false }: AuthGuardProps) => 
     if (requireAuth && !isAuthenticated) {
       setShowAuthModal(true)
     }
-    
+
     // Initialize auth check (simulate checking stored token)
     if (!user) {
       setLoading(false)
@@ -37,9 +40,9 @@ export const AuthGuard = ({ children, requireAuth = false }: AuthGuardProps) => 
   return (
     <>
       {children}
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
       />
     </>
   )
