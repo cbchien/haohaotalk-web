@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Prevent zoom on mobile inputs */
+  input, select, textarea {
+    font-size: 16px;
+  }
+
+  /* Mobile-first touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@layer components {
+  /* Mobile-optimized tap interactions */
+  .tap-highlight {
+    -webkit-tap-highlight-color: rgba(0, 168, 225, 0.1);
+  }
+
+  /* Safe area handling for mobile devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Smooth transitions for interactive elements */
+  .transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
