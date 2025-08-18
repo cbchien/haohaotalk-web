@@ -51,7 +51,7 @@ export default defineConfig({
                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
               },
               cacheKeyWillBeUsed: async ({ request }) => {
-                return `${request.url}?v=${new Date().getTime()}`;
+                return `${request.url}?v=${new Date().getTime()}`
               },
             },
           },

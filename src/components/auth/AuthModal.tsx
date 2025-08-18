@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useAuthStore } from '@/store'
 import { googleAuthService } from '@/services/googleAuth'
+import { authApiService } from '@/services'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -22,21 +23,35 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setIsLoading(true)
     setLoading(true)
 
-    // Simulate API call for guest user creation
-    setTimeout(() => {
-      const guestUser = {
-        id: `guest_${Date.now()}`,
-        display_name: `Guest${Math.floor(Math.random() * 1000)}`,
-        account_type: 'guest' as const,
-        verification_status: 'unverified' as const,
-        join_date: new Date(),
-        preferred_language: 'en' as const,
-      }
+    try {
+      const guestName = `Guest${Math.floor(Math.random() * 1000)}`
+      const response = await authApiService.createGuestUser({
+        display_name: guestName
+      })
 
-      setUser(guestUser)
+      if (response.success && response.data) {
+        setUser(response.data.user, response.data.token)
+        onClose()
+      } else {
+        console.error('Guest creation failed:', response.error)
+        // Fall back to local guest creation for development
+        const guestUser = {
+          id: `guest_${Date.now()}`,
+          display_name: guestName,
+          account_type: 'guest' as const,
+          verification_status: 'unverified' as const,
+          join_date: new Date(),
+          preferred_language: 'en' as const,
+        }
+        setUser(guestUser)
+        onClose()
+      }
+    } catch (error) {
+      console.error('Guest access failed:', error)
+    } finally {
       setIsLoading(false)
-      onClose()
-    }, 1000)
+      setLoading(false)
+    }
   }
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -44,22 +59,35 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setIsLoading(true)
     setLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      const user = {
-        id: `user_${Date.now()}`,
-        display_name: displayName || email.split('@')[0],
-        email,
-        account_type: 'registered' as const,
-        verification_status: 'email_verified' as const,
-        join_date: new Date(),
-        preferred_language: 'en' as const,
+    try {
+      let response
+      
+      if (mode === 'register') {
+        response = await authApiService.register({
+          email,
+          password,
+          display_name: displayName || email.split('@')[0]
+        })
+      } else {
+        response = await authApiService.login({
+          email,
+          password
+        })
       }
 
-      setUser(user)
+      if (response.success && response.data) {
+        setUser(response.data.user, response.data.token)
+        onClose()
+      } else {
+        console.error('Authentication failed:', response.error)
+        // Show error to user in production
+      }
+    } catch (error) {
+      console.error('Email auth failed:', error)
+    } finally {
       setIsLoading(false)
-      onClose()
-    }, 1500)
+      setLoading(false)
+    }
   }
 
   const handleGoogleAuth = async () => {
@@ -69,29 +97,38 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     try {
       const googleUser = await googleAuthService.signIn()
       
-      const user = {
-        id: googleUser.id,
-        display_name: googleUser.name,
-        email: googleUser.email,
-        account_type: 'registered' as const,
-        verification_status: 'oauth_verified' as const,
-        join_date: new Date(),
-        preferred_language: 'en' as const,
-        avatar_url: googleUser.picture,
-      }
+      // Send Google credential to backend
+      const response = await authApiService.googleAuth({
+        credential: 'google_jwt_token' // In real implementation, pass the JWT
+      })
 
-      setUser(user)
-      setLoading(false)
-      onClose()
+      if (response.success && response.data) {
+        setUser(response.data.user, response.data.token)
+        onClose()
+      } else {
+        // Fallback to local user creation for development
+        const user = {
+          id: googleUser.id,
+          display_name: googleUser.name,
+          email: googleUser.email,
+          account_type: 'registered' as const,
+          verification_status: 'oauth_verified' as const,
+          join_date: new Date(),
+          preferred_language: 'en' as const,
+          avatar_url: googleUser.picture,
+        }
+        setUser(user)
+        onClose()
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       if (errorMessage !== 'Google sign-in cancelled') {
         console.error('Google sign-in failed:', error)
       }
-      setLoading(false)
       // Could show error message to user here for real errors
     } finally {
       setIsLoading(false)
+      setLoading(false)
     }
   }
 

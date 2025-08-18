@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthGuard } from './components/auth/AuthGuard'
 import { BottomTabBar } from './components/navigation/BottomTabBar'
@@ -5,8 +6,16 @@ import { HomeScreen } from './screens/HomeScreen'
 import { SearchScreen } from './screens/SearchScreen'
 import { AnalyticsScreen } from './screens/AnalyticsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { useAuthStore } from './store'
 
 function App() {
+  const { initializeAuth } = useAuthStore()
+
+  useEffect(() => {
+    // Initialize authentication on app startup
+    initializeAuth()
+  }, [initializeAuth])
+
   return (
     <Router>
       <AuthGuard>
