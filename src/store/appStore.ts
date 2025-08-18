@@ -38,7 +38,7 @@ interface AppState {
 
 export const useAppStore = create<AppState>()((set, get) => ({
   // Initial state
-  currentLanguage: 'en',
+  currentLanguage: 'zh',
   isOffline: false,
   scenarios: [],
   popularScenarios: [],
