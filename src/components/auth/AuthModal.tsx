@@ -16,11 +16,16 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isGuestLoading, setIsGuestLoading] = useState(false)
+  const [isEmailLoading, setIsEmailLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const { setUser, setLoading } = useAuthStore()
 
+  // Helper to check if any authentication is in progress
+  const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
+
   const handleGuestAccess = async () => {
-    setIsLoading(true)
+    setIsGuestLoading(true)
     setLoading(true)
 
     try {
@@ -33,7 +38,6 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setUser(response.data.user, response.data.token)
         onClose()
       } else {
-        console.error('Guest creation failed:', response.error)
         // Fall back to local guest creation for development
         const guestUser = {
           id: `guest_${Date.now()}`,
@@ -46,17 +50,17 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setUser(guestUser)
         onClose()
       }
-    } catch (error) {
-      console.error('Guest access failed:', error)
+    } catch {
+      // Guest access failed, but continue with fallback
     } finally {
-      setIsLoading(false)
+      setIsGuestLoading(false)
       setLoading(false)
     }
   }
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
+    setIsEmailLoading(true)
     setLoading(true)
 
     try {
@@ -79,40 +83,43 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setUser(response.data.user, response.data.token)
         onClose()
       } else {
-        console.error('Authentication failed:', response.error)
-        // Show error to user in production
+        // Authentication failed - could show error to user in production
       }
-    } catch (error) {
-      console.error('Email auth failed:', error)
+    } catch {
+      // Email auth failed
     } finally {
-      setIsLoading(false)
+      setIsEmailLoading(false)
       setLoading(false)
     }
   }
 
   const handleGoogleAuth = async () => {
-    setIsLoading(true)
+    setIsGoogleLoading(true)
     setLoading(true)
 
     try {
-      const googleUser = await googleAuthService.signIn()
+      if (!googleAuthService.isConfigured()) {
+        throw new Error('Google OAuth not configured')
+      }
+
+      const { user: googleUser, credential } = await googleAuthService.signIn()
       
       // Send Google credential to backend
       const response = await authApiService.googleAuth({
-        credential: 'google_jwt_token' // In real implementation, pass the JWT
+        credential: credential
       })
 
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
       } else {
-        // Fallback to local user creation for development
+        // Use Google user data directly if backend call fails
         const user = {
           id: googleUser.id,
           display_name: googleUser.name,
           email: googleUser.email,
           account_type: 'registered' as const,
-          verification_status: 'oauth_verified' as const,
+          verification_status: 'email_verified' as const,
           join_date: new Date(),
           preferred_language: 'en' as const,
           avatar_url: googleUser.picture,
@@ -123,11 +130,11 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       if (errorMessage !== 'Google sign-in cancelled') {
-        console.error('Google sign-in failed:', error)
+        // Re-throw error to let user know Google OAuth failed
+        throw error
       }
-      // Could show error message to user here for real errors
     } finally {
-      setIsLoading(false)
+      setIsGoogleLoading(false)
       setLoading(false)
     }
   }
@@ -164,14 +171,15 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               </p>
               <button
                 onClick={handleGuestAccess}
-                disabled={isLoading}
+                disabled={isAnyLoading}
                 className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isLoading ? 'Setting up...' : 'Continue as Guest'}
+                {isGuestLoading ? 'Setting up...' : 'Continue as Guest'}
               </button>
               <button
                 onClick={() => setMode('login')}
-                className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+                disabled={isAnyLoading}
+                className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 I have an account
               </button>
@@ -224,10 +232,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isAnyLoading}
                   className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {isLoading
+                  {isEmailLoading
                     ? 'Please wait...'
                     : mode === 'register'
                       ? 'Create Account'
@@ -238,7 +246,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               {/* Google OAuth Button */}
               <button
                 onClick={handleGoogleAuth}
-                disabled={isLoading}
+                disabled={isAnyLoading}
                 className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -259,7 +267,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {isLoading ? 'Signing in...' : 'Continue with Google'}
+                {isGoogleLoading ? 'Signing in...' : 'Continue with Google'}
               </button>
 
               <div className="text-center">
@@ -267,7 +275,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   onClick={() =>
                     setMode(mode === 'login' ? 'register' : 'login')
                   }
-                  className="text-blue-100 text-sm hover:underline"
+                  disabled={isAnyLoading}
+                  className="text-blue-100 text-sm hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {mode === 'login'
                     ? 'Create new account'
@@ -286,7 +295,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
               <button
                 onClick={() => setMode('guest')}
-                className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+                disabled={isAnyLoading}
+                className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Continue as Guest
               </button>

@@ -60,6 +60,7 @@ class GoogleAuthService {
       callback: this.handleCredentialResponse.bind(this),
       auto_select: false,
       cancel_on_tap_outside: true,
+      use_fedcm_for_prompt: false
     })
 
     this.isInitialized = true
@@ -90,12 +91,24 @@ class GoogleAuthService {
     }
   }
 
-  async signIn(): Promise<GoogleUser> {
+  async signIn(): Promise<{ user: GoogleUser; credential: string }> {
     await this.initialize()
 
     return new Promise((resolve, reject) => {
+      // Create temporary button and auto-click it (more reliable than prompt)
+      const tempContainer = document.createElement('div')
+      tempContainer.style.position = 'fixed'
+      tempContainer.style.top = '-9999px'
+      tempContainer.style.left = '-9999px'
+      document.body.appendChild(tempContainer)
+
       this.credentialResponseResolver = (response) => {
         try {
+          // Clean up the temporary container
+          if (document.body.contains(tempContainer)) {
+            document.body.removeChild(tempContainer)
+          }
+          
           if (!response.credential) {
             reject(new Error('Google sign-in cancelled'))
             return
@@ -111,16 +124,55 @@ class GoogleAuthService {
             email_verified: payload.email_verified,
           }
 
-          resolve(user)
+          // Return both user and credential
+          resolve({ user, credential: response.credential })
         } catch (error) {
+          // Clean up on error
+          if (document.body.contains(tempContainer)) {
+            document.body.removeChild(tempContainer)
+          }
           reject(error)
         } finally {
           this.credentialResponseResolver = null
         }
       }
 
-      // Trigger the sign-in prompt
-      window.google!.accounts.id.prompt()
+      try {
+        window.google!.accounts.id.renderButton(tempContainer, {
+          type: 'standard',
+          size: 'large',
+          text: 'continue_with',
+          theme: 'outline',
+        })
+
+        // Auto-click the button after a brief delay
+        setTimeout(() => {
+          const button = tempContainer.querySelector('div[role="button"]') as HTMLElement
+          if (button) {
+            button.click()
+          } else {
+            document.body.removeChild(tempContainer)
+            reject(new Error('Google button not rendered'))
+          }
+        }, 100)
+
+        // Clean up after 30 seconds if no response
+        setTimeout(() => {
+          if (document.body.contains(tempContainer)) {
+            document.body.removeChild(tempContainer)
+            if (this.credentialResponseResolver) {
+              this.credentialResponseResolver = null
+              reject(new Error('Google sign-in timeout'))
+            }
+          }
+        }, 30000)
+
+      } catch (error) {
+        if (document.body.contains(tempContainer)) {
+          document.body.removeChild(tempContainer)
+        }
+        reject(new Error('Failed to initialize Google sign-in button'))
+      }
     })
   }
 
