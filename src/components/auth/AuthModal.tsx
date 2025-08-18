@@ -19,10 +19,49 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [isGuestLoading, setIsGuestLoading] = useState(false)
   const [isEmailLoading, setIsEmailLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [successMessage, setSuccessMessage] = useState('')
   const { setUser, setLoading } = useAuthStore()
 
   // Helper to check if any authentication is in progress
   const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
+
+  // Validation functions
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email) return 'Email is required'
+    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    return ''
+  }
+
+  const validatePassword = (password: string) => {
+    if (!password) return 'Password is required'
+    if (password.length < 8) return 'Password must be at least 8 characters'
+    return ''
+  }
+
+  const validateDisplayName = (displayName: string) => {
+    if (mode === 'register' && !displayName) return 'Display name is required'
+    return ''
+  }
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+    
+    if (mode === 'register') {
+      const displayNameError = validateDisplayName(displayName)
+      if (displayNameError) newErrors.displayName = displayNameError
+    }
+    
+    const emailError = validateEmail(email)
+    if (emailError) newErrors.email = emailError
+    
+    const passwordError = validatePassword(password)
+    if (passwordError) newErrors.password = passwordError
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleGuestAccess = async () => {
     setIsGuestLoading(true)
@@ -60,6 +99,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrors({})
+    setSuccessMessage('')
+    
+    if (!validateForm()) {
+      return
+    }
+    
     setIsEmailLoading(true)
     setLoading(true)
 
@@ -80,13 +126,16 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       }
 
       if (response.success && response.data) {
-        setUser(response.data.user, response.data.token)
-        onClose()
+        setSuccessMessage(mode === 'register' ? 'Account created successfully!' : 'Signed in successfully!')
+        setTimeout(() => {
+          setUser(response.data.user, response.data.token)
+          onClose()
+        }, 1000)
       } else {
-        // Authentication failed - could show error to user in production
+        setErrors({ general: response.error || 'Authentication failed. Please try again.' })
       }
-    } catch {
-      // Email auth failed
+    } catch (error) {
+      setErrors({ general: 'Network error. Please check your connection and try again.' })
     } finally {
       setIsEmailLoading(false)
       setLoading(false)
@@ -186,6 +235,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </>
           ) : (
             <>
+              {/* Error/Success Messages */}
+              {errors.general && (
+                <div className="bg-pink-25 text-pink-100 border border-pink-100 rounded-lg p-3 text-sm">
+                  {errors.general}
+                </div>
+              )}
+              
+              {successMessage && (
+                <div className="bg-green-25 text-green-100 border border-green-100 rounded-lg p-3 text-sm">
+                  {successMessage}
+                </div>
+              )}
+
               <form onSubmit={handleEmailAuth} className="space-y-4">
                 {mode === 'register' && (
                   <div>
@@ -195,10 +257,22 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     <input
                       type="text"
                       value={displayName}
-                      onChange={e => setDisplayName(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
+                      onChange={e => {
+                        setDisplayName(e.target.value)
+                        if (errors.displayName) {
+                          setErrors(prev => ({ ...prev, displayName: '' }))
+                        }
+                      }}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                        errors.displayName
+                          ? 'border-pink-100 focus:ring-pink-100'
+                          : 'border-gray-300 focus:ring-blue-100'
+                      }`}
                       placeholder="Your name"
                     />
+                    {errors.displayName && (
+                      <p className="text-pink-100 text-xs mt-1">{errors.displayName}</p>
+                    )}
                   </div>
                 )}
 
@@ -209,11 +283,22 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <input
                     type="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
+                    onChange={e => {
+                      setEmail(e.target.value)
+                      if (errors.email) {
+                        setErrors(prev => ({ ...prev, email: '' }))
+                      }
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                      errors.email
+                        ? 'border-pink-100 focus:ring-pink-100'
+                        : 'border-gray-300 focus:ring-blue-100'
+                    }`}
                     placeholder="your@email.com"
-                    required
                   />
+                  {errors.email && (
+                    <p className="text-pink-100 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 <div>
@@ -223,11 +308,22 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <input
                     type="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-transparent"
+                    onChange={e => {
+                      setPassword(e.target.value)
+                      if (errors.password) {
+                        setErrors(prev => ({ ...prev, password: '' }))
+                      }
+                    }}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                      errors.password
+                        ? 'border-pink-100 focus:ring-pink-100'
+                        : 'border-gray-300 focus:ring-blue-100'
+                    }`}
                     placeholder="••••••••"
-                    required
                   />
+                  {errors.password && (
+                    <p className="text-pink-100 text-xs mt-1">{errors.password}</p>
+                  )}
                 </div>
 
                 <button
