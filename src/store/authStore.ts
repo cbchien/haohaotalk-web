@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { User } from './types'
+import { googleAuthService } from '@/services/googleAuth'
 
 interface AuthState {
   user: User | null
@@ -10,6 +11,7 @@ interface AuthState {
   // Actions
   setUser: (user: User) => void
   clearUser: () => void
+  logout: () => void
   setLoading: (loading: boolean) => void
   updateUserProfile: (updates: Partial<User>) => void
 }
@@ -34,6 +36,21 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           isLoading: false,
         }),
+
+      logout: async () => {
+        // Sign out from Google if user was signed in via OAuth
+        try {
+          await googleAuthService.signOut()
+        } catch (error) {
+          console.warn('Google sign-out failed:', error)
+        }
+        
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
+      },
 
       setLoading: loading => set({ isLoading: loading }),
 
