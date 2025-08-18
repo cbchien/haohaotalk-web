@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useAuthStore } from '@/store'
+import { useAuthStore, useAppStore } from '@/store'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService } from '@/services'
+import { useTranslation } from '@/utils/translations'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -22,6 +23,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [successMessage, setSuccessMessage] = useState('')
   const { setUser, setLoading } = useAuthStore()
+  const { currentLanguage } = useAppStore()
+  const t = useTranslation(currentLanguage)
 
   // Helper to check if any authentication is in progress
   const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
@@ -29,19 +32,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   // Validation functions
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!email) return 'Email is required'
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    if (!email) return t.auth.validation.emailRequired
+    if (!emailRegex.test(email)) return t.auth.validation.emailInvalid
     return ''
   }
 
   const validatePassword = (password: string) => {
-    if (!password) return 'Password is required'
-    if (password.length < 8) return 'Password must be at least 8 characters'
+    if (!password) return t.auth.validation.passwordRequired
+    if (password.length < 8) return t.auth.validation.passwordTooShort
     return ''
   }
 
   const validateDisplayName = (displayName: string) => {
-    if (mode === 'register' && !displayName) return 'Display name is required'
+    if (mode === 'register' && !displayName) return t.auth.validation.displayNameRequired
     return ''
   }
 
@@ -126,16 +129,16 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       }
 
       if (response.success && response.data) {
-        setSuccessMessage(mode === 'register' ? 'Account created successfully!' : 'Signed in successfully!')
+        setSuccessMessage(mode === 'register' ? t.auth.accountCreatedSuccessfully : t.auth.signedInSuccessfully)
         setTimeout(() => {
           setUser(response.data.user, response.data.token)
           onClose()
         }, 1000)
       } else {
-        setErrors({ general: response.error || 'Authentication failed. Please try again.' })
+        setErrors({ general: response.error || t.auth.errors.authenticationFailed })
       }
     } catch (error) {
-      setErrors({ general: 'Network error. Please check your connection and try again.' })
+      setErrors({ general: t.auth.errors.networkError })
     } finally {
       setIsEmailLoading(false)
       setLoading(false)
@@ -148,7 +151,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
     try {
       if (!googleAuthService.isConfigured()) {
-        throw new Error('Google OAuth not configured')
+        throw new Error(t.auth.errors.googleOAuthNotConfigured)
       }
 
       const { user: googleUser, credential } = await googleAuthService.signIn()
@@ -197,10 +200,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900">
             {mode === 'guest'
-              ? 'Continue as Guest'
+              ? t.auth.continueAsGuest
               : mode === 'register'
-                ? 'Create Account'
-                : 'Welcome Back'}
+                ? t.auth.createAccount
+                : t.auth.signIn}
           </h2>
           <button
             onClick={onClose}
@@ -215,22 +218,21 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           {mode === 'guest' ? (
             <>
               <p className="text-gray-600 text-sm">
-                Start practicing conversations right away. You can create an
-                account later to save your progress.
+                {t.profile.guestModeMessage}
               </p>
               <button
                 onClick={handleGuestAccess}
                 disabled={isAnyLoading}
                 className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isGuestLoading ? 'Setting up...' : 'Continue as Guest'}
+                {isGuestLoading ? t.scenarios.loading : t.auth.continueAsGuest}
               </button>
               <button
                 onClick={() => setMode('login')}
                 disabled={isAnyLoading}
                 className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                I have an account
+                {t.auth.alreadyHaveAccount}
               </button>
             </>
           ) : (
@@ -252,7 +254,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 {mode === 'register' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Display Name
+                      {t.auth.displayName}
                     </label>
                     <input
                       type="text"
@@ -268,7 +270,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                           ? 'border-pink-100 focus:ring-pink-100'
                           : 'border-gray-300 focus:ring-blue-100'
                       }`}
-                      placeholder="Your name"
+                      placeholder={t.auth.displayName}
                     />
                     {errors.displayName && (
                       <p className="text-pink-100 text-xs mt-1">{errors.displayName}</p>
@@ -278,7 +280,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
+                    {t.auth.email}
                   </label>
                   <input
                     type="email"
@@ -294,7 +296,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                         ? 'border-pink-100 focus:ring-pink-100'
                         : 'border-gray-300 focus:ring-blue-100'
                     }`}
-                    placeholder="your@email.com"
+                    placeholder={t.auth.email}
                   />
                   {errors.email && (
                     <p className="text-pink-100 text-xs mt-1">{errors.email}</p>
@@ -303,7 +305,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Password
+                    {t.auth.password}
                   </label>
                   <input
                     type="password"
@@ -332,10 +334,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {isEmailLoading
-                    ? 'Please wait...'
+                    ? t.scenarios.loading
                     : mode === 'register'
-                      ? 'Create Account'
-                      : 'Sign In'}
+                      ? t.auth.createAccount
+                      : t.auth.signIn}
                 </button>
               </form>
 
@@ -363,7 +365,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {isGoogleLoading ? 'Signing in...' : 'Continue with Google'}
+                {isGoogleLoading ? t.scenarios.loading : t.auth.continueWithGoogle}
               </button>
 
               <div className="text-center">
@@ -375,8 +377,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   className="text-blue-100 text-sm hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {mode === 'login'
-                    ? 'Create new account'
-                    : 'Already have an account?'}
+                    ? t.auth.createNewAccount
+                    : t.auth.alreadyHaveAccount}
                 </button>
               </div>
 
@@ -385,7 +387,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <div className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">or</span>
+                  <span className="px-2 bg-white text-gray-500">{currentLanguage === 'zh' ? '或' : 'or'}</span>
                 </div>
               </div>
 
@@ -394,7 +396,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 disabled={isAnyLoading}
                 className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Continue as Guest
+                {t.auth.continueAsGuest}
               </button>
             </>
           )}

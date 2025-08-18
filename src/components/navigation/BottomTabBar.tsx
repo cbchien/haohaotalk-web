@@ -12,12 +12,12 @@ import {
   UserIcon as UserIconSolid,
 } from '@heroicons/react/24/solid'
 import { useAppStore } from '@/store'
+import { useTranslation } from '@/utils/translations'
 
 interface TabItem {
   id: string
   path: string
-  label: string
-  labelZh: string
+  labelKey: keyof typeof useTranslation('en').navigation
   icon: React.ComponentType<{ className?: string }>
   iconActive: React.ComponentType<{ className?: string }>
 }
@@ -26,32 +26,28 @@ const tabs: TabItem[] = [
   {
     id: 'home',
     path: '/',
-    label: 'Home',
-    labelZh: '首頁',
+    labelKey: 'home',
     icon: HomeIcon,
     iconActive: HomeIconSolid,
   },
   {
     id: 'search',
     path: '/search',
-    label: 'Search',
-    labelZh: '搜尋',
+    labelKey: 'search',
     icon: MagnifyingGlassIcon,
     iconActive: MagnifyingGlassIconSolid,
   },
   {
     id: 'analytics',
     path: '/analytics',
-    label: 'Progress',
-    labelZh: '歷史',
+    labelKey: 'progress',
     icon: ChartBarIcon,
     iconActive: ChartBarIconSolid,
   },
   {
     id: 'profile',
     path: '/profile',
-    label: 'Profile',
-    labelZh: '我的',
+    labelKey: 'profile',
     icon: UserIcon,
     iconActive: UserIconSolid,
   },
@@ -60,6 +56,7 @@ const tabs: TabItem[] = [
 export const BottomTabBar = () => {
   const location = useLocation()
   const { currentLanguage } = useAppStore()
+  const t = useTranslation(currentLanguage)
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe">
@@ -69,7 +66,7 @@ export const BottomTabBar = () => {
             location.pathname === tab.path ||
             (tab.path !== '/' && location.pathname.startsWith(tab.path))
           const Icon = isActive ? tab.iconActive : tab.icon
-          const displayLabel = currentLanguage === 'zh' ? tab.labelZh : tab.label
+          const displayLabel = t.navigation[tab.labelKey]
 
           return (
             <NavLink

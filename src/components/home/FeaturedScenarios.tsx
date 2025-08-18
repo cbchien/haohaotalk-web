@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { useAppStore } from '@/store'
 import { scenariosApiService, Scenario } from '@/services'
+import { useTranslation } from '@/utils/translations'
 
 const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 
 export const ScenarioGrid = () => {
-  const { selectedCategories } = useAppStore()
+  const { selectedCategories, currentLanguage } = useAppStore()
   const [scenarios, setScenarios] = useState<Scenario[]>([])
   const [loading, setLoading] = useState(false)
+  const t = useTranslation(currentLanguage)
 
   useEffect(() => {
     const fetchScenarios = async () => {
@@ -19,6 +21,7 @@ export const ScenarioGrid = () => {
 
         const response = await scenariosApiService.getScenarios({
           category: category === 'featured' ? undefined : category,
+          language: currentLanguage,
           limit: 20,
         })
 
@@ -36,12 +39,14 @@ export const ScenarioGrid = () => {
     }
 
     fetchScenarios()
-  }, [selectedCategories])
+  }, [selectedCategories, currentLanguage])
 
   if (loading) {
     return (
       <div className="px-4 pb-4 flex justify-center items-center h-32">
-        <div className="text-gray-500">Loading scenarios...</div>
+        <div className="text-gray-500">
+          {t.scenarios.loading}
+        </div>
       </div>
     )
   }
@@ -49,7 +54,9 @@ export const ScenarioGrid = () => {
   if (!scenarios || scenarios.length === 0) {
     return (
       <div className="px-4 pb-4 flex justify-center items-center h-32">
-        <div className="text-gray-500">No scenarios available</div>
+        <div className="text-gray-500">
+          {t.scenarios.noScenariosAvailable}
+        </div>
       </div>
     )
   }
@@ -72,8 +79,8 @@ export const ScenarioGrid = () => {
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-                  <span className="text-xl">🎭</span>
+                <div className="w-16 h-10 bg-white bg-opacity-90 rounded-lg flex items-center justify-center border border-gray-200">
+                  <span className="text-xs font-medium text-gray-600">[Image]</span>
                 </div>
               )}
             </div>
