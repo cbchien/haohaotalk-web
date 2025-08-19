@@ -82,12 +82,18 @@ export const BottomTabBar = () => {
                 }
               `}
             >
-              <Icon className={`w-6 h-6 mb-1 transition-transform duration-300 ${
-                isActive ? 'scale-110' : 'scale-100'
-              }`} />
-              <span className={`text-xs font-medium truncate transition-all duration-300 ${
-                isActive ? 'font-semibold' : 'font-medium'
-              }`}>{displayLabel}</span>
+              <Icon
+                className={`w-6 h-6 mb-1 transition-transform duration-300 ${
+                  isActive ? 'scale-110' : 'scale-100'
+                }`}
+              />
+              <span
+                className={`text-xs font-medium truncate transition-all duration-300 ${
+                  isActive ? 'font-semibold' : 'font-medium'
+                }`}
+              >
+                {displayLabel}
+              </span>
             </NavLink>
           )
         })}

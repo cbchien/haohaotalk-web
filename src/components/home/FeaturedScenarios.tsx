@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { useAppStore } from '@/store'
 import { scenariosApiService, Scenario } from '@/services'
@@ -7,6 +8,7 @@ import { useTranslation } from '@/utils/translations'
 const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 
 export const ScenarioGrid = () => {
+  const navigate = useNavigate()
   const { selectedCategories, currentLanguage } = useAppStore()
   const [scenarios, setScenarios] = useState<Scenario[]>([])
   const [loading, setLoading] = useState(false)
@@ -44,12 +46,14 @@ export const ScenarioGrid = () => {
     fetchScenarios()
   }, [selectedCategories, currentLanguage])
 
+  const handleScenarioClick = (scenario: Scenario) => {
+    navigate(`/scenario/${scenario.id}/configure`)
+  }
+
   if (loading) {
     return (
       <div className="px-4 pb-4 flex justify-center items-center h-32">
-        <div className="text-gray-500">
-          {t.scenarios.loading}
-        </div>
+        <div className="text-gray-500">{t.scenarios.loading}</div>
       </div>
     )
   }
@@ -57,9 +61,7 @@ export const ScenarioGrid = () => {
   if (!scenarios || scenarios.length === 0) {
     return (
       <div className="px-4 pb-4 flex justify-center items-center h-32">
-        <div className="text-gray-500">
-          {t.scenarios.noScenariosAvailable}
-        </div>
+        <div className="text-gray-500">{t.scenarios.noScenariosAvailable}</div>
       </div>
     )
   }
@@ -71,6 +73,7 @@ export const ScenarioGrid = () => {
         {scenarios.map(scenario => (
           <div
             key={scenario.id}
+            onClick={() => handleScenarioClick(scenario)}
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer break-inside-avoid mb-3"
           >
             {/* Illustration - Same height for all cards */}
@@ -83,7 +86,9 @@ export const ScenarioGrid = () => {
                 />
               ) : (
                 <div className="w-16 h-10 bg-white bg-opacity-90 rounded-lg flex items-center justify-center border border-gray-200">
-                  <span className="text-xs font-medium text-gray-600">[Image]</span>
+                  <span className="text-xs font-medium text-gray-600">
+                    [Image]
+                  </span>
                 </div>
               )}
             </div>

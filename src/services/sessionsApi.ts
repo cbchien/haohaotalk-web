@@ -3,6 +3,7 @@ import { apiClient, ApiResponse } from './api'
 export interface CreateSessionData {
   scenario_id: string
   role_id: string
+  relationship_level?: 'low' | 'normal' | 'high'
   language: 'en' | 'zh'
 }
 
@@ -68,16 +69,19 @@ class SessionsApiService {
     return apiClient.post<Session>('sessions', data)
   }
 
-  async getSessions(params: SessionsListParams = {}): Promise<ApiResponse<SessionsListResponse>> {
+  async getSessions(
+    params: SessionsListParams = {}
+  ): Promise<ApiResponse<SessionsListResponse>> {
     const searchParams = new URLSearchParams()
-    
+
     if (params.status) searchParams.append('status', params.status)
-    if (params.scenario_id) searchParams.append('scenario_id', params.scenario_id)
+    if (params.scenario_id)
+      searchParams.append('scenario_id', params.scenario_id)
     if (params.page) searchParams.append('page', params.page.toString())
     if (params.limit) searchParams.append('limit', params.limit.toString())
 
-    const endpoint = searchParams.toString() 
-      ? `sessions?${searchParams.toString()}` 
+    const endpoint = searchParams.toString()
+      ? `sessions?${searchParams.toString()}`
       : 'sessions'
 
     return apiClient.get<SessionsListResponse>(endpoint)
@@ -87,20 +91,33 @@ class SessionsApiService {
     return apiClient.get<Session>(`sessions/${id}`)
   }
 
-  async getSessionTurns(sessionId: string): Promise<ApiResponse<ConversationTurn[]>> {
+  async getSessionTurns(
+    sessionId: string
+  ): Promise<ApiResponse<ConversationTurn[]>> {
     return apiClient.get<ConversationTurn[]>(`sessions/${sessionId}/turns`)
   }
 
-  async createTurn(sessionId: string, data: CreateTurnData): Promise<ApiResponse<CreateTurnResponse>> {
-    return apiClient.post<CreateTurnResponse>(`sessions/${sessionId}/turns`, data)
+  async createTurn(
+    sessionId: string,
+    data: CreateTurnData
+  ): Promise<ApiResponse<CreateTurnResponse>> {
+    return apiClient.post<CreateTurnResponse>(
+      `sessions/${sessionId}/turns`,
+      data
+    )
   }
 
-  async rateSession(sessionId: string, data: RateSessionData): Promise<ApiResponse<Session>> {
+  async rateSession(
+    sessionId: string,
+    data: RateSessionData
+  ): Promise<ApiResponse<Session>> {
     return apiClient.put<Session>(`sessions/${sessionId}/rating`, data)
   }
 
   async abandonSession(sessionId: string): Promise<ApiResponse<Session>> {
-    return apiClient.put<Session>(`sessions/${sessionId}`, { status: 'abandoned' })
+    return apiClient.put<Session>(`sessions/${sessionId}`, {
+      status: 'abandoned',
+    })
   }
 }
 

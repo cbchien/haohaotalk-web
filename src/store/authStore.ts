@@ -58,10 +58,10 @@ export const useAuthStore = create<AuthState>()(
           // eslint-disable-next-line no-console
           console.warn('Google sign-out failed:', error)
         }
-        
+
         apiClient.setAuthToken(null)
         authApiService.logout()
-        
+
         set({
           user: null,
           isAuthenticated: false,
@@ -94,7 +94,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           apiClient.setAuthToken(authToken)
           const response = await authApiService.getCurrentUser()
-          
+
           if (response.success && response.data) {
             set({
               user: response.data,

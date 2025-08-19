@@ -44,24 +44,25 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   }
 
   const validateDisplayName = (displayName: string) => {
-    if (mode === 'register' && !displayName) return t.auth.validation.displayNameRequired
+    if (mode === 'register' && !displayName)
+      return t.auth.validation.displayNameRequired
     return ''
   }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
-    
+
     if (mode === 'register') {
       const displayNameError = validateDisplayName(displayName)
       if (displayNameError) newErrors.displayName = displayNameError
     }
-    
+
     const emailError = validateEmail(email)
     if (emailError) newErrors.email = emailError
-    
+
     const passwordError = validatePassword(password)
     if (passwordError) newErrors.password = passwordError
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -73,7 +74,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     try {
       const guestName = `Guest${Math.floor(Math.random() * 1000)}`
       const response = await authApiService.createGuestUser({
-        display_name: guestName
+        display_name: guestName,
       })
 
       if (response.success && response.data) {
@@ -104,38 +105,44 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     e.preventDefault()
     setErrors({})
     setSuccessMessage('')
-    
+
     if (!validateForm()) {
       return
     }
-    
+
     setIsEmailLoading(true)
     setLoading(true)
 
     try {
       let response
-      
+
       if (mode === 'register') {
         response = await authApiService.register({
           email,
           password,
-          display_name: displayName || email.split('@')[0]
+          display_name: displayName || email.split('@')[0],
         })
       } else {
         response = await authApiService.login({
           email,
-          password
+          password,
         })
       }
 
       if (response.success && response.data) {
-        setSuccessMessage(mode === 'register' ? t.auth.accountCreatedSuccessfully : t.auth.signedInSuccessfully)
+        setSuccessMessage(
+          mode === 'register'
+            ? t.auth.accountCreatedSuccessfully
+            : t.auth.signedInSuccessfully
+        )
         setTimeout(() => {
           setUser(response.data!.user, response.data!.token)
           onClose()
         }, 1000)
       } else {
-        setErrors({ general: response.error || t.auth.errors.authenticationFailed })
+        setErrors({
+          general: response.error || t.auth.errors.authenticationFailed,
+        })
       }
     } catch {
       setErrors({ general: t.auth.errors.networkError })
@@ -155,10 +162,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       }
 
       const { user: googleUser, credential } = await googleAuthService.signIn()
-      
+
       // Send Google credential to backend
       const response = await authApiService.googleAuth({
-        credential: credential
+        credential: credential,
       })
 
       if (response.success && response.data) {
@@ -180,7 +187,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         onClose()
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error'
       if (errorMessage !== 'Google sign-in cancelled') {
         // Re-throw error to let user know Google OAuth failed
         throw error
@@ -243,7 +251,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   {errors.general}
                 </div>
               )}
-              
+
               {successMessage && (
                 <div className="bg-green-25 text-green-100 border border-green-100 rounded-lg p-3 text-sm">
                   {successMessage}
@@ -273,7 +281,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                       placeholder={t.auth.displayName}
                     />
                     {errors.displayName && (
-                      <p className="text-pink-100 text-xs mt-1">{errors.displayName}</p>
+                      <p className="text-pink-100 text-xs mt-1">
+                        {errors.displayName}
+                      </p>
                     )}
                   </div>
                 )}
@@ -324,7 +334,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     placeholder="••••••••"
                   />
                   {errors.password && (
-                    <p className="text-pink-100 text-xs mt-1">{errors.password}</p>
+                    <p className="text-pink-100 text-xs mt-1">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
 
@@ -365,7 +377,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                {isGoogleLoading ? t.scenarios.loading : t.auth.continueWithGoogle}
+                {isGoogleLoading
+                  ? t.scenarios.loading
+                  : t.auth.continueWithGoogle}
               </button>
 
               <div className="text-center">
@@ -387,7 +401,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <div className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">{currentLanguage === 'zh' ? '或' : 'or'}</span>
+                  <span className="px-2 bg-white text-gray-500">
+                    {currentLanguage === 'zh' ? '或' : 'or'}
+                  </span>
                 </div>
               </div>
 

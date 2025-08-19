@@ -6,6 +6,7 @@ import { HomeScreen } from './screens/HomeScreen'
 import { SearchScreen } from './screens/SearchScreen'
 import { AnalyticsScreen } from './screens/AnalyticsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { ChatSettingsScreen } from './components/chat-settings'
 import { useAuthStore } from './store'
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/analytics" element={<AnalyticsScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
+              <Route
+                path="/scenario/:scenarioId/configure"
+                element={<ChatSettingsScreen />}
+              />
             </Routes>
           </main>
 

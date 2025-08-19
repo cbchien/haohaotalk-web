@@ -43,7 +43,8 @@ class GoogleAuthService {
       script.async = true
       script.defer = true
       script.onload = () => resolve()
-      script.onerror = () => reject(new Error('Failed to load Google Identity script'))
+      script.onerror = () =>
+        reject(new Error('Failed to load Google Identity script'))
       document.head.appendChild(script)
     })
   }
@@ -62,7 +63,7 @@ class GoogleAuthService {
       callback: this.handleCredentialResponse.bind(this),
       auto_select: false,
       cancel_on_tap_outside: true,
-      use_fedcm_for_prompt: false
+      use_fedcm_for_prompt: false,
     })
 
     this.isInitialized = true
@@ -107,20 +108,20 @@ class GoogleAuthService {
       tempContainer.style.left = '-9999px'
       document.body.appendChild(tempContainer)
 
-      this.credentialResponseResolver = (response) => {
+      this.credentialResponseResolver = response => {
         try {
           // Clean up the temporary container
           if (document.body.contains(tempContainer)) {
             document.body.removeChild(tempContainer)
           }
-          
+
           if (!response.credential) {
             reject(new Error('Google sign-in cancelled'))
             return
           }
 
           const payload = this.parseJWT(response.credential)
-          
+
           const user: GoogleUser = {
             id: payload.sub,
             email: payload.email,
@@ -152,7 +153,9 @@ class GoogleAuthService {
 
         // Auto-click the button after a brief delay
         setTimeout(() => {
-          const button = tempContainer.querySelector('div[role="button"]') as HTMLElement
+          const button = tempContainer.querySelector(
+            'div[role="button"]'
+          ) as HTMLElement
           if (button) {
             button.click()
           } else {
@@ -171,7 +174,6 @@ class GoogleAuthService {
             }
           }
         }, 30000)
-
       } catch {
         if (document.body.contains(tempContainer)) {
           document.body.removeChild(tempContainer)

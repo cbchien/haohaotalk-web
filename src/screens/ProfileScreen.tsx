@@ -13,8 +13,10 @@ export const ProfileScreen = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="p-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">{t.navigation.profile}</h1>
-        
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          {t.navigation.profile}
+        </h1>
+
         {user && (
           <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
             <div className="flex items-center gap-4 mb-4">
@@ -39,11 +41,13 @@ export const ProfileScreen = () => {
                   <p className="text-gray-600 text-sm">{user.email}</p>
                 )}
                 <p className="text-gray-500 text-xs mt-1">
-                  {user.account_type === 'guest' ? t.profile.guestAccount : t.profile.registeredAccount}
+                  {user.account_type === 'guest'
+                    ? t.profile.guestAccount
+                    : t.profile.registeredAccount}
                 </p>
               </div>
             </div>
-            
+
             {user.account_type === 'guest' && (
               <div className="bg-yellow-10 border border-yellow-25 rounded-xl p-3 mb-4">
                 <p className="text-yellow-100 text-sm font-medium">
@@ -55,15 +59,19 @@ export const ProfileScreen = () => {
         )}
 
         <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">{currentLanguage === 'zh' ? '帳戶操作' : 'Account Actions'}</h3>
-          
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {currentLanguage === 'zh' ? '帳戶操作' : 'Account Actions'}
+          </h3>
+
           <button
             onClick={handleLogout}
             className="w-full py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition-colors"
           >
-            {user?.account_type === 'guest' ? t.auth.startFreshSession : t.auth.logout}
+            {user?.account_type === 'guest'
+              ? t.auth.startFreshSession
+              : t.auth.logout}
           </button>
-          
+
           {user?.account_type === 'guest' && (
             <p className="text-gray-500 text-xs mt-2 text-center">
               {t.profile.clearSessionMessage}

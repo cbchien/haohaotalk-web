@@ -16,7 +16,8 @@ class ApiClient {
 
   constructor() {
     this.config = {
-      baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://api.haohaotalk.com',
+      baseUrl:
+        import.meta.env.VITE_API_BASE_URL || 'https://api.haohaotalk.com',
       version: import.meta.env.VITE_API_VERSION || 'v1',
     }
   }

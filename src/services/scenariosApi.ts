@@ -46,9 +46,11 @@ export interface ScenariosListResponse {
 }
 
 class ScenariosApiService {
-  async getScenarios(params: ScenariosListParams = {}): Promise<ApiResponse<Scenario[]>> {
+  async getScenarios(
+    params: ScenariosListParams = {}
+  ): Promise<ApiResponse<Scenario[]>> {
     const searchParams = new URLSearchParams()
-    
+
     if (params.category) searchParams.append('category', params.category)
     if (params.difficulty) searchParams.append('difficulty', params.difficulty)
     if (params.search) searchParams.append('search', params.search)
@@ -56,43 +58,73 @@ class ScenariosApiService {
     if (params.limit) searchParams.append('limit', params.limit.toString())
     if (params.language) searchParams.append('language', params.language)
 
-    const endpoint = searchParams.toString() 
-      ? `scenarios?${searchParams.toString()}` 
+    const endpoint = searchParams.toString()
+      ? `scenarios?${searchParams.toString()}`
       : 'scenarios'
 
     return apiClient.get<Scenario[]>(endpoint)
   }
 
-  async getScenario(id: string): Promise<ApiResponse<Scenario>> {
-    return apiClient.get<Scenario>(`scenarios/${id}`)
+  async getScenario(
+    scenarioId: string,
+    params?: { language?: string }
+  ): Promise<ApiResponse<Scenario>> {
+    const searchParams = new URLSearchParams()
+    if (params?.language) searchParams.append('language', params.language)
+
+    const queryString = searchParams.toString()
+    const url = queryString
+      ? `scenarios/${scenarioId}?${queryString}`
+      : `scenarios/${scenarioId}`
+
+    return apiClient.get<Scenario>(url)
   }
 
-  async getScenarioRoles(scenarioId: string): Promise<ApiResponse<ScenarioRole[]>> {
-    return apiClient.get<ScenarioRole[]>(`scenarios/${scenarioId}/roles`)
+  async getScenarioRoles(
+    scenarioId: string,
+    params?: { language?: string }
+  ): Promise<ApiResponse<ScenarioRole[]>> {
+    const searchParams = new URLSearchParams()
+    if (params?.language) searchParams.append('language', params.language)
+
+    const queryString = searchParams.toString()
+    const url = queryString
+      ? `scenarios/${scenarioId}/roles?${queryString}`
+      : `scenarios/${scenarioId}/roles`
+
+    return apiClient.get<ScenarioRole[]>(url)
   }
 
-  async getFeaturedScenarios(language?: string): Promise<ApiResponse<Scenario[]>> {
+  async getFeaturedScenarios(
+    language?: string
+  ): Promise<ApiResponse<Scenario[]>> {
     const params = new URLSearchParams()
     params.append('featured', 'true')
     params.append('limit', '10')
     if (language) params.append('language', language)
-    
+
     return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 
-  async getScenariosByCategory(category: string, language?: string): Promise<ApiResponse<Scenario[]>> {
+  async getScenariosByCategory(
+    category: string,
+    language?: string
+  ): Promise<ApiResponse<Scenario[]>> {
     const params = new URLSearchParams()
     params.append('category', category)
     if (language) params.append('language', language)
-    
+
     return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 
-  async searchScenarios(query: string, language?: string): Promise<ApiResponse<Scenario[]>> {
+  async searchScenarios(
+    query: string,
+    language?: string
+  ): Promise<ApiResponse<Scenario[]>> {
     const params = new URLSearchParams()
     params.append('search', encodeURIComponent(query))
     if (language) params.append('language', language)
-    
+
     return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
   }
 }
