@@ -28,11 +28,14 @@ export const ScenarioGrid = () => {
         if (response.success && response.data) {
           setScenarios(response.data)
         } else {
+          // eslint-disable-next-line no-console
           console.error('Failed to fetch scenarios:', response.error)
           setScenarios([])
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching scenarios:', error)
+        setScenarios([])
       } finally {
         setLoading(false)
       }

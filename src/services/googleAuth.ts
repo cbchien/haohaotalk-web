@@ -11,8 +11,10 @@ declare global {
     google?: {
       accounts: {
         id: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           initialize: (config: any) => void
           prompt: () => void
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           renderButton: (element: HTMLElement, config: any) => void
           disableAutoSelect: () => void
         }
@@ -66,6 +68,7 @@ class GoogleAuthService {
     this.isInitialized = true
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleCredentialResponse(response: any): void {
     // This will be handled by the promise in signIn method
     if (this.credentialResponseResolver) {
@@ -73,8 +76,10 @@ class GoogleAuthService {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private credentialResponseResolver: ((response: any) => void) | null = null
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private parseJWT(token: string): any {
     try {
       const base64Url = token.split('.')[1]
@@ -86,7 +91,7 @@ class GoogleAuthService {
           .join('')
       )
       return JSON.parse(jsonPayload)
-    } catch (error) {
+    } catch {
       throw new Error('Invalid JWT token')
     }
   }
@@ -167,7 +172,7 @@ class GoogleAuthService {
           }
         }, 30000)
 
-      } catch (error) {
+      } catch {
         if (document.body.contains(tempContainer)) {
           document.body.removeChild(tempContainer)
         }

@@ -55,6 +55,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await googleAuthService.signOut()
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.warn('Google sign-out failed:', error)
         }
         
@@ -81,6 +82,7 @@ export const useAuthStore = create<AuthState>()(
             set({ user: response.data })
           }
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Failed to update profile:', error)
         }
       },
@@ -103,6 +105,7 @@ export const useAuthStore = create<AuthState>()(
             get().clearUser()
           }
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Failed to initialize auth:', error)
           get().clearUser()
         }

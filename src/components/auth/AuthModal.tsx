@@ -131,13 +131,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setSuccessMessage(mode === 'register' ? t.auth.accountCreatedSuccessfully : t.auth.signedInSuccessfully)
         setTimeout(() => {
-          setUser(response.data.user, response.data.token)
+          setUser(response.data!.user, response.data!.token)
           onClose()
         }, 1000)
       } else {
         setErrors({ general: response.error || t.auth.errors.authenticationFailed })
       }
-    } catch (error) {
+    } catch {
       setErrors({ general: t.auth.errors.networkError })
     } finally {
       setIsEmailLoading(false)

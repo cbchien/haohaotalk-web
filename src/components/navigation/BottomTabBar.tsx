@@ -12,12 +12,12 @@ import {
   UserIcon as UserIconSolid,
 } from '@heroicons/react/24/solid'
 import { useAppStore } from '@/store'
-import { useTranslation } from '@/utils/translations'
+import { useTranslation, type Translations } from '@/utils/translations'
 
 interface TabItem {
   id: string
   path: string
-  labelKey: keyof typeof useTranslation('en').navigation
+  labelKey: keyof Translations['navigation']
   icon: React.ComponentType<{ className?: string }>
   iconActive: React.ComponentType<{ className?: string }>
 }

@@ -3,11 +3,11 @@ interface ApiConfig {
   version: string
 }
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string
-  meta?: any
+  meta?: Record<string, unknown>
 }
 
 class ApiClient {
@@ -59,6 +59,7 @@ class ApiClient {
       const data = await response.json()
       return data
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('API request failed:', error)
       return {
         success: false,
@@ -71,14 +72,14 @@ class ApiClient {
     return this.request<T>(endpoint, { method: 'GET' })
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     })
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
