@@ -2,10 +2,9 @@ import { useAppStore } from '@/store'
 
 const categories = [
   { id: 'featured', label: '本週推薦', label_en: 'This Week' },
-  { id: 'relationships', label: '情侶關係', label_en: 'Relationships' },
+  { id: 'relationship', label: '情侶關係', label_en: 'Relationships' },
   { id: 'family', label: '親子關係', label_en: 'Family' },
   { id: 'workplace', label: '職場', label_en: 'Workplace' },
-  { id: 'social', label: '社交', label_en: 'Social' },
 ]
 
 export const CategoryChips = () => {
