@@ -22,7 +22,7 @@ export const SessionInsightsPage = () => {
     useSessionInsightsData(sessionId)
 
   const handleBack = () => {
-    navigate(-1)
+    navigate('/sessions')
   }
 
   const handleNext = () => {
