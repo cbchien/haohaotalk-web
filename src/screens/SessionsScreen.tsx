@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { AnalyticsAPI } from '@/services/analyticsApi'
-import type { SessionListItem } from '@/types/analytics'
+import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import type { SessionListItem } from '@/types/sessionPerformance'
 
-export const AnalyticsScreen = () => {
+export const SessionsScreen = () => {
   const navigate = useNavigate()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
@@ -20,7 +20,9 @@ export const AnalyticsScreen = () => {
       setError(null)
 
       try {
-        const response = await AnalyticsAPI.getUserSessions({ limit: 20 })
+        const response = await SessionPerformanceAPI.getUserSessions({
+          limit: 20,
+        })
         // eslint-disable-next-line no-console
         console.log('Sessions API response:', response)
         if (response.success && response.data) {
@@ -84,7 +86,7 @@ export const AnalyticsScreen = () => {
           {t.navigation.progress}
         </h1>
         <p className="text-sm text-gray-600 mt-1">
-          {t.analytics.conversationAnalysis}
+          {t.sessions.conversationAnalysis}
         </p>
       </div>
 
@@ -116,7 +118,7 @@ export const AnalyticsScreen = () => {
               onClick={() => navigate('/')}
               className="px-6 py-3 bg-blue-100 text-white rounded-xl font-semibold"
             >
-              {t.analytics.browseScenarios}
+              {t.sessions.browseScenarios}
             </button>
           </div>
         ) : (
@@ -134,8 +136,8 @@ export const AnalyticsScreen = () => {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-900 truncate">
                       {session.status === 'complete'
-                        ? t.analytics.completedSession
-                        : t.analytics.practiceSession}
+                        ? t.sessions.completedSession
+                        : t.sessions.practiceSession}
                     </h3>
                     <p className="text-sm text-gray-600 mb-2">
                       {session.completed_at

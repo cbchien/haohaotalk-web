@@ -1,16 +1,16 @@
 import { apiClient } from './api'
 import type { ApiResponse } from './api'
 import {
-  SessionAnalytics,
+  SessionPerformance,
   SessionInsights,
   SessionListItem,
-} from '@/types/analytics'
+} from '@/types/sessionPerformance'
 
-class AnalyticsApiService {
-  // Session Analytics
-  async getSessionAnalytics(
+class SessionPerformanceApiService {
+  // Session Performance
+  async getSessionPerformance(
     sessionId: string
-  ): Promise<ApiResponse<SessionAnalytics>> {
+  ): Promise<ApiResponse<SessionPerformance>> {
     return apiClient.get(`sessions/${sessionId}/analytics`)
   }
 
@@ -62,4 +62,4 @@ class AnalyticsApiService {
   }
 }
 
-export const AnalyticsAPI = new AnalyticsApiService()
+export const SessionPerformanceAPI = new SessionPerformanceApiService()

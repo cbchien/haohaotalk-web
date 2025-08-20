@@ -9,12 +9,12 @@ import { AuthGuard } from './components/auth/AuthGuard'
 import { BottomTabBar } from './components/navigation/BottomTabBar'
 import { HomeScreen } from './screens/HomeScreen'
 import { SearchScreen } from './screens/SearchScreen'
-import { AnalyticsScreen } from './screens/AnalyticsScreen'
+import { SessionsScreen } from './screens/SessionsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { ChatSettingsScreen } from './components/chat-settings'
 import { ChatScreen } from './components/chat'
 import { SessionInsightsPage } from './pages/SessionInsightsPage'
-import { SessionComparisonPage } from './pages/SessionComparisonPage'
+import { SessionPerfComparisonPage } from './pages/SessionPerfComparisonPage'
 import { useAuthStore } from './store'
 
 function AppContent() {
@@ -33,7 +33,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/search" element={<SearchScreen />} />
-          <Route path="/sessions" element={<AnalyticsScreen />} />
+          <Route path="/sessions" element={<SessionsScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
           <Route
             path="/scenario/:scenarioId/configure"
@@ -45,8 +45,8 @@ function AppContent() {
             element={<SessionInsightsPage />}
           />
           <Route
-            path="/session/:sessionId/comparison"
-            element={<SessionComparisonPage />}
+            path="/session/:sessionId/performance-comparison"
+            element={<SessionPerfComparisonPage />}
           />
         </Routes>
       </main>

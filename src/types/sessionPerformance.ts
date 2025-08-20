@@ -1,5 +1,5 @@
-// Session Analytics Types (from backend API)
-export interface SessionAnalytics {
+// Session Performance Types (from backend API)
+export interface SessionPerformance {
   session_id: string
   final_score: number
   total_turns: number
@@ -45,7 +45,7 @@ export interface SessionInsights {
   things_to_try_next: string[]
 }
 
-// Comparative Analytics Types
+// Comparative Performance Types
 export interface ScoreDistribution {
   score_range: string
   user_count: number

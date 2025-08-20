@@ -4,13 +4,16 @@ import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/authStore'
-import { AnalyticsAPI } from '@/services/analyticsApi'
-import { ScoreDistributionChart } from '@/components/analytics/charts/ScoreDistributionChart'
-import { RecommendationItem } from '@/components/analytics/insights/RecommendationItem'
+import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { ScoreDistributionChart } from '@/components/sessions/charts/ScoreDistributionChart'
+import { RecommendationItem } from '@/components/sessions/insights/RecommendationItem'
 import { calculateUserPercentile } from '@/utils/percentileCalculator'
-import type { SessionListItem, SessionAnalytics } from '@/types/analytics'
+import type {
+  SessionListItem,
+  SessionPerformance,
+} from '@/types/sessionPerformance'
 
-export const SessionComparisonPage = () => {
+export const SessionPerfComparisonPage = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
   const location = useLocation()
@@ -26,7 +29,9 @@ export const SessionComparisonPage = () => {
   // Get session data from navigation state
   const sessionData = location.state?.sessionData
 
-  const [analytics, setAnalytics] = useState<SessionAnalytics | null>(null)
+  const [performance, setPerformance] = useState<SessionPerformance | null>(
+    null
+  )
   const [currentSessionData, setCurrentSessionData] =
     useState<SessionListItem | null>(sessionData || null)
   const [isLoading, setIsLoading] = useState(true)
@@ -43,7 +48,7 @@ export const SessionComparisonPage = () => {
 
       // Check if user is authenticated
       if (!isAuthenticated && !authToken) {
-        setError('Please log in to view analytics')
+        setError('Please log in to view performance')
         setIsLoading(false)
         return
       }
@@ -52,16 +57,17 @@ export const SessionComparisonPage = () => {
       setError(null)
 
       try {
-        // Get session analytics which includes score_distribution
-        const analyticsResponse =
-          await AnalyticsAPI.getSessionAnalytics(sessionId)
+        // Get session performance which includes score_distribution
+        const performanceResponse =
+          await SessionPerformanceAPI.getSessionPerformance(sessionId)
 
-        if (analyticsResponse.success && analyticsResponse.data) {
-          setAnalytics(analyticsResponse.data)
+        if (performanceResponse.success && performanceResponse.data) {
+          setPerformance(performanceResponse.data)
 
           // If we don't have session data from navigation state, fetch it for display purposes
           if (!currentSessionData) {
-            const sessionResponse = await AnalyticsAPI.getSession(sessionId)
+            const sessionResponse =
+              await SessionPerformanceAPI.getSession(sessionId)
             if (
               sessionResponse.success &&
               sessionResponse.data &&
@@ -72,7 +78,7 @@ export const SessionComparisonPage = () => {
             }
           }
         } else {
-          setError('Session analytics not found')
+          setError('Session performance not found')
         }
       } catch {
         setError('Failed to load comparison data')
@@ -110,7 +116,7 @@ export const SessionComparisonPage = () => {
     )
   }
 
-  if (error || !analytics) {
+  if (error || !performance) {
     return (
       <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
         <div className="text-center">
@@ -131,24 +137,24 @@ export const SessionComparisonPage = () => {
   // Generic recommendations (placeholder until backend provides them)
   const recommendations = [
     {
-      category: t.analytics.neutralDescription,
-      description: t.analytics.neutralDescriptionDetail,
+      category: t.performance.neutralDescription,
+      description: t.performance.neutralDescriptionDetail,
     },
     {
-      category: t.analytics.expressEmotions,
-      description: t.analytics.expressEmotionsDetail,
+      category: t.performance.expressEmotions,
+      description: t.performance.expressEmotionsDetail,
     },
     {
-      category: t.analytics.clarifyNeeds,
-      description: t.analytics.clarifyNeedsDetail,
+      category: t.performance.clarifyNeeds,
+      description: t.performance.clarifyNeedsDetail,
     },
     {
-      category: t.analytics.positiveResponse,
-      description: t.analytics.positiveResponseDetail,
+      category: t.performance.positiveResponse,
+      description: t.performance.positiveResponseDetail,
     },
     {
-      category: t.analytics.understandNeeds,
-      description: t.analytics.understandNeedsDetail,
+      category: t.performance.understandNeeds,
+      description: t.performance.understandNeedsDetail,
     },
   ]
 
@@ -176,10 +182,10 @@ export const SessionComparisonPage = () => {
                 {currentScenario?.title ||
                   currentSessionData?.scenario_role?.scenario?.title ||
                   sessionData?.scenario_role?.scenario?.title ||
-                  t.analytics.performanceComparison}
+                  t.performance.performanceComparison}
               </h1>
               <p className="text-sm text-gray-600">
-                {t.analytics.compareWithOthers}
+                {t.performance.compareWithOthers}
               </p>
             </div>
           </div>
@@ -196,15 +202,15 @@ export const SessionComparisonPage = () => {
         {/* Score Distribution Chart */}
         <div className="bg-white rounded-xl p-4">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
-            {t.analytics.relativeToOthers}
+            {t.performance.relativeToOthers}
           </h2>
-          {analytics?.score_distribution &&
-          analytics.score_distribution.scores &&
-          Array.isArray(analytics.score_distribution.scores) &&
-          analytics.score_distribution.scores.length > 0 ? (
+          {performance?.score_distribution &&
+          performance.score_distribution.scores &&
+          Array.isArray(performance.score_distribution.scores) &&
+          performance.score_distribution.scores.length > 0 ? (
             (() => {
-              const userScore = analytics.final_score || 0
-              const distributionData = analytics.score_distribution
+              const userScore = performance.final_score || 0
+              const distributionData = performance.score_distribution
 
               // Transform the data to match ScoreDistributionChart expectations
               const chartDistribution = distributionData.scores.map(item => ({
@@ -227,7 +233,7 @@ export const SessionComparisonPage = () => {
                     userScore={userScore}
                   />
                   <p className="text-center text-sm text-gray-600 mt-3">
-                    {t.analytics.betterThanPercentage.replace(
+                    {t.performance.betterThanPercentage.replace(
                       '{percentage}',
                       percentileData.betterThanPercentage.toString()
                     )}

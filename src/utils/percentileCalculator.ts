@@ -1,4 +1,4 @@
-import type { ScoreDistribution } from '@/types/analytics'
+import type { ScoreDistribution } from '@/types/sessionPerformance'
 
 export function calculateUserPercentile(
   userScore: number,
@@ -17,7 +17,9 @@ export function calculateUserPercentile(
 
     // Handle both range format ("1-2") and single score format ("1")
     if (range.score_range.includes('-')) {
-      const [min, max] = range.score_range.split('-').map(s => parseInt(s.trim()))
+      const [min, max] = range.score_range
+        .split('-')
+        .map(s => parseInt(s.trim()))
       if (userScore < min) {
         continue
       } else if (userScore > max) {

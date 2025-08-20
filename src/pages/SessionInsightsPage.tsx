@@ -3,10 +3,13 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { AnalyticsAPI } from '@/services/analyticsApi'
-import { ConnectionScoreChart } from '@/components/analytics/charts/ConnectionScoreChart'
-import { InsightItem } from '@/components/analytics/insights/InsightItem'
-import type { SessionAnalytics, SessionInsights } from '@/types/analytics'
+import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { ConnectionScoreChart } from '@/components/sessions/charts/ConnectionScoreChart'
+import { InsightItem } from '@/components/sessions/insights/InsightItem'
+import type {
+  SessionPerformance,
+  SessionInsights,
+} from '@/types/sessionPerformance'
 
 export const SessionInsightsPage = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -19,7 +22,9 @@ export const SessionInsightsPage = () => {
   const sessionData = location.state?.sessionData
   const scenarioKey = location.state?.scenarioKey
 
-  const [analytics, setAnalytics] = useState<SessionAnalytics | null>(null)
+  const [performance, setPerformance] = useState<SessionPerformance | null>(
+    null
+  )
   const [insights, setInsights] = useState<SessionInsights | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -32,15 +37,17 @@ export const SessionInsightsPage = () => {
       setError(null)
 
       try {
-        const [analyticsResponse, insightsResponse] = await Promise.all([
-          AnalyticsAPI.getSessionAnalytics(sessionId),
-          AnalyticsAPI.getSessionInsights(sessionId),
+        const [performanceResponse, insightsResponse] = await Promise.all([
+          SessionPerformanceAPI.getSessionPerformance(sessionId),
+          SessionPerformanceAPI.getSessionInsights(sessionId),
         ])
 
-        if (analyticsResponse.success && analyticsResponse.data) {
-          setAnalytics(analyticsResponse.data)
-        } else if (!analyticsResponse.success) {
-          setError(analyticsResponse.error || 'Failed to load session analytics')
+        if (performanceResponse.success && performanceResponse.data) {
+          setPerformance(performanceResponse.data)
+        } else if (!performanceResponse.success) {
+          setError(
+            performanceResponse.error || 'Failed to load session performance'
+          )
           return
         }
 
@@ -65,7 +72,7 @@ export const SessionInsightsPage = () => {
   }
 
   const handleNext = () => {
-    navigate(`/session/${sessionId}/comparison`, {
+    navigate(`/session/${sessionId}/performance-comparison`, {
       state: {
         sessionData,
         scenarioKey,
@@ -121,10 +128,10 @@ export const SessionInsightsPage = () => {
             )}
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
-                {currentScenario?.title || t.analytics.sessionInsights}
+                {currentScenario?.title || t.sessions.sessionInsights}
               </h1>
               <p className="text-sm text-gray-600">
-                {t.analytics.conversationAnalysis}
+                {t.sessions.conversationAnalysis}
               </p>
             </div>
           </div>
@@ -141,16 +148,16 @@ export const SessionInsightsPage = () => {
         {/* Connection Score Chart */}
         <div className="bg-white rounded-xl p-4">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
-            {t.analytics.connectionProgression}
+            {t.performance.connectionProgression}
           </h2>
-          <ConnectionScoreChart analytics={analytics} />
+          <ConnectionScoreChart performance={performance} />
         </div>
 
         {/* What Went Well */}
         {insights?.what_went_well && insights.what_went_well.length > 0 && (
           <div className="bg-white rounded-xl p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              {t.analytics.whatWentWell}
+              {t.performance.whatWentWell}
             </h3>
             <div className="space-y-3">
               {insights.what_went_well.map((item, index) => (
@@ -169,7 +176,7 @@ export const SessionInsightsPage = () => {
         {insights?.key_moments && insights.key_moments.length > 0 && (
           <div className="bg-white rounded-xl p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              {t.analytics.keyMoments}
+              {t.performance.keyMoments}
             </h3>
             <div className="space-y-3">
               {insights.key_moments.map((item, index) => (
@@ -189,7 +196,7 @@ export const SessionInsightsPage = () => {
           insights.things_to_try_next.length > 0 && (
             <div className="bg-white rounded-xl p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {t.analytics.thingsToTryNext}
+                {t.performance.thingsToTryNext}
               </h3>
               <div className="space-y-3">
                 {insights.things_to_try_next.map((item, index) => (

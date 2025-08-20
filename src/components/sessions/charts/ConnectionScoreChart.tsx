@@ -2,26 +2,26 @@ import React from 'react'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { ChartDataPoint, SessionAnalytics } from '@/types/analytics'
+import { ChartDataPoint, SessionPerformance } from '@/types/sessionPerformance'
 
 interface ConnectionScoreChartProps {
-  analytics: SessionAnalytics | null
+  performance: SessionPerformance | null
 }
 
 export const ConnectionScoreChart = ({
-  analytics,
+  performance,
 }: ConnectionScoreChartProps) => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
   // Transform API data for Recharts
   const chartData: ChartDataPoint[] = React.useMemo(() => {
-    if (!analytics) return []
+    if (!performance) return []
 
     // Combine breakthrough and setback moments
     const allMoments = [
-      ...(analytics.breakthrough_moments || []),
-      ...(analytics.setback_moments || []),
+      ...(performance.breakthrough_moments || []),
+      ...(performance.setback_moments || []),
     ]
 
     // Sort by turn number
@@ -31,9 +31,9 @@ export const ConnectionScoreChart = ({
     const data: ChartDataPoint[] = []
 
     // First, collect all changes for each turn
-    const changes: number[] = new Array(analytics.total_turns).fill(0)
+    const changes: number[] = new Array(performance.total_turns).fill(0)
     allMoments.forEach(moment => {
-      if (moment.turn_number <= analytics.total_turns) {
+      if (moment.turn_number <= performance.total_turns) {
         changes[moment.turn_number - 1] = moment.connection_score_change
       }
     })
@@ -42,9 +42,9 @@ export const ConnectionScoreChart = ({
     const totalChanges = changes.reduce((sum, change) => sum + change, 0)
 
     // Starting score is final_score minus all changes
-    let runningScore = analytics.final_score - totalChanges
+    let runningScore = performance.final_score - totalChanges
 
-    for (let turn = 1; turn <= analytics.total_turns; turn++) {
+    for (let turn = 1; turn <= performance.total_turns; turn++) {
       const change = changes[turn - 1]
       runningScore += change
 
@@ -56,15 +56,15 @@ export const ConnectionScoreChart = ({
     }
 
     return data
-  }, [analytics])
+  }, [performance])
 
   // Show loading state if no data
-  if (!analytics || chartData.length === 0) {
+  if (!performance || chartData.length === 0) {
     return (
       <div className="h-48 w-full flex items-center justify-center">
         <div className="text-center">
           <div className="w-6 h-6 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-500">{t.analytics.loadingChart}</p>
+          <p className="text-sm text-gray-500">{t.performance.loadingChart}</p>
         </div>
       </div>
     )
@@ -83,7 +83,7 @@ export const ConnectionScoreChart = ({
             tickLine={false}
             tick={{ fontSize: 12, fill: '#9CA3AF' }}
             label={{
-              value: t.analytics.conversationTurns,
+              value: t.performance.conversationTurns,
               position: 'insideBottom',
               offset: -5,
               style: { textAnchor: 'middle', fontSize: 12, fill: '#6B7280' },
@@ -95,7 +95,7 @@ export const ConnectionScoreChart = ({
             tickLine={false}
             tick={false}
             label={{
-              value: t.analytics.relationshipStrength,
+              value: t.performance.relationshipStrength,
               angle: -90,
               position: 'insideLeft',
               style: { textAnchor: 'middle', fontSize: 12, fill: '#6B7280' },

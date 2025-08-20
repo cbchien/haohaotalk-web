@@ -10,7 +10,10 @@ import {
 } from 'recharts'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { ScoreDistribution, DistributionChartData } from '@/types/analytics'
+import {
+  ScoreDistribution,
+  DistributionChartData,
+} from '@/types/sessionPerformance'
 
 interface ScoreDistributionChartProps {
   distribution: ScoreDistribution[]
@@ -59,10 +62,16 @@ export const ScoreDistributionChart = ({
 
       if (!isNaN(scoreValue)) {
         // Convert score to percentage (0 to 100)
-        const percentage = ((scoreValue - SCORE_RANGE_MIN) / (SCORE_RANGE_MAX - SCORE_RANGE_MIN)) * 100
+        const percentage =
+          ((scoreValue - SCORE_RANGE_MIN) /
+            (SCORE_RANGE_MAX - SCORE_RANGE_MIN)) *
+          100
 
         // Find which bucket this percentage belongs to
-        const bucketIndex = Math.min(Math.floor(percentage / 10), BUCKET_COUNT - 1)
+        const bucketIndex = Math.min(
+          Math.floor(percentage / 10),
+          BUCKET_COUNT - 1
+        )
         const start = bucketIndex * 10
         const end = start + 10
         const bucketLabel = `${end}%`
@@ -70,7 +79,10 @@ export const ScoreDistributionChart = ({
         buckets[bucketLabel].count += item.user_count
 
         // Check if user's score falls in this bucket
-        const userPercentage = ((userScore - SCORE_RANGE_MIN) / (SCORE_RANGE_MAX - SCORE_RANGE_MIN)) * 100
+        const userPercentage =
+          ((userScore - SCORE_RANGE_MIN) /
+            (SCORE_RANGE_MAX - SCORE_RANGE_MIN)) *
+          100
         if (userPercentage >= start && userPercentage < end) {
           buckets[bucketLabel].isUserRange = true
         }
@@ -97,7 +109,7 @@ export const ScoreDistributionChart = ({
       <div className="h-32 w-full flex items-center justify-center">
         <div className="text-center">
           <div className="w-6 h-6 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-500">{t.analytics.loadingChart}</p>
+          <p className="text-sm text-gray-500">{t.performance.loadingChart}</p>
         </div>
       </div>
     )
@@ -116,10 +128,10 @@ export const ScoreDistributionChart = ({
       return (
         <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
           <p className="text-sm font-medium text-gray-900">
-            {t.analytics.scoreRange}: {label}
+            {t.performance.scoreRange}: {label}
           </p>
           <p className="text-sm text-blue-100">
-            {t.analytics.userCount}: {payload[0].value}%
+            {t.performance.userCount}: {payload[0].value}%
           </p>
         </div>
       )
@@ -142,7 +154,7 @@ export const ScoreDistributionChart = ({
             tick={{ fontSize: 10, fill: '#9CA3AF' }}
             interval={0}
             label={{
-              value: `${t.analytics.relationshipStrength} (%)`,
+              value: `${t.performance.relationshipStrength} (%)`,
               position: 'insideBottom',
               offset: -5,
               style: { textAnchor: 'middle', fontSize: 12, fill: '#6B7280' },

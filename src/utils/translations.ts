@@ -130,27 +130,31 @@ export interface Translations {
     }
   }
 
-  // Analytics
-  analytics: {
+  // Sessions
+  sessions: {
     sessionInsights: string
-    performanceComparison: string
     conversationAnalysis: string
+    completedSession: string
+    practiceSession: string
+    browseScenarios: string
+  }
+
+  // Performance
+  performance: {
+    performanceComparison: string
     connectionProgression: string
     relativeToOthers: string
     compareWithOthers: string
     betterThanPercentage: string
     loadingChart: string
-    completedSession: string
-    practiceSession: string
-    whatWentWell: string
-    keyMoments: string
-    thingsToTryNext: string
     conversationTurns: string
     relationshipStrength: string
     chartDataPreparing: string
-    browseScenarios: string
     scoreRange: string
     userCount: string
+    whatWentWell: string
+    keyMoments: string
+    thingsToTryNext: string
     neutralDescription: string
     neutralDescriptionDetail: string
     expressEmotions: string
@@ -290,26 +294,28 @@ export const translations: Record<Language, Translations> = {
         networkError: 'Network error. Please try again.',
       },
     },
-    analytics: {
+    sessions: {
       sessionInsights: 'Session Insights',
-      performanceComparison: 'Performance Comparison',
       conversationAnalysis: 'Conversation Analysis',
+      completedSession: 'Completed Session',
+      practiceSession: 'Practice Session',
+      browseScenarios: 'Browse Scenarios',
+    },
+    performance: {
+      performanceComparison: 'Performance Comparison',
       connectionProgression: 'Connection Progression',
       relativeToOthers: 'Relative to Others',
       compareWithOthers: 'Compare with Others',
       betterThanPercentage: 'Better than {percentage}% of users',
       loadingChart: 'Loading chart...',
-      completedSession: 'Completed Session',
-      practiceSession: 'Practice Session',
-      whatWentWell: 'What Went Well',
-      keyMoments: 'Key Moments',
-      thingsToTryNext: 'Things to Try Next',
       conversationTurns: 'Conversation Turns',
       relationshipStrength: 'Relationship Strength',
       chartDataPreparing: 'Chart data preparing',
-      browseScenarios: 'Browse Scenarios',
       scoreRange: 'Score Range',
       userCount: 'User Count',
+      whatWentWell: 'What Went Well',
+      keyMoments: 'Key Moments',
+      thingsToTryNext: 'Things to Try Next',
       neutralDescription: 'Use neutral descriptions instead of accusations',
       neutralDescriptionDetail:
         'Try: "When you ask what to do, I feel a bit lost because I waited for an hour" to reduce confrontational tone.',
@@ -321,10 +327,10 @@ export const translations: Record<Language, Translations> = {
         '"If you might be late next time, I hope you can let me know in advance so I can adjust my schedule and not feel rushed."',
       positiveResponse: 'Respond positively to build trust',
       positiveResponseDetail:
-        '"You willing to listen to me means a lot to me. I feel we had a good conversation."',
+        'Show understanding and willingness to work together on solutions.',
       understandNeeds: 'Understand underlying needs',
       understandNeedsDetail:
-        'Try to express core needs during conversation, e.g., "What I really care about is our mutual respect and trust."',
+        'Focus on what each person needs rather than what they did wrong.',
     },
     common: {
       goBack: 'Go Back',
@@ -440,26 +446,28 @@ export const translations: Record<Language, Translations> = {
         networkError: '網路錯誤，請稍後再試。',
       },
     },
-    analytics: {
+    sessions: {
       sessionInsights: '對話練習結果',
-      performanceComparison: '相對於其他練習的結果',
       conversationAnalysis: '對話分析',
+      completedSession: '已完成練習',
+      practiceSession: '練習會話',
+      browseScenarios: '探索情境',
+    },
+    performance: {
+      performanceComparison: '相對於其他練習的結果',
       connectionProgression: '對話中的距離',
       relativeToOthers: '相對於其他練習的結果',
       compareWithOthers: '與其他用戶比較',
       betterThanPercentage: '超過 {percentage}% 的用戶',
       loadingChart: '載入圖表中...',
-      completedSession: '已完成練習',
-      practiceSession: '練習會話',
-      whatWentWell: '做得很好的地方',
-      keyMoments: '關鍵時刻',
-      thingsToTryNext: '下次可以嘗試',
       conversationTurns: '對話回合',
       relationshipStrength: '關係強度',
       chartDataPreparing: '圖表數據準備中',
-      browseScenarios: '探索情境',
       scoreRange: '分數範圍',
       userCount: '用戶數量',
+      whatWentWell: '做得很好的地方',
+      keyMoments: '關鍵時刻',
+      thingsToTryNext: '下次可以嘗試',
       neutralDescription: '用中性描述取代情緒引爆詞',
       neutralDescriptionDetail:
         '可以改成：「你一來就問我要去吃什麼，我有點錯愕，因為我等了一個小時」來降低衝突感。',
@@ -470,11 +478,9 @@ export const translations: Record<Language, Translations> = {
       clarifyNeedsDetail:
         '「如果你下次可能會遲到，我希望你可以提前告訴我，這樣我可以自己調整安排，也不會這麼焦躁。」',
       positiveResponse: '適時肯定對方的回應，讓溝通形成正循環',
-      positiveResponseDetail:
-        '「你願意聽我說，對我來說真的很重要，我感覺我們有把話說開。」',
-      understandNeeds: '辨認「情緒背後的需求」',
-      understandNeedsDetail:
-        '在溝通時可以嘗試說出這些核心需求，例如：「我其實最在意的是我們有彼此的尊重和信任感」。',
+      positiveResponseDetail: '展現理解並願意共同尋找解決方案的態度。',
+      understandNeeds: '理解潛在需求',
+      understandNeedsDetail: '專注於每個人需要什麼，而不是他們做錯了什麼。',
     },
     common: {
       goBack: '返回',
