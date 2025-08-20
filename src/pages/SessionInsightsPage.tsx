@@ -1,15 +1,10 @@
-import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { useSessionInsightsData } from '@/hooks/useSessionQueries'
 import { ConnectionScoreChart } from '@/components/sessions/charts/ConnectionScoreChart'
 import { InsightItem } from '@/components/sessions/insights/InsightItem'
-import type {
-  SessionPerformance,
-  SessionInsights,
-} from '@/types/sessionPerformance'
 
 export const SessionInsightsPage = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -22,50 +17,9 @@ export const SessionInsightsPage = () => {
   const sessionData = location.state?.sessionData
   const scenarioKey = location.state?.scenarioKey
 
-  const [performance, setPerformance] = useState<SessionPerformance | null>(
-    null
-  )
-  const [insights, setInsights] = useState<SessionInsights | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!sessionId) return
-
-    const loadSessionData = async () => {
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        const [performanceResponse, insightsResponse] = await Promise.all([
-          SessionPerformanceAPI.getSessionPerformance(sessionId),
-          SessionPerformanceAPI.getSessionInsights(sessionId),
-        ])
-
-        if (performanceResponse.success && performanceResponse.data) {
-          setPerformance(performanceResponse.data)
-        } else if (!performanceResponse.success) {
-          setError(
-            performanceResponse.error || 'Failed to load session performance'
-          )
-          return
-        }
-
-        if (insightsResponse.success && insightsResponse.data) {
-          setInsights(insightsResponse.data)
-        } else if (!insightsResponse.success) {
-          setError(insightsResponse.error || 'Failed to load session insights')
-          return
-        }
-      } catch {
-        setError('Network error: Failed to load session data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadSessionData()
-  }, [sessionId])
+  // Use React Query for cached data fetching
+  const { performance, insights, isLoading, error, isError } =
+    useSessionInsightsData(sessionId)
 
   const handleBack = () => {
     navigate(-1)
@@ -91,11 +45,14 @@ export const SessionInsightsPage = () => {
     )
   }
 
-  if (error) {
+  // Show error state
+  if (isError || error) {
     return (
       <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-4">
+            {error?.message || 'Failed to load session data'}
+          </p>
           <button
             onClick={handleBack}
             className="px-4 py-2 bg-blue-100 text-white rounded-lg"
@@ -150,7 +107,7 @@ export const SessionInsightsPage = () => {
           <h2 className="text-center font-semibold mb-4 text-gray-900">
             {t.performance.connectionProgression}
           </h2>
-          <ConnectionScoreChart performance={performance} />
+          <ConnectionScoreChart performance={performance || null} />
         </div>
 
         {/* What Went Well */}

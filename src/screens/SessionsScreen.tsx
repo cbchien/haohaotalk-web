@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
-import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { useSessionsList } from '@/hooks/useSessionQueries'
 import type { SessionListItem } from '@/types/sessionPerformance'
 
 export const SessionsScreen = () => {
@@ -10,35 +9,8 @@ export const SessionsScreen = () => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
-  const [sessions, setSessions] = useState<SessionListItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const loadSessions = async () => {
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        const response = await SessionPerformanceAPI.getUserSessions({
-          limit: 20,
-        })
-        // eslint-disable-next-line no-console
-        console.log('Sessions API response:', response)
-        if (response.success && response.data) {
-          setSessions(response.data)
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to load sessions:', err)
-        setError('Failed to load session history')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadSessions()
-  }, [])
+  // Use React Query for cached sessions list
+  const { data: sessions = [], isLoading, error, isError } = useSessionsList(20)
 
   const handleSessionClick = (session: SessionListItem) => {
     navigate(`/session/${session.id}/insights`, {
@@ -91,9 +63,11 @@ export const SessionsScreen = () => {
       </div>
 
       <div className="p-4">
-        {error ? (
+        {isError || error ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 mb-4">{error}</p>
+            <p className="text-gray-600 mb-4">
+              {error?.message || 'Failed to load session history'}
+            </p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-100 text-white rounded-lg"

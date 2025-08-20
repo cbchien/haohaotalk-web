@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/authStore'
-import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { useSessionComparisonData } from '@/hooks/useSessionQueries'
 import { ScoreDistributionChart } from '@/components/sessions/charts/ScoreDistributionChart'
 import { RecommendationItem } from '@/components/sessions/insights/RecommendationItem'
 import { calculateUserPercentile } from '@/utils/percentileCalculator'
-import type {
-  SessionListItem,
-  SessionPerformance,
-} from '@/types/sessionPerformance'
 
 export const SessionPerfComparisonPage = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -29,73 +24,47 @@ export const SessionPerfComparisonPage = () => {
   // Get session data from navigation state
   const sessionData = location.state?.sessionData
 
-  const [performance, setPerformance] = useState<SessionPerformance | null>(
-    null
-  )
-  const [currentSessionData, setCurrentSessionData] =
-    useState<SessionListItem | null>(sessionData || null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // Use React Query for cached data fetching
+  const { performance, sessionDetail, isLoading, error, isError } =
+    useSessionComparisonData(sessionId, !sessionData)
 
-  useEffect(() => {
-    const loadComparisonData = async () => {
-      if (!sessionId) return
+  // Use session data from navigation state or fetched data
+  const currentSessionData = sessionData || sessionDetail
 
-      // Wait for auth to be fully initialized
-      if (authLoading || !isInitialized) {
-        return
-      }
+  // Handle auth-related loading and errors
+  const isAuthLoading = authLoading || !isInitialized
+  const isNotAuthenticated = !isAuthenticated && !authToken
 
-      // Check if user is authenticated
-      if (!isAuthenticated && !authToken) {
-        setError('Please log in to view performance')
-        setIsLoading(false)
-        return
-      }
+  // Show auth loading state
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">{t.common.loading}</p>
+        </div>
+      </div>
+    )
+  }
 
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        // Get session performance which includes score_distribution
-        const performanceResponse =
-          await SessionPerformanceAPI.getSessionPerformance(sessionId)
-
-        if (performanceResponse.success && performanceResponse.data) {
-          setPerformance(performanceResponse.data)
-
-          // If we don't have session data from navigation state, fetch it for display purposes
-          if (!currentSessionData) {
-            const sessionResponse =
-              await SessionPerformanceAPI.getSession(sessionId)
-            if (
-              sessionResponse.success &&
-              sessionResponse.data &&
-              Array.isArray(sessionResponse.data) &&
-              sessionResponse.data.length > 0
-            ) {
-              setCurrentSessionData(sessionResponse.data[0])
-            }
-          }
-        } else {
-          setError('Session performance not found')
-        }
-      } catch {
-        setError('Failed to load comparison data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadComparisonData()
-  }, [
-    sessionId,
-    currentSessionData,
-    authLoading,
-    isAuthenticated,
-    authToken,
-    isInitialized,
-  ])
+  // Show auth error
+  if (isNotAuthenticated) {
+    return (
+      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">
+            Please log in to view performance
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-4 py-2 bg-blue-100 text-white rounded-lg"
+          >
+            {t.common.goBack}
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const handleBack = () => {
     navigate(`/session/${sessionId}/insights`)
@@ -116,13 +85,43 @@ export const SessionPerfComparisonPage = () => {
     )
   }
 
-  if (error || !performance) {
+  // Show data loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">{t.common.loading}</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (isError || error) {
     return (
       <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-gray-600 mb-4">
-            {error || 'Comparison data not available'}
+            {error?.message || 'Comparison data not available'}
           </p>
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 bg-blue-100 text-white rounded-lg"
+          >
+            {t.common.goBack}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Show no data state
+  if (!performance) {
+    return (
+      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">No performance data available</p>
           <button
             onClick={handleBack}
             className="px-4 py-2 bg-blue-100 text-white rounded-lg"
