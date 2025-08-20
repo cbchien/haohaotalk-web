@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
+import { cacheInvalidation } from '@/utils/cacheKeys'
 import {
   scenariosApiService,
   sessionsApiService,
@@ -25,6 +27,7 @@ interface Message {
 export const ChatScreen = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const {
     currentLanguage,
     currentScenario,
@@ -256,6 +259,11 @@ export const ChatScreen = () => {
                   try {
                     await sessionsApiService.endSession(sessionId)
 
+                    // Invalidate sessions list cache to show the completed session
+                    queryClient.invalidateQueries({
+                      queryKey: cacheInvalidation.sessionsList(),
+                    })
+
                     // After successful API call, show end message
                     setMessages(prevMsgs => [
                       ...prevMsgs,
@@ -339,6 +347,11 @@ export const ChatScreen = () => {
 
     try {
       await sessionsApiService.endSession(sessionId)
+
+      // Invalidate sessions list cache to show the completed session
+      queryClient.invalidateQueries({
+        queryKey: cacheInvalidation.sessionsList(),
+      })
 
       setMessages(prev => [
         ...prev,
