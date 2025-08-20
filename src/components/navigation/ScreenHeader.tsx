@@ -3,6 +3,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 interface ScreenHeaderProps {
   title: string
   leftContent?: React.ReactNode
+  rightContent?: React.ReactNode
   onBack: () => void
   className?: string
 }
@@ -10,6 +11,7 @@ interface ScreenHeaderProps {
 export const ScreenHeader = ({
   title,
   leftContent,
+  rightContent,
   onBack,
   className = '',
 }: ScreenHeaderProps) => {
@@ -28,7 +30,9 @@ export const ScreenHeader = ({
 
         {leftContent && <div className="flex-shrink-0">{leftContent}</div>}
 
-        <h1 className="truncate">{title}</h1>
+        <h1 className="flex-1 truncate">{title}</h1>
+
+        {rightContent && <div className="flex-shrink-0">{rightContent}</div>}
       </div>
     </header>
   )

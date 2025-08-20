@@ -97,4 +97,35 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Chat-specific animations */
+  .animate-bounce-in {
+    animation: bounceIn 0.3s ease-out;
+  }
+
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Active scale animation */
+  .active\:scale-98:active {
+    transform: scale(0.98);
+  }
+
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
 }

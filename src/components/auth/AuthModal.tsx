@@ -165,7 +165,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
       // Send Google credential to backend
       const response = await authApiService.googleAuth({
-        credential: credential,
+        idToken: credential,
       })
 
       if (response.success && response.data) {

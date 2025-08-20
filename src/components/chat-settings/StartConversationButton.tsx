@@ -63,7 +63,7 @@ export const StartConversationButton = ({
     try {
       const response = await sessionsApiService.createSession({
         scenario_id: scenario.id,
-        role_id: selectedRole,
+        scenario_role_id: selectedRole,
         relationship_level: relationshipLevel,
         language: currentLanguage,
       })
@@ -100,7 +100,7 @@ export const StartConversationButton = ({
         className={`w-full py-3 rounded-2xl text-base font-semibold transition-all duration-200 ${
           disabled || isCreating
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-blue-500 text-white hover:bg-blue-600 active:scale-98'
+            : 'bg-blue-100 text-white hover:bg-blue-75 active:scale-98'
         }`}
       >
         {isCreating ? (

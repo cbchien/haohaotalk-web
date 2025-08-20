@@ -88,6 +88,55 @@ export interface Translations {
       serverError: string
     }
   }
+
+  // Chat Interface
+  chat: {
+    loading: string
+    conversation: string
+    connectionScore: string
+    scenarioContext: string
+    storyBackground: string
+    typeResponse: string
+    conversationComplete: string
+    conversationCompleteMessage: string
+    finalScore: string
+    turnsCompleted: string
+    viewDetailedResults: string
+    practiceAgain: string
+    backToHome: string
+    practiceSessionEnded: string
+    sessionEndError: string
+    endSessionEarly: string
+    endSessionConfirmTitle: string
+    endSessionConfirmMessage: string
+    endSessionConfirm: string
+    cancel: string
+
+    // Score messages
+    score: {
+      veryNegative: string
+      negative: string
+      neutral: string
+      positive: string
+      veryPositive: string
+    }
+
+    // Error messages
+    errors: {
+      sessionNotFound: string
+      loadingFailed: string
+      sendFailed: string
+      networkError: string
+    }
+  }
+
+  // Common
+  common: {
+    goBack: string
+    loading: string
+    error: string
+    retry: string
+  }
 }
 
 export const translations: Record<Language, Translations> = {
@@ -169,6 +218,50 @@ export const translations: Record<Language, Translations> = {
         serverError: 'Server error. Please try again in a moment.',
       },
     },
+    chat: {
+      loading: 'Loading conversation...',
+      conversation: 'Conversation',
+      connectionScore: 'Connection Score',
+      scenarioContext: 'This conversation simulates drama.',
+      storyBackground: 'Story Background:',
+      typeResponse: 'Type your response...',
+      conversationComplete: 'Conversation Complete!',
+      conversationCompleteMessage:
+        'Great job practicing your conversation skills!',
+      finalScore: 'Final Score',
+      turnsCompleted: 'turns completed',
+      viewDetailedResults: 'View Detailed Results',
+      practiceAgain: 'Practice Again',
+      backToHome: 'Back to Home',
+      practiceSessionEnded:
+        '🎉 Practice session complete! Saving your progress...',
+      sessionEndError: '⚠️ Session ended, but failed to save progress.',
+      endSessionEarly: 'End Session',
+      endSessionConfirmTitle: 'End Session Early?',
+      endSessionConfirmMessage:
+        'Are you sure you want to end this practice session?',
+      endSessionConfirm: 'End Session',
+      cancel: 'Cancel',
+      score: {
+        veryNegative: 'Relationship strained',
+        negative: 'Some tension present',
+        neutral: 'Neutral interaction',
+        positive: 'Building connection',
+        veryPositive: 'Strong connection',
+      },
+      errors: {
+        sessionNotFound: 'Session not found',
+        loadingFailed: 'Failed to load conversation',
+        sendFailed: 'Failed to send message',
+        networkError: 'Network error. Please try again.',
+      },
+    },
+    common: {
+      goBack: 'Go Back',
+      loading: 'Loading...',
+      error: 'Error',
+      retry: 'Retry',
+    },
   },
   zh: {
     navigation: {
@@ -240,6 +333,47 @@ export const translations: Record<Language, Translations> = {
         tooManySessions: '建立對話次數過多，請稍後再試。',
         serverError: '伺服器錯誤，請稍後再試。',
       },
+    },
+    chat: {
+      loading: '載入對話中...',
+      conversation: '對話',
+      connectionScore: '關係係',
+      scenarioContext: '本對話純屬模擬劇情。',
+      storyBackground: '故事背景：',
+      typeResponse: '輸入回覆...',
+      conversationComplete: '對話完成！',
+      conversationCompleteMessage: '很棒的對話練習！',
+      finalScore: '最終分數',
+      turnsCompleted: '回合完成',
+      viewDetailedResults: '查看詳細結果',
+      practiceAgain: '再次練習',
+      backToHome: '回到首頁',
+      practiceSessionEnded: '練習結束！',
+      sessionEndError: '練習結束，但保存進度失敗。',
+      endSessionEarly: '結束會話',
+      endSessionConfirmTitle: '提前結束會話？',
+      endSessionConfirmMessage: '確定要結束此練習會話嗎？',
+      endSessionConfirm: '結束會話',
+      cancel: '取消',
+      score: {
+        veryNegative: '關係緊張',
+        negative: '存在一些緊張',
+        neutral: '中性互動',
+        positive: '建立聯繫',
+        veryPositive: '深度連結',
+      },
+      errors: {
+        sessionNotFound: '找不到對話',
+        loadingFailed: '載入對話失敗',
+        sendFailed: '發送訊息失敗',
+        networkError: '網路錯誤，請稍後再試。',
+      },
+    },
+    common: {
+      goBack: '返回',
+      loading: '載入中...',
+      error: '錯誤',
+      retry: '重試',
     },
   },
 }

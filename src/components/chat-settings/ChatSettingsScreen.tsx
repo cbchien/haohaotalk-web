@@ -19,7 +19,13 @@ import { StartConversationButton } from './StartConversationButton'
 export const ChatSettingsScreen = () => {
   const { scenarioId } = useParams<{ scenarioId: string }>()
   const navigate = useNavigate()
-  const { currentLanguage } = useAppStore()
+  const {
+    currentLanguage,
+    setCurrentScenario: setGlobalScenario,
+    setAvailableRoles: setGlobalAvailableRoles,
+    setSelectedRole: setGlobalSelectedRole,
+    setRelationshipLevel: setGlobalRelationshipLevel,
+  } = useAppStore()
   const t = useTranslation(currentLanguage)
 
   const [scenario, setScenario] = useState<Scenario | null>(null)
@@ -36,7 +42,11 @@ export const ChatSettingsScreen = () => {
     window.scrollTo(0, 0)
 
     const loadScenario = async () => {
-      if (!scenarioId) return
+      if (!scenarioId) {
+        setError(t.chatSettings.errors.scenarioNotFound)
+        setIsLoading(false)
+        return
+      }
 
       setIsLoading(true)
       setError(null)
@@ -87,6 +97,11 @@ export const ChatSettingsScreen = () => {
               setRoles(rolesResponse.data)
               setSelectedRole(rolesResponse.data[0].id)
               setScenario(scenarioData) // Only set scenario if roles loaded successfully
+
+              // Store in global state
+              setGlobalScenario(scenarioData)
+              setGlobalAvailableRoles(rolesResponse.data)
+              setGlobalSelectedRole(rolesResponse.data[0])
             } else {
               // No roles available - this is a scenario error
               throw new Error('This scenario is not properly configured')
@@ -134,6 +149,20 @@ export const ChatSettingsScreen = () => {
 
   const handleBack = () => {
     navigate(-1)
+  }
+
+  const handleRoleSelect = (roleId: string) => {
+    setSelectedRole(roleId)
+    const roleData = roles.find(role => role.id === roleId)
+    if (roleData) {
+      setGlobalAvailableRoles(roles)
+      setGlobalSelectedRole(roleData)
+    }
+  }
+
+  const handleRelationshipLevelSelect = (level: 'low' | 'normal' | 'high') => {
+    setRelationshipLevel(level)
+    setGlobalRelationshipLevel(level)
   }
 
   if (isLoading) {
@@ -188,13 +217,13 @@ export const ChatSettingsScreen = () => {
         <RoleSelector
           roles={roles}
           selectedRole={selectedRole}
-          onRoleSelect={setSelectedRole}
+          onRoleSelect={handleRoleSelect}
           language={currentLanguage}
         />
 
         <RelationshipSelector
           selectedLevel={relationshipLevel}
-          onLevelSelect={setRelationshipLevel}
+          onLevelSelect={handleRelationshipLevelSelect}
           language={currentLanguage}
         />
 
@@ -204,7 +233,8 @@ export const ChatSettingsScreen = () => {
           relationshipLevel={relationshipLevel}
           disabled={!selectedRole}
           onSessionCreated={sessionId => {
-            navigate(`/chat/${sessionId}`)
+            // Navigate to chat - data is now in global state
+            navigate(`/session/${sessionId}/chat`)
           }}
         />
       </div>

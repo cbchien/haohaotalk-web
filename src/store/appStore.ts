@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { Scenario, ChatSession } from './types'
+import { ChatSession } from './types'
+import type { Scenario, ScenarioRole } from '@/services'
 
 interface AppState {
   // UI State
@@ -16,6 +17,12 @@ interface AppState {
   activeSession: ChatSession | null
   isLoadingSession: boolean
 
+  // Session Configuration (for chat setup)
+  currentScenario: Scenario | null
+  availableRoles: ScenarioRole[]
+  selectedRole: ScenarioRole | null
+  relationshipLevel: 'low' | 'normal' | 'high'
+
   // Search & Filters
   searchQuery: string
   selectedCategories: string[]
@@ -30,6 +37,17 @@ interface AppState {
   setScenariosLoading: (loading: boolean) => void
   setActiveSession: (session: ChatSession | null) => void
   setSessionLoading: (loading: boolean) => void
+  setCurrentScenario: (scenario: Scenario | null) => void
+  setAvailableRoles: (roles: ScenarioRole[]) => void
+  setSelectedRole: (role: ScenarioRole | null) => void
+  setRelationshipLevel: (level: 'low' | 'normal' | 'high') => void
+  clearSessionConfiguration: () => void
+  setSessionConfiguration: (
+    scenario: Scenario,
+    roles: ScenarioRole[],
+    role: ScenarioRole,
+    relationshipLevel: 'low' | 'normal' | 'high'
+  ) => void
   setSearchQuery: (query: string) => void
   setSelectedCategories: (categories: string[]) => void
   setSelectedDifficulty: (difficulty: string[]) => void
@@ -46,6 +64,10 @@ export const useAppStore = create<AppState>()(set => ({
   isLoadingScenarios: false,
   activeSession: null,
   isLoadingSession: false,
+  currentScenario: null,
+  availableRoles: [],
+  selectedRole: null,
+  relationshipLevel: 'normal',
   searchQuery: '',
   selectedCategories: [],
   selectedDifficulty: [],
@@ -59,6 +81,24 @@ export const useAppStore = create<AppState>()(set => ({
   setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
   setActiveSession: session => set({ activeSession: session }),
   setSessionLoading: loading => set({ isLoadingSession: loading }),
+  setCurrentScenario: scenario => set({ currentScenario: scenario }),
+  setAvailableRoles: roles => set({ availableRoles: roles }),
+  setSelectedRole: role => set({ selectedRole: role }),
+  setRelationshipLevel: level => set({ relationshipLevel: level }),
+  clearSessionConfiguration: () =>
+    set({
+      currentScenario: null,
+      availableRoles: [],
+      selectedRole: null,
+      relationshipLevel: 'normal',
+    }),
+  setSessionConfiguration: (scenario, roles, role, relationshipLevel) =>
+    set({
+      currentScenario: scenario,
+      availableRoles: roles,
+      selectedRole: role,
+      relationshipLevel,
+    }),
   setSearchQuery: query => set({ searchQuery: query }),
   setSelectedCategories: categories => set({ selectedCategories: categories }),
   setSelectedDifficulty: difficulty => set({ selectedDifficulty: difficulty }),

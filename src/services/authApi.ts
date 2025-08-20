@@ -22,7 +22,7 @@ export interface AuthResponse {
 }
 
 export interface GoogleAuthData {
-  credential: string
+  idToken: string
 }
 
 class AuthApiService {

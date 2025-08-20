@@ -1,0 +1,120 @@
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from '@/utils/translations'
+import { useAppStore } from '@/store'
+import type { Session } from '@/services'
+
+interface CompletionModalProps {
+  session: Session
+  finalScore: number
+  onClose: () => void
+  onViewResults: () => void
+}
+
+export const CompletionModal = ({
+  session,
+  finalScore,
+  onClose,
+  onViewResults,
+}: CompletionModalProps) => {
+  const navigate = useNavigate()
+  const { currentLanguage, currentScenario } = useAppStore()
+  const t = useTranslation(currentLanguage)
+
+  // Convert score from -5/+5 range to percentage
+  const scorePercentage = Math.max(
+    0,
+    Math.min(100, ((finalScore + 5) / 10) * 100)
+  )
+
+  const handleViewResults = () => {
+    onViewResults()
+  }
+
+  const handleTryAgain = () => {
+    onClose()
+    // Use global scenario state first, fallback to session data
+    const scenarioId = currentScenario?.id || session.scenario_id
+    if (scenarioId) {
+      navigate(`/scenario/${scenarioId}/configure`)
+    } else {
+      navigate('/')
+    }
+  }
+
+  const handleBackToHome = () => {
+    onClose()
+    navigate('/')
+  }
+
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose()
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      onClick={handleOverlayClick}
+    >
+      <div className="bg-white rounded-2xl p-6 max-w-sm w-full animate-bounce-in relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+        >
+          <span className="text-lg">×</span>
+        </button>
+
+        <div className="text-center">
+          {/* Celebration emoji */}
+          <div className="text-6xl mb-4">🎉</div>
+
+          {/* Title */}
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            {t.chat.conversationComplete}
+          </h2>
+
+          {/* Message */}
+          <p className="text-gray-600 mb-6">
+            {t.chat.conversationCompleteMessage}
+          </p>
+
+          {/* Final score display */}
+          <div className="bg-blue-10 rounded-xl p-4 mb-6">
+            <div className="text-sm text-gray-600 mb-1">
+              {t.chat.finalScore}
+            </div>
+            <div className="text-2xl font-bold text-blue-100">
+              {Math.round(scorePercentage)}%
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="space-y-3">
+            <button
+              onClick={handleViewResults}
+              className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-500 transition-colors"
+            >
+              {t.chat.viewDetailedResults}
+            </button>
+
+            <button
+              onClick={handleTryAgain}
+              className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              {t.chat.practiceAgain}
+            </button>
+
+            <button
+              onClick={handleBackToHome}
+              className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
+            >
+              {t.chat.backToHome}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

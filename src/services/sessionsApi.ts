@@ -2,7 +2,7 @@ import { apiClient, ApiResponse } from './api'
 
 export interface CreateSessionData {
   scenario_id: string
-  role_id: string
+  scenario_role_id: string
   relationship_level?: 'low' | 'normal' | 'high'
   language: 'en' | 'zh'
 }
@@ -15,12 +15,17 @@ export interface Session {
   language: 'en' | 'zh'
   status: 'active' | 'completed' | 'abandoned'
   turns_count: number
+  connection_score?: number
+  is_completed?: boolean
+  max_turns?: number
+  current_turn?: number
   rating?: number
   feedback?: string
   started_at: string
   completed_at?: string
   created_at: string
   updated_at: string
+  turns?: ConversationTurn[]
 }
 
 export interface ConversationTurn {
@@ -30,18 +35,26 @@ export interface ConversationTurn {
   user_message: string
   ai_response: string
   ai_feedback?: string
+  character_emotion?: 'neutral' | 'happy' | 'concerned' | 'frustrated'
+  score_change?: number
   created_at: string
 }
 
 export interface CreateTurnData {
   user_message: string
+  language?: 'en' | 'zh'
 }
 
 export interface CreateTurnResponse {
   turn: ConversationTurn
-  ai_response: string
-  ai_feedback?: string
-  session_status: Session['status']
+  session: {
+    connection_score: number
+    current_turn: number
+    max_turns: number
+    is_completed: boolean
+    completion_reason?: 'max_turns' | 'manual' | 'objective_achieved'
+  }
+  session_completed?: boolean
 }
 
 export interface RateSessionData {
@@ -105,6 +118,17 @@ class SessionsApiService {
       `sessions/${sessionId}/turns`,
       data
     )
+  }
+
+  async submitTurn(
+    sessionId: string,
+    data: CreateTurnData
+  ): Promise<ApiResponse<CreateTurnResponse>> {
+    return this.createTurn(sessionId, data)
+  }
+
+  async endSession(sessionId: string): Promise<ApiResponse<Session>> {
+    return apiClient.post<Session>(`sessions/${sessionId}/end`, {})
   }
 
   async rateSession(
