@@ -13,12 +13,14 @@ import { AnalyticsScreen } from './screens/AnalyticsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { ChatSettingsScreen } from './components/chat-settings'
 import { ChatScreen } from './components/chat'
+import { SessionInsightsPage } from './pages/SessionInsightsPage'
+import { SessionComparisonPage } from './pages/SessionComparisonPage'
 import { useAuthStore } from './store'
 
 function AppContent() {
   const location = useLocation()
 
-  // Hide bottom navigation on chat routes (focused session)
+  // Hide bottom navigation on fullscreen routes (chat and analytics)
   const hiddenBottomNavRoutes = ['/session/', '/chat']
   const hideBottomNav = hiddenBottomNavRoutes.some(route =>
     location.pathname.includes(route)
@@ -31,13 +33,21 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/search" element={<SearchScreen />} />
-          <Route path="/analytics" element={<AnalyticsScreen />} />
+          <Route path="/sessions" element={<AnalyticsScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
           <Route
             path="/scenario/:scenarioId/configure"
             element={<ChatSettingsScreen />}
           />
           <Route path="/session/:sessionId/chat" element={<ChatScreen />} />
+          <Route
+            path="/session/:sessionId/insights"
+            element={<SessionInsightsPage />}
+          />
+          <Route
+            path="/session/:sessionId/comparison"
+            element={<SessionComparisonPage />}
+          />
         </Routes>
       </main>
 

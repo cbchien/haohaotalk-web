@@ -118,31 +118,38 @@ export const ChatScreen = () => {
             response.data.turns.length > 0
           ) {
             const messageHistory: Message[] = []
-            response.data.turns.forEach((turn: {
-              id: string;
-              user_message: string;
-              ai_response: string;
-              character_emotion?: string;
-              created_at: string;
-            }) => {
-              if (turn.user_message) {
-                messageHistory.push({
-                  id: `${turn.id}-user`,
-                  content: turn.user_message,
-                  type: 'user',
-                  timestamp: new Date(turn.created_at),
-                })
+            response.data.turns.forEach(
+              (turn: {
+                id: string
+                user_message: string
+                ai_response: string
+                character_emotion?: string
+                created_at: string
+              }) => {
+                if (turn.user_message) {
+                  messageHistory.push({
+                    id: `${turn.id}-user`,
+                    content: turn.user_message,
+                    type: 'user',
+                    timestamp: new Date(turn.created_at),
+                  })
+                }
+                if (turn.ai_response) {
+                  messageHistory.push({
+                    id: `${turn.id}-ai`,
+                    content: turn.ai_response,
+                    type: 'character',
+                    timestamp: new Date(turn.created_at),
+                    character_emotion:
+                      (turn.character_emotion as
+                        | 'neutral'
+                        | 'happy'
+                        | 'concerned'
+                        | 'frustrated') || 'neutral',
+                  })
+                }
               }
-              if (turn.ai_response) {
-                messageHistory.push({
-                  id: `${turn.id}-ai`,
-                  content: turn.ai_response,
-                  type: 'character',
-                  timestamp: new Date(turn.created_at),
-                  character_emotion: (turn.character_emotion as 'neutral' | 'happy' | 'concerned' | 'frustrated') || 'neutral',
-                })
-              }
-            })
+            )
             // Replace messages with history (no initial message needed if there's existing conversation)
             setMessages(messageHistory)
           }
@@ -202,7 +209,9 @@ export const ChatScreen = () => {
         if (updatedSession) {
           setConnectionScore(updatedSession.connection_score || 0)
           // Update the existing session with new data
-          setSession(prevSession => prevSession ? { ...prevSession, ...updatedSession } : null)
+          setSession(prevSession =>
+            prevSession ? { ...prevSession, ...updatedSession } : null
+          )
         }
 
         // Add AI response and check completion after messages are updated
@@ -315,15 +324,6 @@ export const ChatScreen = () => {
 
   const handleBack = () => {
     navigate('/')
-  }
-
-  const handleSessionComplete = () => {
-    setShowCompletion(false)
-    if (sessionId) {
-      navigate(`/session/${sessionId}/results`)
-    } else {
-      navigate('/')
-    }
   }
 
   const handleEndSessionEarly = () => {
@@ -448,7 +448,12 @@ export const ChatScreen = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
         <MessageInput
           onSend={handleSendMessage}
-          disabled={isTyping || showCompletion || isEndingSession || session?.is_completed}
+          disabled={
+            isTyping ||
+            showCompletion ||
+            isEndingSession ||
+            session?.is_completed
+          }
         />
       </div>
 
@@ -457,7 +462,6 @@ export const ChatScreen = () => {
           session={session}
           finalScore={connectionScore}
           onClose={() => setShowCompletion(false)}
-          onViewResults={handleSessionComplete}
         />
       )}
 

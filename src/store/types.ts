@@ -11,6 +11,7 @@ export interface User {
 
 export interface Scenario {
   id: string
+  key: string
   title: string
   title_zh: string
   description: string
@@ -19,6 +20,8 @@ export interface Scenario {
   difficulty: 'easy' | 'medium' | 'hard'
   estimated_duration: number
   illustration: string
+  image_url?: string
+  context?: string
   is_popular: boolean
   created_at: string
 }

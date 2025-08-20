@@ -7,14 +7,12 @@ interface CompletionModalProps {
   session: Session
   finalScore: number
   onClose: () => void
-  onViewResults: () => void
 }
 
 export const CompletionModal = ({
   session,
   finalScore,
   onClose,
-  onViewResults,
 }: CompletionModalProps) => {
   const navigate = useNavigate()
   const { currentLanguage, currentScenario } = useAppStore()
@@ -27,7 +25,8 @@ export const CompletionModal = ({
   )
 
   const handleViewResults = () => {
-    onViewResults()
+    onClose()
+    navigate(`/session/${session.id}/insights`)
   }
 
   const handleTryAgain = () => {

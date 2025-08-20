@@ -38,8 +38,8 @@ const tabs: TabItem[] = [
     iconActive: MagnifyingGlassIconSolid,
   },
   {
-    id: 'analytics',
-    path: '/analytics',
+    id: 'sessions',
+    path: '/sessions',
     labelKey: 'progress',
     icon: ChartBarIcon,
     iconActive: ChartBarIconSolid,

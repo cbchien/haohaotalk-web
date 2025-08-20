@@ -8,6 +8,7 @@ interface AuthState {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
+  isInitialized: boolean
   authToken: string | null
 
   // Actions
@@ -25,6 +26,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isInitialized: false,
       authToken: null,
 
       setUser: (user, token) => {
@@ -89,7 +91,10 @@ export const useAuthStore = create<AuthState>()(
 
       initializeAuth: async () => {
         const { authToken } = get()
-        if (!authToken) return
+        if (!authToken) {
+          set({ isInitialized: true })
+          return
+        }
 
         try {
           apiClient.setAuthToken(authToken)
@@ -99,15 +104,18 @@ export const useAuthStore = create<AuthState>()(
             set({
               user: response.data,
               isAuthenticated: true,
+              isInitialized: true,
             })
           } else {
             // Token is invalid, clear auth state
             get().clearUser()
+            set({ isInitialized: true })
           }
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error('Failed to initialize auth:', error)
           get().clearUser()
+          set({ isInitialized: true })
         }
       },
     }),

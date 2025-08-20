@@ -32,3 +32,5 @@ export type {
 
 export { googleAuthService } from './googleAuth'
 export type { GoogleUser } from './googleAuth'
+
+export { AnalyticsAPI } from './analyticsApi'
