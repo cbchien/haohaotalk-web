@@ -88,6 +88,15 @@ export const ScenarioGrid = () => {
                 <span className="px-2 py-1 bg-green-10 text-green-100 text-xs rounded-full border">
                   {scenario.difficulty_level}
                 </span>
+                {scenario.tags &&
+                  scenario.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full border"
+                    >
+                      {tag}
+                    </span>
+                  ))}
               </div>
 
               {/* Practice Count - positioned at bottom right */}
