@@ -28,13 +28,30 @@ export const cacheKeys = {
     auth: ['user', 'auth'] as const,
   },
 
-  // Scenarios related queries (for future use)
+  // Scenarios related queries
   scenarios: {
     // All scenarios: ['scenarios']
     list: ['scenarios'] as const,
 
     // Single scenario: ['scenarios', scenarioId]
     detail: (scenarioId: string) => ['scenarios', scenarioId] as const,
+
+    // Popular scenarios: ['scenarios', 'popular', language]
+    popular: (language: string) => ['scenarios', 'popular', language] as const,
+
+    // Search results: ['scenarios', 'search', query, language]
+    search: (query: string, language: string) =>
+      ['scenarios', 'search', query, language] as const,
+
+    // Tag filtered scenarios: ['scenarios', 'tag', tagName, language]
+    tag: (tagName: string, language: string) =>
+      ['scenarios', 'tag', tagName, language] as const,
+  },
+
+  // Tags related queries
+  tags: {
+    // All tags: ['tags']
+    list: ['tags'] as const,
   },
 } as const
 

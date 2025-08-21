@@ -101,9 +101,9 @@ export const ScenarioGrid = () => {
 
               {/* Context/Description */}
               <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                {scenario.context.length > CONTEXT_DISPLAY_CHARACTER_COUNT
+                {scenario.context && scenario.context.length > CONTEXT_DISPLAY_CHARACTER_COUNT
                   ? `${scenario.context.substring(0, CONTEXT_DISPLAY_CHARACTER_COUNT)}...`
-                  : scenario.context}
+                  : scenario.context || scenario.description}
               </p>
 
               {/* Tags */}
