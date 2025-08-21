@@ -46,6 +46,10 @@ export const cacheKeys = {
     // Tag filtered scenarios: ['scenarios', 'tag', tagName, language]
     tag: (tagName: string, language: string) =>
       ['scenarios', 'tag', tagName, language] as const,
+
+    // Home page scenarios by category: ['scenarios', 'home', category, language]
+    home: (category: string | undefined, language: string) =>
+      ['scenarios', 'home', category || 'featured', language] as const,
   },
 
   // Tags related queries

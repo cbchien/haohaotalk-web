@@ -1,50 +1,23 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { useAppStore } from '@/store'
-import { scenariosApiService, Scenario } from '@/services'
+import type { Scenario } from '@/services'
 import { useTranslation } from '@/utils/translations'
+import { useHomeScenarios } from '@/hooks/useHomeQueries'
 
 const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 
 export const ScenarioGrid = () => {
   const navigate = useNavigate()
   const { selectedCategories, currentLanguage } = useAppStore()
-  const [scenarios, setScenarios] = useState<Scenario[]>([])
-  const [loading, setLoading] = useState(false)
   const t = useTranslation(currentLanguage)
 
-  useEffect(() => {
-    const fetchScenarios = async () => {
-      setLoading(true)
-      try {
-        const category =
-          selectedCategories.length > 0 ? selectedCategories[0] : undefined
+  const category =
+    selectedCategories.length > 0 ? selectedCategories[0] : undefined
+  const scenariosQuery = useHomeScenarios(category, currentLanguage)
 
-        const response = await scenariosApiService.getScenarios({
-          category: category === 'featured' ? undefined : category,
-          language: currentLanguage,
-          limit: 20,
-        })
-
-        if (response.success && response.data) {
-          setScenarios(response.data)
-        } else {
-          // eslint-disable-next-line no-console
-          console.error('Failed to fetch scenarios:', response.error)
-          setScenarios([])
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching scenarios:', error)
-        setScenarios([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchScenarios()
-  }, [selectedCategories, currentLanguage])
+  const scenarios = scenariosQuery.data || []
+  const loading = scenariosQuery.isLoading
 
   const handleScenarioClick = (scenario: Scenario) => {
     navigate(`/scenario/${scenario.id}/configure`)
@@ -101,7 +74,8 @@ export const ScenarioGrid = () => {
 
               {/* Context/Description */}
               <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                {scenario.context && scenario.context.length > CONTEXT_DISPLAY_CHARACTER_COUNT
+                {scenario.context &&
+                scenario.context.length > CONTEXT_DISPLAY_CHARACTER_COUNT
                   ? `${scenario.context.substring(0, CONTEXT_DISPLAY_CHARACTER_COUNT)}...`
                   : scenario.context || scenario.description}
               </p>
