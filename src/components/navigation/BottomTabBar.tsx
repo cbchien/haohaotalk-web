@@ -58,6 +58,10 @@ export const BottomTabBar = () => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
+  const handleTabClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe">
       <div className="flex items-center justify-around h-16">
@@ -72,6 +76,7 @@ export const BottomTabBar = () => {
             <NavLink
               key={tab.id}
               to={tab.path}
+              onClick={handleTabClick}
               className={({ isActive }) => `
                 flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-1 
                 transition-all duration-300 ease-out transform
