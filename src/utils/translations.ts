@@ -15,6 +15,17 @@ export interface Translations {
     noScenariosAvailable: string
   }
 
+  // Search
+  search: {
+    placeholder: string
+    popularScenarios: string
+    resultsFor: string
+    taggedAs: string
+    noResultsFound: string
+    noResultsDescription: string
+    noResultsDescriptionTag: string
+  }
+
   // Authentication
   auth: {
     displayName: string
@@ -189,6 +200,16 @@ export const translations: Record<Language, Translations> = {
       loading: 'Loading scenarios...',
       noScenariosAvailable: 'No scenarios available',
     },
+    search: {
+      placeholder: 'Search scenarios...',
+      popularScenarios: 'Popular Scenarios',
+      resultsFor: 'Results for',
+      taggedAs: 'Tagged:',
+      noResultsFound: 'No scenarios found',
+      noResultsDescription:
+        'Try different keywords or browse popular scenarios',
+      noResultsDescriptionTag: 'No scenarios available for this tag',
+    },
     auth: {
       displayName: 'Display Name',
       email: 'Email',
@@ -350,6 +371,15 @@ export const translations: Record<Language, Translations> = {
     scenarios: {
       loading: '載入情境中...',
       noScenariosAvailable: '沒有可用的情境',
+    },
+    search: {
+      placeholder: '搜尋情境...',
+      popularScenarios: '熱門情境',
+      resultsFor: '搜尋結果',
+      taggedAs: '標籤:',
+      noResultsFound: '找不到情境',
+      noResultsDescription: '嘗試不同關鍵字或瀏覽熱門情境',
+      noResultsDescriptionTag: '此標籤沒有可用的情境',
     },
     auth: {
       displayName: '顯示名稱',

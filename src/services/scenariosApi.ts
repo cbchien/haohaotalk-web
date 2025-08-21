@@ -2,8 +2,10 @@ import { apiClient, ApiResponse } from './api'
 
 export interface ScenarioTag {
   id: string
-  name: string
-  name_en: string
+  en_name: string
+  zh_name: string
+  description: string
+  created_at: string
 }
 
 export interface Scenario {
@@ -15,7 +17,7 @@ export interface Scenario {
   difficulty: 'easy' | 'medium' | 'hard'
   max_turns: number
   estimated_duration_minutes: number
-  tags: ScenarioTag[]
+  tags: string[]
   is_active: boolean
   practice_count: number
   created_at: string
@@ -47,6 +49,9 @@ export interface ScenariosListParams {
   page?: number
   limit?: number
   language?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+  tags?: string
 }
 
 export interface ScenariosListResponse {
@@ -69,6 +74,9 @@ class ScenariosApiService {
     if (params.page) searchParams.append('page', params.page.toString())
     if (params.limit) searchParams.append('limit', params.limit.toString())
     if (params.language) searchParams.append('language', params.language)
+    if (params.sortBy) searchParams.append('sortBy', params.sortBy)
+    if (params.sortOrder) searchParams.append('sortOrder', params.sortOrder)
+    if (params.tags) searchParams.append('tags', params.tags)
 
     const endpoint = searchParams.toString()
       ? `scenarios?${searchParams.toString()}`
@@ -138,6 +146,10 @@ class ScenariosApiService {
     if (language) params.append('language', language)
 
     return apiClient.get<Scenario[]>(`scenarios?${params.toString()}`)
+  }
+
+  async getTags(): Promise<ApiResponse<ScenarioTag[]>> {
+    return apiClient.get<ScenarioTag[]>('tags')
   }
 }
 
