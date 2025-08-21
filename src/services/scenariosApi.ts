@@ -1,20 +1,32 @@
 import { apiClient, ApiResponse } from './api'
 
+export interface ScenarioTag {
+  id: string
+  name: string
+  name_en: string
+}
+
 export interface Scenario {
   id: string
-  title: string
-  category: string
-  context: string
-  objective: string
-  difficulty_level: 'easy' | 'medium' | 'hard'
-  language: string
-  max_turns: number
-  practice_count: number
   scenario_key: string
-  display_order: number
-  image_url: string | null
+  title: string
+  description: string
+  category: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  max_turns: number
+  estimated_duration_minutes: number
+  tags: ScenarioTag[]
   is_active: boolean
+  practice_count: number
   created_at: string
+  updated_at: string
+  // Legacy fields for backward compatibility
+  context?: string
+  objective?: string
+  difficulty_level?: 'easy' | 'medium' | 'hard'
+  language?: string
+  display_order?: number
+  image_url?: string | null
 }
 
 export interface ScenarioRole {
