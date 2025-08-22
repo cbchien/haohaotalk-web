@@ -45,6 +45,11 @@ export const useAuthStore = create<AuthState>()(
             authToken: token || get().authToken,
             authLoadingType: null,
           })
+
+          // Navigate to home tab after login
+          if (typeof window !== 'undefined') {
+            window.location.pathname = '/'
+          }
         },
 
         clearUser: () => {
@@ -83,6 +88,11 @@ export const useAuthStore = create<AuthState>()(
             authToken: null,
             authLoadingType: null,
           })
+
+          // Navigate to home tab after logout
+          if (typeof window !== 'undefined') {
+            window.location.pathname = '/'
+          }
         },
 
         setLoading: loading => set({ isLoading: loading }),
