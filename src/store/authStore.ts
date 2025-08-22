@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, devtools } from 'zustand/middleware'
 import { User } from './types'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService, apiClient } from '@/services'
@@ -21,8 +21,9 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
+  devtools(
+    persist(
+      (set, get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -118,25 +119,29 @@ export const useAuthStore = create<AuthState>()(
           set({ isInitialized: true })
         }
       },
-    }),
-    {
-      name: 'haohaotalk-auth',
-      partialize: state => {
-        // Only persist registered users, not guest users
-        // Guest sessions should start fresh each browser session
-        if (state.user?.isGuest) {
-          return {
-            user: null,
-            isAuthenticated: false,
-            authToken: null,
+      }),
+      {
+        name: 'haohaotalk-auth',
+        partialize: state => {
+          // Only persist registered users, not guest users
+          // Guest sessions should start fresh each browser session
+          if (state.user?.isGuest) {
+            return {
+              user: null,
+              isAuthenticated: false,
+              authToken: null,
+            }
           }
-        }
-        return {
-          user: state.user,
-          isAuthenticated: state.isAuthenticated,
-          authToken: state.authToken,
-        }
-      },
+          return {
+            user: state.user,
+            isAuthenticated: state.isAuthenticated,
+            authToken: state.authToken,
+          }
+        },
+      }
+    ),
+    {
+      name: 'AuthStore',
     }
   )
 )

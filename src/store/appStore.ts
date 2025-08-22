@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 import { ChatSession } from './types'
 import type { Scenario, ScenarioRole } from '@/services'
 
@@ -54,58 +55,65 @@ interface AppState {
   clearFilters: () => void
 }
 
-export const useAppStore = create<AppState>()(set => ({
-  // Initial state
-  currentLanguage: 'zh',
-  isOffline: false,
-  scenarios: [],
-  popularScenarios: [],
-  featuredScenarios: [],
-  isLoadingScenarios: false,
-  activeSession: null,
-  isLoadingSession: false,
-  currentScenario: null,
-  availableRoles: [],
-  selectedRole: null,
-  relationshipLevel: 'normal',
-  searchQuery: '',
-  selectedCategories: [],
-  selectedDifficulty: [],
-
-  // Actions
-  setLanguage: language => set({ currentLanguage: language }),
-  setOfflineStatus: isOffline => set({ isOffline }),
-  setScenarios: scenarios => set({ scenarios }),
-  setPopularScenarios: scenarios => set({ popularScenarios: scenarios }),
-  setFeaturedScenarios: scenarios => set({ featuredScenarios: scenarios }),
-  setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
-  setActiveSession: session => set({ activeSession: session }),
-  setSessionLoading: loading => set({ isLoadingSession: loading }),
-  setCurrentScenario: scenario => set({ currentScenario: scenario }),
-  setAvailableRoles: roles => set({ availableRoles: roles }),
-  setSelectedRole: role => set({ selectedRole: role }),
-  setRelationshipLevel: level => set({ relationshipLevel: level }),
-  clearSessionConfiguration: () =>
-    set({
+export const useAppStore = create<AppState>()(
+  devtools(
+    set => ({
+      // Initial state
+      currentLanguage: 'zh',
+      isOffline: false,
+      scenarios: [],
+      popularScenarios: [],
+      featuredScenarios: [],
+      isLoadingScenarios: false,
+      activeSession: null,
+      isLoadingSession: false,
       currentScenario: null,
       availableRoles: [],
       selectedRole: null,
       relationshipLevel: 'normal',
-    }),
-  setSessionConfiguration: (scenario, roles, role, relationshipLevel) =>
-    set({
-      currentScenario: scenario,
-      availableRoles: roles,
-      selectedRole: role,
-      relationshipLevel,
-    }),
-  setSearchQuery: query => set({ searchQuery: query }),
-  setSelectedCategories: categories => set({ selectedCategories: categories }),
-  setSelectedDifficulty: difficulty => set({ selectedDifficulty: difficulty }),
-  clearFilters: () =>
-    set({
       searchQuery: '',
       selectedCategories: [],
       selectedDifficulty: [],
+
+      // Actions
+      setLanguage: language => set({ currentLanguage: language }),
+      setOfflineStatus: isOffline => set({ isOffline }),
+      setScenarios: scenarios => set({ scenarios }),
+      setPopularScenarios: scenarios => set({ popularScenarios: scenarios }),
+      setFeaturedScenarios: scenarios => set({ featuredScenarios: scenarios }),
+      setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
+      setActiveSession: session => set({ activeSession: session }),
+      setSessionLoading: loading => set({ isLoadingSession: loading }),
+      setCurrentScenario: scenario => set({ currentScenario: scenario }),
+      setAvailableRoles: roles => set({ availableRoles: roles }),
+      setSelectedRole: role => set({ selectedRole: role }),
+      setRelationshipLevel: level => set({ relationshipLevel: level }),
+      clearSessionConfiguration: () =>
+        set({
+          currentScenario: null,
+          availableRoles: [],
+          selectedRole: null,
+          relationshipLevel: 'normal',
+        }),
+      setSessionConfiguration: (scenario, roles, role, relationshipLevel) =>
+        set({
+          currentScenario: scenario,
+          availableRoles: roles,
+          selectedRole: role,
+          relationshipLevel,
+        }),
+      setSearchQuery: query => set({ searchQuery: query }),
+      setSelectedCategories: categories => set({ selectedCategories: categories }),
+      setSelectedDifficulty: difficulty => set({ selectedDifficulty: difficulty }),
+      clearFilters: () =>
+        set({
+          searchQuery: '',
+          selectedCategories: [],
+          selectedDifficulty: [],
+        }),
     }),
-}))
+    {
+      name: 'AppStore',
+    }
+  )
+)
