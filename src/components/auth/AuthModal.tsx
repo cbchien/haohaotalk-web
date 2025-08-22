@@ -243,19 +243,6 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </>
           ) : (
             <>
-              {/* Error/Success Messages */}
-              {errors.general && (
-                <div className="bg-pink-25 text-pink-100 border border-pink-100 rounded-lg p-3 text-sm">
-                  {errors.general}
-                </div>
-              )}
-
-              {successMessage && (
-                <div className="bg-green-25 text-green-100 border border-green-100 rounded-lg p-3 text-sm">
-                  {successMessage}
-                </div>
-              )}
-
               <form onSubmit={handleEmailAuth} className="space-y-4">
                 {mode === 'register' && (
                   <div>
@@ -412,6 +399,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               >
                 {t.auth.continueAsGuest}
               </button>
+
+              {/* Error/Success Messages */}
+              {errors.general && (
+                <div className="bg-pink-25 text-pink-100 border border-pink-100 rounded-lg p-3 text-sm">
+                  {errors.general}
+                </div>
+              )}
+
+              {successMessage && (
+                <div className="bg-green-25 text-green-100 border border-green-100 rounded-lg p-3 text-sm">
+                  {successMessage}
+                </div>
+              )}
             </>
           )}
         </div>
