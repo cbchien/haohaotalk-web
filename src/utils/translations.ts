@@ -164,6 +164,7 @@ export interface Translations {
     completedSession: string
     practiceSession: string
     browseScenarios: string
+    pastPracticeSessions: string
   }
 
   // Performance
@@ -353,6 +354,7 @@ export const translations: Record<Language, Translations> = {
       completedSession: 'Completed Session',
       practiceSession: 'Practice Session',
       browseScenarios: 'Browse Scenarios',
+      pastPracticeSessions: 'Past practice sessions',
     },
     performance: {
       performanceComparison: 'Performance Comparison',
@@ -530,6 +532,7 @@ export const translations: Record<Language, Translations> = {
       completedSession: '已完成練習',
       practiceSession: '練習會話',
       browseScenarios: '探索情境',
+      pastPracticeSessions: '練習記錄',
     },
     performance: {
       performanceComparison: '相對於其他練習的結果',

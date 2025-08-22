@@ -52,14 +52,10 @@ export const SessionsScreen = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
-        <h1 className="text-xl font-semibold text-gray-900">
-          {t.navigation.progress}
+      <div className="px-6 py-5 bg-white border-b border-gray-100">
+        <h1 className="text-lg font-medium text-gray-900">
+          {t.sessions.pastPracticeSessions}
         </h1>
-        <p className="text-sm text-gray-600 mt-1">
-          {t.sessions.conversationAnalysis}
-        </p>
       </div>
 
       <div className="p-4">
@@ -104,32 +100,23 @@ export const SessionsScreen = () => {
                 className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:border-blue-40 transition-colors active:scale-98"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-10 to-blue-25 flex items-center justify-center">
-                    <span className="text-lg">💬</span>
+                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {session.scenario_role?.avatar_url ? (
+                      <img
+                        src={session.scenario_role.avatar_url}
+                        alt={session.scenario_role.role_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-lg">💬</span>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 truncate">
-                      {session.status === 'complete'
-                        ? t.sessions.completedSession
-                        : t.sessions.practiceSession}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {session.completed_at
-                        ? formatDate(session.completed_at)
-                        : formatDate(session.created_at)}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="px-2 py-1 bg-blue-10 rounded-full">
-                          <span className="text-xs font-medium text-blue-100">
-                            {formatScore(session.connection_score)}%
-                          </span>
-                        </div>
-                        <span className="text-xs text-gray-500">
-                          {session.current_turn} turns
-                        </span>
-                      </div>
-                      <div className="text-gray-400">
+                    <div className="flex items-start justify-between mb-1">
+                      <h3 className="font-semibold text-gray-900 truncate">
+                        {session.scenario?.title || t.sessions.practiceSession}
+                      </h3>
+                      <div className="text-gray-400 ml-2">
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -143,6 +130,26 @@ export const SessionsScreen = () => {
                             d="M9 5l7 7-7 7"
                           />
                         </svg>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500 truncate">
+                      {session.scenario_role?.role_name}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-400">
+                        {session.completed_at
+                          ? formatDate(session.completed_at)
+                          : formatDate(session.started_at)}
+                      </span>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xs text-gray-500">
+                          {session.current_turn} turns
+                        </span>
+                        <div className="px-2 py-1 bg-blue-10 rounded-full">
+                          <span className="text-xs font-medium text-blue-100">
+                            {formatScore(session.connection_score)}%
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

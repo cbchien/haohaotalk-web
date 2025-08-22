@@ -63,8 +63,9 @@ export interface SessionListItem {
   id: string
   user_id: string
   scenario_role_id: string
+  scenario_id: string
   scenario_key: string
-  status: 'complete' | 'active' | 'abandoned'
+  status: 'completed' | 'active' | 'abandoned'
   current_turn: number
   connection_score: number
   user_rating?: number
@@ -72,32 +73,39 @@ export interface SessionListItem {
   session_metadata: Record<string, unknown>
   started_at: string
   completed_at?: string
-  created_at: string
-  updated_at: string
-  scenario_role?: {
+  scenario_role: {
     id: string
+    language: string
+    role_key: string
     role_name: string
-    character_description: string
     avatar_url: string
-    scenario: {
-      id: string
-      scenario_key: string
-      title: string
-      category: string
-      difficulty_level: string
-      max_turns: number
-    }
-  }
-  counterpart_role?: {
-    id: string
-    role_name: string
+    created_at: string
+    scenario_id: string
+    initial_message: string
+    role_constraints: string[]
     character_description: string
-    avatar_url: string
+    initial_emotional_state: Record<string, unknown>
   }
-  user?: {
+  scenario: {
     id: string
-    display_name: string
+    title: string
+    context: string
+    category: string
+    language: string
+    image_url?: string
+    is_active: boolean
+    max_turns: number
+    objective: string
+    created_at: string
+    scenario_key: string
+    display_order: number
+    practice_count: number
+    difficulty_level: string
+  }
+  user: {
+    id: string
     email: string
+    display_name: string
   }
 }
 
