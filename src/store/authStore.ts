@@ -10,12 +10,14 @@ interface AuthState {
   isLoading: boolean
   isInitialized: boolean
   authToken: string | null
+  authLoadingType: 'login' | 'logout' | null
 
   // Actions
   setUser: (user: User, token?: string) => void
   clearUser: () => void
   logout: () => Promise<void>
   setLoading: (loading: boolean) => void
+  setAuthLoading: (type: 'login' | 'logout' | null) => void
   updateUserProfile: (updates: Partial<User>) => Promise<void>
   initializeAuth: () => Promise<void>
 }
@@ -29,16 +31,19 @@ export const useAuthStore = create<AuthState>()(
         isLoading: false,
         isInitialized: false,
         authToken: null,
+        authLoadingType: null,
 
         setUser: (user, token) => {
           if (token) {
             apiClient.setAuthToken(token)
           }
+          
           set({
             user,
             isAuthenticated: true,
             isLoading: false,
             authToken: token || get().authToken,
+            authLoadingType: null,
           })
         },
 
@@ -54,13 +59,19 @@ export const useAuthStore = create<AuthState>()(
         },
 
         logout: async () => {
-          // Sign out from Google if user was signed in via OAuth
+          // Set logout loading state
+          set({ authLoadingType: 'logout' })
+
           try {
+            // Sign out from Google if user was signed in via OAuth
             await googleAuthService.signOut()
           } catch (error) {
             // eslint-disable-next-line no-console
             console.warn('Google sign-out failed:', error)
           }
+
+          // Add delay to show logout loading page with thank you message
+          await new Promise(resolve => setTimeout(resolve, 800))
 
           apiClient.setAuthToken(null)
           authApiService.logout()
@@ -70,10 +81,13 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             isLoading: false,
             authToken: null,
+            authLoadingType: null,
           })
         },
 
         setLoading: loading => set({ isLoading: loading }),
+
+        setAuthLoading: type => set({ authLoadingType: type }),
 
         updateUserProfile: async updates => {
           const { user } = get()

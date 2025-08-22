@@ -6,6 +6,7 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { AuthGuard } from './components/auth/AuthGuard'
+import { AuthLoadingPage } from './components/auth/AuthLoadingPage'
 import { BottomTabBar } from './components/navigation/BottomTabBar'
 import { HomeScreen } from './screens/HomeScreen'
 import { SearchScreen } from './screens/SearchScreen'
@@ -26,6 +27,12 @@ import { useAuthStore } from './store'
 
 function AppContent() {
   const location = useLocation()
+  const { authLoadingType } = useAuthStore()
+
+  // Show loading page during auth operations
+  if (authLoadingType) {
+    return <AuthLoadingPage type={authLoadingType} />
+  }
 
   // Hide bottom navigation on fullscreen routes (chat and analytics)
   const hiddenBottomNavRoutes = ['/session/', '/chat']

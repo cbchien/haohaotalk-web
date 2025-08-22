@@ -42,6 +42,13 @@ export interface Translations {
     startFreshSession: string
     logout: string
 
+    // Loading states
+    loading: {
+      signingIn: string
+      signingOut: string
+      thankYou: string
+    }
+
     // Validation messages
     validation: {
       emailRequired: string
@@ -241,6 +248,11 @@ export const translations: Record<Language, Translations> = {
       signedInSuccessfully: 'Signed in successfully!',
       startFreshSession: 'Start Fresh Session',
       logout: 'Logout',
+      loading: {
+        signingIn: 'Signing in...',
+        signingOut: 'Signing out...',
+        thankYou: 'Thank you for using HaoHaoTalk',
+      },
       validation: {
         emailRequired: 'Email is required',
         emailInvalid: 'Please enter a valid email address',
@@ -429,6 +441,11 @@ export const translations: Record<Language, Translations> = {
       signedInSuccessfully: '登入成功！',
       startFreshSession: '開始新的會話',
       logout: '登出',
+      loading: {
+        signingIn: '登入中...',
+        signingOut: '登出中...',
+        thankYou: '期待下次的「好好說」',
+      },
       validation: {
         emailRequired: '電子郵件為必填',
         emailInvalid: '請輸入有效的電子郵件地址',

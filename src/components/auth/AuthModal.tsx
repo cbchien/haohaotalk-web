@@ -22,7 +22,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [successMessage, setSuccessMessage] = useState('')
-  const { setUser, setLoading } = useAuthStore()
+  const { setUser, setLoading, setAuthLoading } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
@@ -70,6 +70,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const handleGuestAccess = async () => {
     setIsGuestLoading(true)
     setLoading(true)
+    setAuthLoading('login')
 
     try {
       const guestName = `Guest${Math.floor(Math.random() * 1000)}`
@@ -97,6 +98,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     } finally {
       setIsGuestLoading(false)
       setLoading(false)
+      setAuthLoading(null)
     }
   }
 
@@ -111,6 +113,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
     setIsEmailLoading(true)
     setLoading(true)
+    setAuthLoading('login')
 
     try {
       let response
@@ -129,15 +132,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       }
 
       if (response.success && response.data) {
-        setSuccessMessage(
-          mode === 'register'
-            ? t.auth.accountCreatedSuccessfully
-            : t.auth.signedInSuccessfully
-        )
-        setTimeout(() => {
-          setUser(response.data!.user, response.data!.token)
-          onClose()
-        }, 1000)
+        // Immediately set user and close modal - loading page will show
+        setUser(response.data.user, response.data.token)
+        onClose()
       } else {
         setErrors({
           general: response.error || t.auth.errors.authenticationFailed,
@@ -148,12 +145,14 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     } finally {
       setIsEmailLoading(false)
       setLoading(false)
+      setAuthLoading(null)
     }
   }
 
   const handleGoogleAuth = async () => {
     setIsGoogleLoading(true)
     setLoading(true)
+    setAuthLoading('login')
 
     try {
       if (!googleAuthService.isConfigured()) {
@@ -194,6 +193,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     } finally {
       setIsGoogleLoading(false)
       setLoading(false)
+      setAuthLoading(null)
     }
   }
 
