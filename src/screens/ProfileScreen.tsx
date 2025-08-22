@@ -36,6 +36,10 @@ export const ProfileScreen = () => {
       onClick: () => navigate('/profile/contact'),
     },
     {
+      title: t.profile.menu.language,
+      onClick: () => navigate('/profile/language'),
+    },
+    {
       title: t.profile.menu.deleteAccount,
       onClick: () => navigate('/profile/delete-account'),
       variant: 'danger' as const,

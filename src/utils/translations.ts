@@ -71,8 +71,15 @@ export interface Translations {
       privacy: string
       terms: string
       contact: string
+      language: string
       deleteAccount: string
       logout: string
+    }
+    language: {
+      title: string
+      description: string
+      chinese: string
+      english: string
     }
   }
 
@@ -260,8 +267,15 @@ export const translations: Record<Language, Translations> = {
         privacy: 'Privacy Policy',
         terms: 'Terms of Use',
         contact: 'Contact Us',
+        language: 'Language',
         deleteAccount: 'Delete Account',
         logout: 'Logout',
+      },
+      language: {
+        title: 'Choose Language',
+        description: 'Select your preferred app language.',
+        chinese: '中文',
+        english: 'English',
       },
     },
     chatSettings: {
@@ -437,8 +451,15 @@ export const translations: Record<Language, Translations> = {
         privacy: '隱私政策',
         terms: '使用者條款',
         contact: '回報問題',
+        language: '語言設定',
         deleteAccount: '刪除帳號',
         logout: '登出',
+      },
+      language: {
+        title: '選擇語言',
+        description: '選擇您偏好的應用程式語言。',
+        chinese: '中文',
+        english: 'English',
       },
     },
     chatSettings: {

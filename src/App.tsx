@@ -16,6 +16,7 @@ import { ConnectionScorePage } from './pages/profile/ConnectionScorePage'
 import { PrivacyPolicyPage } from './pages/profile/PrivacyPolicyPage'
 import { TermsOfUsePage } from './pages/profile/TermsOfUsePage'
 import { ContactUsPage } from './pages/profile/ContactUsPage'
+import { LanguagePage } from './pages/profile/LanguagePage'
 import { DeleteAccountPage } from './pages/profile/DeleteAccountPage'
 import { ChatSettingsScreen } from './components/chat-settings'
 import { ChatScreen } from './components/chat'
@@ -46,6 +47,7 @@ function AppContent() {
           <Route path="/profile/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/profile/terms" element={<TermsOfUsePage />} />
           <Route path="/profile/contact" element={<ContactUsPage />} />
+          <Route path="/profile/language" element={<LanguagePage />} />
           <Route path="/profile/delete-account" element={<DeleteAccountPage />} />
           <Route
             path="/scenario/:scenarioId/configure"
