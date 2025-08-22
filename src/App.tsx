@@ -43,12 +43,18 @@ function AppContent() {
           <Route path="/sessions" element={<SessionsScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
           <Route path="/profile/how-to-use" element={<HowToUsePage />} />
-          <Route path="/profile/connection-score" element={<ConnectionScorePage />} />
+          <Route
+            path="/profile/connection-score"
+            element={<ConnectionScorePage />}
+          />
           <Route path="/profile/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/profile/terms" element={<TermsOfUsePage />} />
           <Route path="/profile/contact" element={<ContactUsPage />} />
           <Route path="/profile/language" element={<LanguagePage />} />
-          <Route path="/profile/delete-account" element={<DeleteAccountPage />} />
+          <Route
+            path="/profile/delete-account"
+            element={<DeleteAccountPage />}
+          />
           <Route
             path="/scenario/:scenarioId/configure"
             element={<ChatSettingsScreen />}

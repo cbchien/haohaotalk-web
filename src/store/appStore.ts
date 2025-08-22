@@ -103,8 +103,10 @@ export const useAppStore = create<AppState>()(
           relationshipLevel,
         }),
       setSearchQuery: query => set({ searchQuery: query }),
-      setSelectedCategories: categories => set({ selectedCategories: categories }),
-      setSelectedDifficulty: difficulty => set({ selectedDifficulty: difficulty }),
+      setSelectedCategories: categories =>
+        set({ selectedCategories: categories }),
+      setSelectedDifficulty: difficulty =>
+        set({ selectedDifficulty: difficulty }),
       clearFilters: () =>
         set({
           searchQuery: '',

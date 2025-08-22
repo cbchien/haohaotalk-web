@@ -27,14 +27,18 @@ export const DeleteAccountPage = () => {
         navigate('/')
       } else {
         // Handle error
-        alert(currentLanguage === 'zh' 
-          ? '刪除帳戶失敗，請稍後再試。' 
-          : 'Failed to delete account. Please try again later.')
+        alert(
+          currentLanguage === 'zh'
+            ? '刪除帳戶失敗，請稍後再試。'
+            : 'Failed to delete account. Please try again later.'
+        )
       }
     } catch {
-      alert(currentLanguage === 'zh' 
-        ? '刪除帳戶時發生錯誤，請稍後再試。' 
-        : 'An error occurred while deleting your account. Please try again later.')
+      alert(
+        currentLanguage === 'zh'
+          ? '刪除帳戶時發生錯誤，請稍後再試。'
+          : 'An error occurred while deleting your account. Please try again later.'
+      )
     } finally {
       setIsDeleting(false)
       setShowConfirmation(false)
@@ -57,7 +61,9 @@ export const DeleteAccountPage = () => {
             {/* Warning Message */}
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
               <p className="text-red-800 font-medium mb-2">
-                {currentLanguage === 'zh' ? '警告：此動作無法復原' : 'Warning: This action cannot be undone'}
+                {currentLanguage === 'zh'
+                  ? '警告：此動作無法復原'
+                  : 'Warning: This action cannot be undone'}
               </p>
               <p className="text-red-700 text-sm">
                 {currentLanguage === 'zh'
@@ -69,20 +75,30 @@ export const DeleteAccountPage = () => {
             {/* What will be deleted */}
             <div className="mb-6">
               <h3 className="text-base font-semibold text-gray-900 mb-3">
-                {currentLanguage === 'zh' ? '將被刪除的資料：' : 'Data that will be deleted:'}
+                {currentLanguage === 'zh'
+                  ? '將被刪除的資料：'
+                  : 'Data that will be deleted:'}
               </h3>
               <ul className="list-disc list-inside space-y-2 text-gray-600 text-sm">
                 <li>
-                  {currentLanguage === 'zh' ? '個人資料和帳戶資訊' : 'Personal information and account details'}
+                  {currentLanguage === 'zh'
+                    ? '個人資料和帳戶資訊'
+                    : 'Personal information and account details'}
                 </li>
                 <li>
-                  {currentLanguage === 'zh' ? '所有練習對話記錄' : 'All practice conversation records'}
+                  {currentLanguage === 'zh'
+                    ? '所有練習對話記錄'
+                    : 'All practice conversation records'}
                 </li>
                 <li>
-                  {currentLanguage === 'zh' ? '進度和統計資料' : 'Progress and statistics data'}
+                  {currentLanguage === 'zh'
+                    ? '進度和統計資料'
+                    : 'Progress and statistics data'}
                 </li>
                 <li>
-                  {currentLanguage === 'zh' ? '偏好設定' : 'Preference settings'}
+                  {currentLanguage === 'zh'
+                    ? '偏好設定'
+                    : 'Preference settings'}
                 </li>
               </ul>
             </div>
@@ -90,7 +106,9 @@ export const DeleteAccountPage = () => {
             {/* Alternative Options */}
             <div className="mb-6">
               <h3 className="text-base font-semibold text-gray-900 mb-3">
-                {currentLanguage === 'zh' ? '考慮其他選項：' : 'Consider alternatives:'}
+                {currentLanguage === 'zh'
+                  ? '考慮其他選項：'
+                  : 'Consider alternatives:'}
               </h3>
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p className="text-blue-800 text-sm mb-2">
@@ -102,7 +120,9 @@ export const DeleteAccountPage = () => {
                   onClick={() => navigate('/profile')}
                   className="text-blue-600 text-sm font-medium hover:underline"
                 >
-                  {currentLanguage === 'zh' ? '返回個人資料頁面' : 'Return to Profile'}
+                  {currentLanguage === 'zh'
+                    ? '返回個人資料頁面'
+                    : 'Return to Profile'}
                 </button>
               </div>
             </div>
@@ -112,7 +132,9 @@ export const DeleteAccountPage = () => {
               onClick={() => setShowConfirmation(true)}
               className="w-full py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors"
             >
-              {currentLanguage === 'zh' ? '我了解風險，繼續刪除' : 'I understand the risks, continue deletion'}
+              {currentLanguage === 'zh'
+                ? '我了解風險，繼續刪除'
+                : 'I understand the risks, continue deletion'}
             </button>
           </div>
         ) : (
@@ -134,7 +156,9 @@ export const DeleteAccountPage = () => {
             {user && (
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <p className="text-sm text-gray-600 mb-1">
-                  {currentLanguage === 'zh' ? '即將刪除的帳戶：' : 'Account to be deleted:'}
+                  {currentLanguage === 'zh'
+                    ? '即將刪除的帳戶：'
+                    : 'Account to be deleted:'}
                 </p>
                 <p className="font-medium text-gray-900">{user.email}</p>
                 <p className="text-sm text-gray-600">{user.displayName}</p>
@@ -149,8 +173,12 @@ export const DeleteAccountPage = () => {
                 className="w-full py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
                 {isDeleting
-                  ? (currentLanguage === 'zh' ? '刪除中...' : 'Deleting...')
-                  : (currentLanguage === 'zh' ? '確認刪除帳戶' : 'Confirm Account Deletion')}
+                  ? currentLanguage === 'zh'
+                    ? '刪除中...'
+                    : 'Deleting...'
+                  : currentLanguage === 'zh'
+                    ? '確認刪除帳戶'
+                    : 'Confirm Account Deletion'}
               </button>
 
               <button

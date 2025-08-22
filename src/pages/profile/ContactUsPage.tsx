@@ -11,11 +11,13 @@ export const ContactUsPage = () => {
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!subject.trim() || !body.trim()) return
 
     setIsSubmitting(true)
@@ -59,7 +61,9 @@ export const ContactUsPage = () => {
               We Value Your Feedback
             </h2>
             <p className="text-gray-600 text-sm">
-              If you have any questions, suggestions, or feedback, please contact us using the form below. We'll get back to you as soon as possible.
+              If you have any questions, suggestions, or feedback, please
+              contact us using the form below. We'll get back to you as soon as
+              possible.
             </p>
           </div>
         )}
@@ -73,8 +77,12 @@ export const ContactUsPage = () => {
             <input
               type="text"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder={currentLanguage === 'zh' ? '請輸入問題主題...' : 'Enter subject...'}
+              onChange={e => setSubject(e.target.value)}
+              placeholder={
+                currentLanguage === 'zh'
+                  ? '請輸入問題主題...'
+                  : 'Enter subject...'
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               required
             />
@@ -87,8 +95,12 @@ export const ContactUsPage = () => {
             </label>
             <textarea
               value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder={currentLanguage === 'zh' ? '請詳細描述您的問題或建議...' : 'Please describe your issue or suggestion in detail...'}
+              onChange={e => setBody(e.target.value)}
+              placeholder={
+                currentLanguage === 'zh'
+                  ? '請詳細描述您的問題或建議...'
+                  : 'Please describe your issue or suggestion in detail...'
+              }
               rows={6}
               className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
               required
@@ -102,8 +114,12 @@ export const ContactUsPage = () => {
             className="w-full py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
             {isSubmitting
-              ? (currentLanguage === 'zh' ? '送出中...' : 'Submitting...')
-              : (currentLanguage === 'zh' ? '送出回饋' : 'Submit Feedback')}
+              ? currentLanguage === 'zh'
+                ? '送出中...'
+                : 'Submitting...'
+              : currentLanguage === 'zh'
+                ? '送出回饋'
+                : 'Submit Feedback'}
           </button>
         </form>
 

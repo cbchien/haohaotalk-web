@@ -21,14 +21,9 @@ export const ProfileMenuItem = ({
       : 'text-gray-900 hover:bg-gray-50'
 
   return (
-    <button
-      onClick={onClick}
-      className={`${baseClasses} ${variantClasses}`}
-    >
+    <button onClick={onClick} className={`${baseClasses} ${variantClasses}`}>
       <span className="font-medium">{title}</span>
-      {showArrow && (
-        <ChevronRightIcon className="w-5 h-5 text-gray-400" />
-      )}
+      {showArrow && <ChevronRightIcon className="w-5 h-5 text-gray-400" />}
     </button>
   )
 }

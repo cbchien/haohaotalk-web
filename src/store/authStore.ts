@@ -24,101 +24,101 @@ export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
       (set, get) => ({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      isInitialized: false,
-      authToken: null,
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        isInitialized: false,
+        authToken: null,
 
-      setUser: (user, token) => {
-        if (token) {
-          apiClient.setAuthToken(token)
-        }
-        set({
-          user,
-          isAuthenticated: true,
-          isLoading: false,
-          authToken: token || get().authToken,
-        })
-      },
-
-      clearUser: () => {
-        apiClient.setAuthToken(null)
-        authApiService.logout()
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-          authToken: null,
-        })
-      },
-
-      logout: async () => {
-        // Sign out from Google if user was signed in via OAuth
-        try {
-          await googleAuthService.signOut()
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn('Google sign-out failed:', error)
-        }
-
-        apiClient.setAuthToken(null)
-        authApiService.logout()
-
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-          authToken: null,
-        })
-      },
-
-      setLoading: loading => set({ isLoading: loading }),
-
-      updateUserProfile: async updates => {
-        const { user } = get()
-        if (!user) return
-
-        try {
-          const response = await authApiService.updateProfile(updates)
-          if (response.success && response.data) {
-            set({ user: response.data })
+        setUser: (user, token) => {
+          if (token) {
+            apiClient.setAuthToken(token)
           }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to update profile:', error)
-        }
-      },
+          set({
+            user,
+            isAuthenticated: true,
+            isLoading: false,
+            authToken: token || get().authToken,
+          })
+        },
 
-      initializeAuth: async () => {
-        const { authToken } = get()
-        if (!authToken) {
-          set({ isInitialized: true })
-          return
-        }
+        clearUser: () => {
+          apiClient.setAuthToken(null)
+          authApiService.logout()
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+            authToken: null,
+          })
+        },
 
-        try {
-          apiClient.setAuthToken(authToken)
-          const response = await authApiService.getCurrentUser()
+        logout: async () => {
+          // Sign out from Google if user was signed in via OAuth
+          try {
+            await googleAuthService.signOut()
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn('Google sign-out failed:', error)
+          }
 
-          if (response.success && response.data) {
-            set({
-              user: response.data.user,
-              isAuthenticated: true,
-              isInitialized: true,
-            })
-          } else {
-            // Token is invalid, clear auth state
+          apiClient.setAuthToken(null)
+          authApiService.logout()
+
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+            authToken: null,
+          })
+        },
+
+        setLoading: loading => set({ isLoading: loading }),
+
+        updateUserProfile: async updates => {
+          const { user } = get()
+          if (!user) return
+
+          try {
+            const response = await authApiService.updateProfile(updates)
+            if (response.success && response.data) {
+              set({ user: response.data })
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to update profile:', error)
+          }
+        },
+
+        initializeAuth: async () => {
+          const { authToken } = get()
+          if (!authToken) {
+            set({ isInitialized: true })
+            return
+          }
+
+          try {
+            apiClient.setAuthToken(authToken)
+            const response = await authApiService.getCurrentUser()
+
+            if (response.success && response.data) {
+              set({
+                user: response.data.user,
+                isAuthenticated: true,
+                isInitialized: true,
+              })
+            } else {
+              // Token is invalid, clear auth state
+              get().clearUser()
+              set({ isInitialized: true })
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to initialize auth:', error)
             get().clearUser()
             set({ isInitialized: true })
           }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to initialize auth:', error)
-          get().clearUser()
-          set({ isInitialized: true })
-        }
-      },
+        },
       }),
       {
         name: 'haohaotalk-auth',

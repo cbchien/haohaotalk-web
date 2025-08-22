@@ -18,7 +18,7 @@ export const HowToUsePage = () => {
               <p className="text-gray-600 mb-4">
                 好好說是一個幫助您練習困難對話的平台。通過角色扮演的方式，您可以在安全的環境中提升溝通技巧。
               </p>
-              
+
               <h3 className="text-base font-semibold text-gray-900 mb-3">
                 如何開始練習：
               </h3>
@@ -48,10 +48,11 @@ export const HowToUsePage = () => {
                 Welcome to HaoHaoTalk
               </h2>
               <p className="text-gray-600 mb-4">
-                HaoHaoTalk is a platform designed to help you practice difficult conversations. 
-                Through role-playing scenarios, you can improve your communication skills in a safe environment.
+                HaoHaoTalk is a platform designed to help you practice difficult
+                conversations. Through role-playing scenarios, you can improve
+                your communication skills in a safe environment.
               </p>
-              
+
               <h3 className="text-base font-semibold text-gray-900 mb-3">
                 How to Start Practicing:
               </h3>

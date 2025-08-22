@@ -6,7 +6,10 @@ interface ProfilePageLayoutProps {
   children: React.ReactNode
 }
 
-export const ProfilePageLayout = ({ title, children }: ProfilePageLayoutProps) => {
+export const ProfilePageLayout = ({
+  title,
+  children,
+}: ProfilePageLayoutProps) => {
   const navigate = useNavigate()
 
   return (
@@ -25,9 +28,7 @@ export const ProfilePageLayout = ({ title, children }: ProfilePageLayoutProps) =
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        {children}
-      </div>
+      <div className="p-4">{children}</div>
     </div>
   )
 }

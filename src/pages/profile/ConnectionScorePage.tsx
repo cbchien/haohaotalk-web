@@ -19,7 +19,7 @@ export const ConnectionScorePage = () => {
                 對話中的距離（連接分數）是衡量您在對話中與他人建立情感連接程度的指標。
                 分數越高，表示您在對話中越能與對方產生共鳴和理解。
               </p>
-              
+
               <h3 className="text-base font-semibold text-gray-900 mb-3">
                 分數範圍說明：
               </h3>
@@ -61,10 +61,12 @@ export const ConnectionScorePage = () => {
                 What is Connection Score?
               </h2>
               <p className="text-gray-600 mb-4">
-                Connection Score measures how well you build emotional connection with others during conversations. 
-                A higher score indicates better empathy and understanding in your communication.
+                Connection Score measures how well you build emotional
+                connection with others during conversations. A higher score
+                indicates better empathy and understanding in your
+                communication.
               </p>
-              
+
               <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Score Ranges:
               </h3>
@@ -72,19 +74,22 @@ export const ConnectionScorePage = () => {
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-red-500 rounded mr-3"></div>
                   <span className="text-gray-600">
-                    <strong>0-30:</strong> Distant conversation, needs more empathy
+                    <strong>0-30:</strong> Distant conversation, needs more
+                    empathy
                   </span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-yellow-500 rounded mr-3"></div>
                   <span className="text-gray-600">
-                    <strong>30-60:</strong> Basic understanding, room for improvement
+                    <strong>30-60:</strong> Basic understanding, room for
+                    improvement
                   </span>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
                   <span className="text-gray-600">
-                    <strong>60-100:</strong> Good emotional connection established
+                    <strong>60-100:</strong> Good emotional connection
+                    established
                   </span>
                 </div>
               </div>
@@ -93,7 +98,9 @@ export const ConnectionScorePage = () => {
                 How to Improve Your Connection Score:
               </h3>
               <ul className="list-disc list-inside space-y-2 text-gray-600">
-                <li>Actively listen to the other person's perspective and feelings</li>
+                <li>
+                  Actively listen to the other person's perspective and feelings
+                </li>
                 <li>Express empathy and understanding</li>
                 <li>Share your genuine feelings</li>
                 <li>Look for common ground and solutions</li>
