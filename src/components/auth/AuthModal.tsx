@@ -84,11 +84,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         // Fall back to local guest creation for development
         const guestUser = {
           id: `guest_${Date.now()}`,
-          display_name: guestName,
-          account_type: 'guest' as const,
-          verification_status: 'unverified' as const,
-          join_date: new Date(),
-          preferred_language: 'en' as const,
+          displayName: guestName,
+          email: '', // Guest users don't have email
+          isGuest: true,
+          createdAt: new Date().toISOString(),
         }
         setUser(guestUser)
         onClose()
@@ -175,13 +174,12 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         // Use Google user data directly if backend call fails
         const user = {
           id: googleUser.id,
-          display_name: googleUser.name,
+          displayName: googleUser.name,
           email: googleUser.email,
-          account_type: 'registered' as const,
-          verification_status: 'email_verified' as const,
-          join_date: new Date(),
-          preferred_language: 'en' as const,
-          avatar_url: googleUser.picture,
+          isGuest: false,
+          emailVerified: true,
+          createdAt: new Date().toISOString(),
+          avatarUrl: googleUser.picture,
         }
         setUser(user)
         onClose()

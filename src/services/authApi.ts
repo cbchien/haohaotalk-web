@@ -71,8 +71,8 @@ class AuthApiService {
     return response
   }
 
-  async getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiClient.get<User>('auth/me')
+  async getCurrentUser(): Promise<ApiResponse<{user: User}>> {
+    return apiClient.get<{user: User}>('auth/me')
   }
 
   async updateProfile(updates: Partial<User>): Promise<ApiResponse<User>> {

@@ -102,7 +102,7 @@ export const useAuthStore = create<AuthState>()(
 
           if (response.success && response.data) {
             set({
-              user: response.data,
+              user: response.data.user,
               isAuthenticated: true,
               isInitialized: true,
             })
@@ -124,8 +124,12 @@ export const useAuthStore = create<AuthState>()(
       partialize: state => {
         // Only persist registered users, not guest users
         // Guest sessions should start fresh each browser session
-        if (state.user?.account_type === 'guest') {
-          return {}
+        if (state.user?.isGuest) {
+          return {
+            user: null,
+            isAuthenticated: false,
+            authToken: null,
+          }
         }
         return {
           user: state.user,

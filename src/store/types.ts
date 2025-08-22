@@ -1,12 +1,13 @@
 export interface User {
   id: string
-  display_name: string
-  email?: string
-  avatar_url?: string
-  account_type: 'guest' | 'registered' | 'premium'
-  verification_status: 'unverified' | 'email_verified' | 'fully_verified'
-  join_date: Date
-  preferred_language: 'en' | 'zh'
+  displayName: string
+  email: string
+  avatarUrl?: string
+  isGuest: boolean
+  isAdmin?: boolean
+  emailVerified?: boolean
+  createdAt: string
+  lastLoginAt?: string
 }
 
 export interface Scenario {

@@ -34,3 +34,10 @@ export { googleAuthService } from './googleAuth'
 export type { GoogleUser } from './googleAuth'
 
 export { SessionPerformanceAPI } from './sessionPerformanceApi'
+
+export { profileApiService } from './profileApi'
+export type {
+  FeedbackRequest,
+  FeedbackResponse,
+  AccountDeletionResponse,
+} from './profileApi'

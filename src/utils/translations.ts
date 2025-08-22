@@ -65,6 +65,15 @@ export interface Translations {
     registeredAccount: string
     guestModeMessage: string
     clearSessionMessage: string
+    menu: {
+      howToUse: string
+      connectionScore: string
+      privacy: string
+      terms: string
+      contact: string
+      deleteAccount: string
+      logout: string
+    }
   }
 
   // Chat Settings
@@ -245,6 +254,15 @@ export const translations: Record<Language, Translations> = {
         "You're using guest mode. Create an account to save your progress!",
       clearSessionMessage:
         'This will clear your current session and start over',
+      menu: {
+        howToUse: 'How to Use HaoHaoTalk',
+        connectionScore: 'About Connection Score',
+        privacy: 'Privacy Policy',
+        terms: 'Terms of Use',
+        contact: 'Contact Us',
+        deleteAccount: 'Delete Account',
+        logout: 'Logout',
+      },
     },
     chatSettings: {
       context: 'Context',
@@ -413,6 +431,15 @@ export const translations: Record<Language, Translations> = {
       registeredAccount: '註冊帳戶',
       guestModeMessage: '您正在使用訪客模式。建立帳戶以保存您的進度！',
       clearSessionMessage: '這將清除您當前的會話並重新開始',
+      menu: {
+        howToUse: '如何使用「好好說」',
+        connectionScore: '關於「對話中的距離」',
+        privacy: '隱私政策',
+        terms: '使用者條款',
+        contact: '回報問題',
+        deleteAccount: '刪除帳號',
+        logout: '登出',
+      },
     },
     chatSettings: {
       context: '情境',

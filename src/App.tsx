@@ -11,6 +11,12 @@ import { HomeScreen } from './screens/HomeScreen'
 import { SearchScreen } from './screens/SearchScreen'
 import { SessionsScreen } from './screens/SessionsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { HowToUsePage } from './pages/profile/HowToUsePage'
+import { ConnectionScorePage } from './pages/profile/ConnectionScorePage'
+import { PrivacyPolicyPage } from './pages/profile/PrivacyPolicyPage'
+import { TermsOfUsePage } from './pages/profile/TermsOfUsePage'
+import { ContactUsPage } from './pages/profile/ContactUsPage'
+import { DeleteAccountPage } from './pages/profile/DeleteAccountPage'
 import { ChatSettingsScreen } from './components/chat-settings'
 import { ChatScreen } from './components/chat'
 import { SessionInsightsPage } from './pages/SessionInsightsPage'
@@ -35,6 +41,12 @@ function AppContent() {
           <Route path="/search" element={<SearchScreen />} />
           <Route path="/sessions" element={<SessionsScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/profile/how-to-use" element={<HowToUsePage />} />
+          <Route path="/profile/connection-score" element={<ConnectionScorePage />} />
+          <Route path="/profile/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/profile/terms" element={<TermsOfUsePage />} />
+          <Route path="/profile/contact" element={<ContactUsPage />} />
+          <Route path="/profile/delete-account" element={<DeleteAccountPage />} />
           <Route
             path="/scenario/:scenarioId/configure"
             element={<ChatSettingsScreen />}
