@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService } from '@/services'
@@ -13,6 +14,7 @@ interface AuthModalProps {
 type AuthMode = 'login' | 'register' | 'guest'
 
 export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+  const navigate = useNavigate()
   const [mode, setMode] = useState<AuthMode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -81,6 +83,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
+        navigate('/')
       } else {
         // Fall back to local guest creation for development
         const guestUser = {
@@ -92,9 +95,21 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(guestUser)
         onClose()
+        navigate('/')
       }
     } catch {
       // Guest access failed, but continue with fallback
+      const guestName = `Guest${Math.floor(Math.random() * 1000)}`
+      const guestUser = {
+        id: `guest_${Date.now()}`,
+        displayName: guestName,
+        email: '', // Guest users don't have email
+        isGuest: true,
+        createdAt: new Date().toISOString(),
+      }
+      setUser(guestUser)
+      onClose()
+      navigate('/')
     } finally {
       setIsGuestLoading(false)
       setLoading(false)
@@ -135,6 +150,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         // Immediately set user and close modal - loading page will show
         setUser(response.data.user, response.data.token)
         onClose()
+        navigate('/')
       } else {
         setErrors({
           general: response.error || t.auth.errors.authenticationFailed,
@@ -169,6 +185,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
+        navigate('/')
       } else {
         // Use Google user data directly if backend call fails
         const user = {
@@ -182,6 +199,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(user)
         onClose()
+        navigate('/')
       }
     } catch (error) {
       const errorMessage =

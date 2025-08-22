@@ -45,11 +45,6 @@ export const useAuthStore = create<AuthState>()(
             authToken: token || get().authToken,
             authLoadingType: null,
           })
-
-          // Navigate to home tab after login
-          if (typeof window !== 'undefined') {
-            window.location.pathname = '/'
-          }
         },
 
         clearUser: () => {
