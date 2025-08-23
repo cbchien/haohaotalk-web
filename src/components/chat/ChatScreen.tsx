@@ -503,12 +503,13 @@ export const ChatScreen = () => {
         />
       </div>
 
-      {showCompletion && session && (
+      {showCompletion && session && sessionId && (
         <CompletionModal
           session={session}
           finalScore={connectionScore}
           onClose={() => setShowCompletion(false)}
           onSessionUpdate={handleSessionUpdate}
+          sessionId={sessionId}
         />
       )}
 

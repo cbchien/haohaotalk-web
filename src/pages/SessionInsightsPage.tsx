@@ -7,7 +7,7 @@ import { ConnectionScoreChart } from '@/components/sessions/charts/ConnectionSco
 import { InsightItem } from '@/components/sessions/insights/InsightItem'
 
 export const SessionInsightsPage = () => {
-  const { sessionId } = useParams<{ sessionId: string }>()
+  const { sessionId: urlSessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
   const location = useLocation()
   const { currentLanguage, currentScenario } = useAppStore()
@@ -16,6 +16,10 @@ export const SessionInsightsPage = () => {
   // Get session data from navigation state
   const sessionData = location.state?.sessionData
   const scenarioKey = location.state?.scenarioKey
+  const stateSessionId = location.state?.sessionId
+
+  // Use sessionId from URL params, fallback to navigation state
+  const sessionId = urlSessionId || stateSessionId
 
   // Use React Query for cached data fetching
   const { performance, insights, isLoading, error, isError } =

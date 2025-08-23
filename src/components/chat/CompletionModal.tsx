@@ -11,6 +11,7 @@ interface CompletionModalProps {
   finalScore: number
   onClose: () => void
   onSessionUpdate?: (updatedSession: Session) => void
+  sessionId: string
 }
 
 export const CompletionModal = ({
@@ -18,6 +19,7 @@ export const CompletionModal = ({
   finalScore,
   onClose,
   onSessionUpdate,
+  sessionId,
 }: CompletionModalProps) => {
   // Only show rating if session doesn't already have a rating
   const [showRating, setShowRating] = useState(!session.rating)
@@ -54,7 +56,9 @@ export const CompletionModal = ({
 
   const handleViewResults = () => {
     onClose()
-    navigate(`/session/${session.id}/insights`)
+    navigate(`/session/${sessionId}/insights`, {
+      state: { sessionId }
+    })
   }
 
   const handleTryAgain = () => {
