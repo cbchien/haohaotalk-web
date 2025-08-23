@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
@@ -9,6 +10,10 @@ export const ProfileScreen = () => {
   const { logout } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleLogout = async () => {
     await logout()
