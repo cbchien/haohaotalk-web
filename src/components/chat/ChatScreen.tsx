@@ -17,6 +17,7 @@ import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
 
 const SESSION_ENDING_MESSAGE_DISPLAY_DURATION = 1000
+const AI_TYPING_ANIMATION_DURATION = 1100
 
 interface Message {
   id: string
@@ -65,7 +66,7 @@ export const ChatScreen = () => {
       try {
         setIsLoading(true)
         setError(null)
-        
+
         // Reset completion state for new session
         setSessionEndCalled(false)
         setShowCompletion(false)
@@ -75,9 +76,12 @@ export const ChatScreen = () => {
         if (response.success && response.data) {
           setSession(response.data)
           setConnectionScore(response.data.connection_score || 0)
-          
+
           // If session is already completed, mark as processed to prevent duplicate processing
-          if (response.data.is_completed || response.data.status === 'completed') {
+          if (
+            response.data.is_completed ||
+            response.data.status === 'completed'
+          ) {
             setSessionEndCalled(true)
           }
 
@@ -184,14 +188,22 @@ export const ChatScreen = () => {
 
   const handleSendMessage = async (content: string) => {
     if (!sessionId || !content.trim()) return
-    
+
     // Prevent sending messages if session is completed or ending
-    if (session?.is_completed || session?.status === 'completed' || isEndingSession || sessionEndCalled) return
-    
+    if (
+      session?.is_completed ||
+      session?.status === 'completed' ||
+      isEndingSession ||
+      sessionEndCalled
+    )
+      return
+
     // Additional check: prevent sending if max turns already reached
     const maxTurns = session?.max_turns || scenario?.max_turns
     if (maxTurns) {
-      const currentUserTurns = messages.filter(msg => msg.type === 'user').length
+      const currentUserTurns = messages.filter(
+        msg => msg.type === 'user'
+      ).length
       if (currentUserTurns >= maxTurns) return
     }
 
@@ -204,8 +216,12 @@ export const ChatScreen = () => {
 
     // Optimistic update
     setMessages(prev => [...prev, userMessage])
-    setIsTyping(true)
     setError(null)
+
+    // Delay showing typing indicator by 900ms
+    const typingTimeout = setTimeout(() => {
+      setIsTyping(true)
+    }, AI_TYPING_ANIMATION_DURATION)
 
     try {
       const response = await sessionsApiService.submitTurn(sessionId, {
@@ -238,7 +254,7 @@ export const ChatScreen = () => {
           )
         }
 
-        // Add AI response
+        // Add AI response immediately
         if (turn.ai_response) {
           const aiMessage: Message = {
             id: `${turn.id}-ai`,
@@ -250,6 +266,10 @@ export const ChatScreen = () => {
 
           setMessages(prev => [...prev, aiMessage])
         }
+
+        // Clear typing timeout and typing state
+        clearTimeout(typingTimeout)
+        setIsTyping(false)
 
         // Check if we've reached max turns after successful turn completion
         if (updatedSession) {
@@ -284,7 +304,9 @@ export const ChatScreen = () => {
 
                 // Replace ending message with completion message
                 setMessages(prevMsgs => [
-                  ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
+                  ...prevMsgs.filter(
+                    msg => !msg.id.startsWith('session-ending-')
+                  ),
                   {
                     id: `session-end-notification-${Date.now()}`,
                     content: t.chat.practiceSessionEnded,
@@ -301,7 +323,9 @@ export const ChatScreen = () => {
 
                 // Replace ending message with error message
                 setMessages(prevMsgs => [
-                  ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
+                  ...prevMsgs.filter(
+                    msg => !msg.id.startsWith('session-ending-')
+                  ),
                   {
                     id: `session-end-error-${Date.now()}`,
                     content: t.chat.sessionEndError,
@@ -325,6 +349,8 @@ export const ChatScreen = () => {
         // Remove optimistic message on failure
         setMessages(prev => prev.filter(m => m.id !== userMessage.id))
         setError(response.error || t.chat.errors.sendFailed)
+        clearTimeout(typingTimeout)
+        setIsTyping(false)
 
         // Check if user reached max turns even if API failed
         const maxTurns = scenario?.max_turns
@@ -341,7 +367,7 @@ export const ChatScreen = () => {
       // Remove optimistic message on failure
       setMessages(prev => prev.filter(m => m.id !== userMessage.id))
       setError(t.chat.errors.networkError)
-    } finally {
+      clearTimeout(typingTimeout)
       setIsTyping(false)
     }
   }
@@ -472,12 +498,18 @@ export const ChatScreen = () => {
           rightContent={
             !isEndingSession && (
               <button
-                onClick={sessionEndCalled || session?.is_completed || session?.status === 'completed' 
-                  ? handleShowInsights 
-                  : handleEndSessionEarly}
+                onClick={
+                  sessionEndCalled ||
+                  session?.is_completed ||
+                  session?.status === 'completed'
+                    ? handleShowInsights
+                    : handleEndSessionEarly
+                }
                 className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               >
-                {sessionEndCalled || session?.is_completed || session?.status === 'completed'
+                {sessionEndCalled ||
+                session?.is_completed ||
+                session?.status === 'completed'
                   ? t.sessions.sessionInsights
                   : t.chat.endSessionEarly}
               </button>
@@ -498,7 +530,8 @@ export const ChatScreen = () => {
             error={error}
             userAvatar={globalSelectedRole?.avatar_url}
             characterAvatar={
-              availableRoles.find(role => role.id !== globalSelectedRole?.id)?.avatar_url
+              availableRoles.find(role => role.id !== globalSelectedRole?.id)
+                ?.avatar_url
             }
           />
         </div>
