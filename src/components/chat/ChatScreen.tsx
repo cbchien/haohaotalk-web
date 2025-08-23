@@ -341,6 +341,10 @@ export const ChatScreen = () => {
     setShowEndConfirmation(true)
   }
 
+  const handleShowInsights = () => {
+    setShowCompletion(true)
+  }
+
   const handleConfirmEndSession = async () => {
     if (!sessionId || sessionEndCalled) return
 
@@ -433,13 +437,16 @@ export const ChatScreen = () => {
           title={scenario?.title || t.chat.conversation}
           leftContent={scenarioImage}
           rightContent={
-            !showCompletion &&
             !isEndingSession && (
               <button
-                onClick={handleEndSessionEarly}
+                onClick={sessionEndCalled || session?.is_completed || session?.status === 'completed' 
+                  ? handleShowInsights 
+                  : handleEndSessionEarly}
                 className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               >
-                {t.chat.endSessionEarly}
+                {sessionEndCalled || session?.is_completed || session?.status === 'completed'
+                  ? t.sessions.sessionInsights
+                  : t.chat.endSessionEarly}
               </button>
             )
           }
