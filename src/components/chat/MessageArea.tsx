@@ -118,12 +118,20 @@ export const MessageArea = ({
         {/* Messages */}
         {messages.map(message => {
           if (message.type === 'system') {
+            // Special handling for session ending message with loading animation
+            const isSessionEnding = message.id.startsWith('session-ending-')
+            
             return (
               <div key={message.id} className="flex justify-center mb-4">
                 <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 max-w-xs">
-                  <p className="text-sm text-blue-800 text-center">
-                    {message.content}
-                  </p>
+                  <div className="flex items-center justify-center space-x-2">
+                    {isSessionEnding && (
+                      <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                    )}
+                    <p className="text-sm text-blue-800 text-center">
+                      {message.content}
+                    </p>
+                  </div>
                 </div>
               </div>
             )

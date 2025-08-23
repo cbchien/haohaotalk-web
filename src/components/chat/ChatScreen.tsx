@@ -255,12 +255,23 @@ export const ChatScreen = () => {
           const currentTurn = updatedSession.current_turn
 
           if (maxTurns && currentTurn >= maxTurns && !sessionEndCalled) {
-            // We've reached max turns - end the session
+            // We've reached max turns - show session ending message and disable input
             setSessionEndCalled(true)
             setIsEndingSession(true)
 
-            // Call endSession API
-            ;(async () => {
+            // Add immediate "session ending..." message
+            setMessages(prevMsgs => [
+              ...prevMsgs,
+              {
+                id: `session-ending-${Date.now()}`,
+                content: t.chat.sessionEnding,
+                type: 'system',
+                timestamp: new Date(),
+              } as Message,
+            ])
+
+            // Call endSession API after a brief delay to show the ending message
+            setTimeout(async () => {
               try {
                 await sessionsApiService.endSession(sessionId)
 
@@ -269,9 +280,9 @@ export const ChatScreen = () => {
                   queryKey: cacheInvalidation.sessionsList(),
                 })
 
-                // Add session end message
+                // Replace ending message with completion message
                 setMessages(prevMsgs => [
-                  ...prevMsgs,
+                  ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
                   {
                     id: `session-end-notification-${Date.now()}`,
                     content: t.chat.practiceSessionEnded,
@@ -286,9 +297,9 @@ export const ChatScreen = () => {
               } catch (error) {
                 console.error('Failed to end session:', error) // eslint-disable-line no-console
 
-                // Show error message
+                // Replace ending message with error message
                 setMessages(prevMsgs => [
-                  ...prevMsgs,
+                  ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
                   {
                     id: `session-end-error-${Date.now()}`,
                     content: t.chat.sessionEndError,
@@ -301,7 +312,7 @@ export const ChatScreen = () => {
                 setIsEndingSession(false)
                 setShowCompletion(true)
               }
-            })()
+            }, 1000) // 1 second delay to show "session ending..." message
           } else if (updatedSession.is_completed && !sessionEndCalled) {
             // Backend already completed the session (for other reasons)
             setSessionEndCalled(true)
