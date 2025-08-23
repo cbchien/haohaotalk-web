@@ -63,12 +63,21 @@ export const ChatScreen = () => {
       try {
         setIsLoading(true)
         setError(null)
+        
+        // Reset completion state for new session
+        setSessionEndCalled(false)
+        setShowCompletion(false)
 
         const response = await sessionsApiService.getSession(sessionId)
 
         if (response.success && response.data) {
           setSession(response.data)
           setConnectionScore(response.data.connection_score || 0)
+          
+          // If session is already completed, mark as processed to prevent duplicate processing
+          if (response.data.is_completed || response.data.status === 'completed') {
+            setSessionEndCalled(true)
+          }
 
           // Use global scenario data or fetch if not available
           if (currentScenario) {
@@ -173,6 +182,16 @@ export const ChatScreen = () => {
 
   const handleSendMessage = async (content: string) => {
     if (!sessionId || !content.trim()) return
+    
+    // Prevent sending messages if session is completed or ending
+    if (session?.is_completed || session?.status === 'completed' || isEndingSession || sessionEndCalled) return
+    
+    // Additional check: prevent sending if max turns already reached
+    const maxTurns = session?.max_turns || scenario?.max_turns
+    if (maxTurns) {
+      const currentUserTurns = messages.filter(msg => msg.type === 'user').length
+      if (currentUserTurns >= maxTurns) return
+    }
 
     const userMessage: Message = {
       id: `temp-${Date.now()}`,
@@ -217,7 +236,7 @@ export const ChatScreen = () => {
           )
         }
 
-        // Add AI response and check completion after messages are updated
+        // Add AI response
         if (turn.ai_response) {
           const aiMessage: Message = {
             id: `${turn.id}-ai`,
@@ -227,84 +246,67 @@ export const ChatScreen = () => {
             character_emotion: turn.character_emotion || 'neutral',
           }
 
-          setMessages(prev => {
-            const newMessages = [...prev, aiMessage]
+          setMessages(prev => [...prev, aiMessage])
+        }
 
-            // Check completion after AI message is added
-            if (updatedSession) {
-              const isBackendCompleted = updatedSession.is_completed
-              const maxTurns = updatedSession.max_turns || scenario?.max_turns
+        // Check if we've reached max turns after successful turn completion
+        if (updatedSession) {
+          const maxTurns = updatedSession.max_turns || scenario?.max_turns
+          const currentTurn = updatedSession.current_turn
 
-              // Count user turns from updated messages array (includes current user message)
-              const userTurnsCount = newMessages.filter(
-                msg => msg.type === 'user'
-              ).length
-              const hasUserCompletedAllTurns =
-                maxTurns && userTurnsCount >= maxTurns
+          if (maxTurns && currentTurn >= maxTurns && !sessionEndCalled) {
+            // We've reached max turns - end the session
+            setSessionEndCalled(true)
+            setIsEndingSession(true)
 
-              // Complete session when user has completed all turns (only call once)
-              if (
-                hasUserCompletedAllTurns &&
-                !isBackendCompleted &&
-                !sessionEndCalled
-              ) {
-                // Mark that we've started the end session process
-                setSessionEndCalled(true)
+            // Call endSession API
+            ;(async () => {
+              try {
+                await sessionsApiService.endSession(sessionId)
 
-                // Disable input immediately
-                setIsEndingSession(true)
+                // Invalidate sessions list cache
+                queryClient.invalidateQueries({
+                  queryKey: cacheInvalidation.sessionsList(),
+                })
 
-                // Call endSession API
-                ;(async () => {
-                  try {
-                    await sessionsApiService.endSession(sessionId)
+                // Add session end message
+                setMessages(prevMsgs => [
+                  ...prevMsgs,
+                  {
+                    id: `session-end-notification-${Date.now()}`,
+                    content: t.chat.practiceSessionEnded,
+                    type: 'system',
+                    timestamp: new Date(),
+                  } as Message,
+                ])
 
-                    // Invalidate sessions list cache to show the completed session
-                    queryClient.invalidateQueries({
-                      queryKey: cacheInvalidation.sessionsList(),
-                    })
+                // Show completion modal
+                setIsEndingSession(false)
+                setShowCompletion(true)
+              } catch (error) {
+                console.error('Failed to end session:', error) // eslint-disable-line no-console
 
-                    // After successful API call, show end message
-                    setMessages(prevMsgs => [
-                      ...prevMsgs,
-                      {
-                        id: `session-end-notification-${Date.now()}`,
-                        content: t.chat.practiceSessionEnded,
-                        type: 'system',
-                        timestamp: new Date(),
-                      } as Message,
-                    ])
+                // Show error message
+                setMessages(prevMsgs => [
+                  ...prevMsgs,
+                  {
+                    id: `session-end-error-${Date.now()}`,
+                    content: t.chat.sessionEndError,
+                    type: 'system',
+                    timestamp: new Date(),
+                  } as Message,
+                ])
 
-                    // Show completion modal
-                    setIsEndingSession(false)
-                    setShowCompletion(true)
-                  } catch (error) {
-                    console.error('Failed to end session:', error) // eslint-disable-line no-console
-
-                    // Show error message
-                    setMessages(prevMsgs => [
-                      ...prevMsgs,
-                      {
-                        id: `session-end-error-${Date.now()}`,
-                        content: t.chat.sessionEndError,
-                        type: 'system',
-                        timestamp: new Date(),
-                      } as Message,
-                    ])
-
-                    // Show modal anyway after error
-                    setIsEndingSession(false)
-                    setShowCompletion(true)
-                  }
-                })()
-              } else if (isBackendCompleted) {
-                // Backend already marked as complete
+                // Show modal anyway after error
+                setIsEndingSession(false)
                 setShowCompletion(true)
               }
-            }
-
-            return newMessages
-          })
+            })()
+          } else if (updatedSession.is_completed && !sessionEndCalled) {
+            // Backend already completed the session (for other reasons)
+            setSessionEndCalled(true)
+            setShowCompletion(true)
+          }
         }
       } else {
         // Remove optimistic message on failure
@@ -317,7 +319,8 @@ export const ChatScreen = () => {
           msg => msg.type === 'user'
         ).length
 
-        if (maxTurns && userTurnsCount >= maxTurns) {
+        if (maxTurns && userTurnsCount >= maxTurns && !sessionEndCalled) {
+          setSessionEndCalled(true)
           setShowCompletion(true)
         }
       }
@@ -465,7 +468,15 @@ export const ChatScreen = () => {
             isTyping ||
             showCompletion ||
             isEndingSession ||
-            session?.is_completed
+            sessionEndCalled ||
+            session?.is_completed ||
+            session?.status === 'completed' ||
+            // Also disable if max turns reached (extra safety)
+            (() => {
+              const maxTurns = session?.max_turns || scenario?.max_turns
+              const currentTurn = session?.current_turn
+              return Boolean(maxTurns && currentTurn && currentTurn >= maxTurns)
+            })()
           }
         />
       </div>
