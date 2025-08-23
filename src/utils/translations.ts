@@ -146,6 +146,18 @@ export interface Translations {
     endSessionConfirm: string
     cancel: string
 
+    // Rating
+    rating: {
+      title: string
+      subtitle: string
+      placeholder: string
+      submit: string
+      skip: string
+      thankYou: string
+      submitting: string
+      error: string
+    }
+
     // Score messages
     score: {
       veryNegative: string
@@ -346,6 +358,16 @@ export const translations: Record<Language, Translations> = {
         'Are you sure you want to end this practice session?',
       endSessionConfirm: 'End Session',
       cancel: 'Cancel',
+      rating: {
+        title: 'Rate this practice session',
+        subtitle: 'How was your conversation practice?',
+        placeholder: 'Share your thoughts about this session (optional)',
+        submit: 'Submit Rating',
+        skip: 'Skip',
+        thankYou: 'Thank you for your feedback!',
+        submitting: 'Submitting rating...',
+        error: 'Failed to submit rating. Please try again.',
+      },
       score: {
         veryNegative: 'Relationship strained',
         negative: 'Some tension present',
@@ -529,6 +551,16 @@ export const translations: Record<Language, Translations> = {
       endSessionConfirmMessage: '確定要結束此練習會話嗎？',
       endSessionConfirm: '結束會話',
       cancel: '取消',
+      rating: {
+        title: '為這次練習評分',
+        subtitle: '這次對話練習如何？',
+        placeholder: '分享您對這次練習的想法（選填）',
+        submit: '提交',
+        skip: '跳過',
+        thankYou: '感謝您的回饋！',
+        submitting: '正在提交評分...',
+        error: '評分提交失敗，請重試。',
+      },
       score: {
         veryNegative: '關係緊張',
         negative: '存在一些緊張',

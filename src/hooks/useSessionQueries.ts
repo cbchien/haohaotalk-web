@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
+import { sessionsApiService } from '@/services/sessionsApi'
 import { cacheKeys, cacheTime, staleTime } from '@/utils/cacheKeys'
 import type {
   SessionPerformance,
@@ -135,4 +136,48 @@ export const useSessionComparisonData = (
       performanceQuery.isSuccess &&
       (!needsSessionDetail || sessionDetailQuery.isSuccess),
   }
+}
+
+// Rating mutation for sessions
+export const useRateSession = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      sessionId,
+      rating,
+      feedback,
+    }: {
+      sessionId: string
+      rating: number
+      feedback?: string
+    }) => {
+      const response = await sessionsApiService.rateSession(sessionId, {
+        rating,
+        feedback,
+      })
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to submit rating')
+      }
+
+      return response.data
+    },
+    onSuccess: (_, variables) => {
+      // Invalidate sessions list to show updated rating
+      queryClient.invalidateQueries({
+        queryKey: cacheKeys.sessions.list,
+      })
+
+      // Update specific session detail cache if exists
+      queryClient.invalidateQueries({
+        queryKey: cacheKeys.sessions.detail(variables.sessionId),
+      })
+
+      // Update session performance cache if exists
+      queryClient.invalidateQueries({
+        queryKey: cacheKeys.sessions.performance(variables.sessionId),
+      })
+    },
+  })
 }

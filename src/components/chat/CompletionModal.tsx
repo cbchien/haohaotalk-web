@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
+import { useRateSession } from '@/hooks/useSessionQueries'
+import { SessionRatingModal } from '@/components/sessions/SessionRatingModal'
 import type { Session } from '@/services'
 
 interface CompletionModalProps {
@@ -14,15 +17,31 @@ export const CompletionModal = ({
   finalScore,
   onClose,
 }: CompletionModalProps) => {
+  const [showRating, setShowRating] = useState(true)
+
   const navigate = useNavigate()
   const { currentLanguage, currentScenario } = useAppStore()
   const t = useTranslation(currentLanguage)
+  const rateSessionMutation = useRateSession()
 
   // Convert score from -5/+5 range to percentage
   const scorePercentage = Math.max(
     0,
     Math.min(100, ((finalScore + 5) / 10) * 100)
   )
+
+  const handleRatingSubmit = async (rating: number, feedback?: string) => {
+    await rateSessionMutation.mutateAsync({
+      sessionId: session.id,
+      rating,
+      feedback,
+    })
+    setShowRating(false)
+  }
+
+  const handleRatingSkip = () => {
+    setShowRating(false)
+  }
 
   const handleViewResults = () => {
     onClose()
@@ -52,68 +71,81 @@ export const CompletionModal = ({
   }
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-      onClick={handleOverlayClick}
-    >
-      <div className="bg-white rounded-2xl p-6 max-w-sm w-full animate-bounce-in relative">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+    <>
+      {/* Rating Modal - shown first */}
+      <SessionRatingModal
+        isOpen={showRating}
+        onSubmit={handleRatingSubmit}
+        onSkip={handleRatingSkip}
+        isSubmitting={rateSessionMutation.isPending}
+      />
+
+      {/* Completion Modal - shown after rating */}
+      {!showRating && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={handleOverlayClick}
         >
-          <span className="text-lg">×</span>
-        </button>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full animate-bounce-in relative">
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <span className="text-lg">×</span>
+            </button>
 
-        <div className="text-center">
-          {/* Celebration emoji */}
-          <div className="text-6xl mb-4">🎉</div>
+            <div className="text-center">
+              {/* Celebration emoji */}
+              <div className="text-6xl mb-4">🎉</div>
 
-          {/* Title */}
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            {t.chat.conversationComplete}
-          </h2>
+              {/* Title */}
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                {t.chat.conversationComplete}
+              </h2>
 
-          {/* Message */}
-          <p className="text-gray-600 mb-6">
-            {t.chat.conversationCompleteMessage}
-          </p>
+              {/* Message */}
+              <p className="text-gray-600 mb-6">
+                {t.chat.conversationCompleteMessage}
+              </p>
 
-          {/* Final score display */}
-          <div className="bg-blue-10 rounded-xl p-4 mb-6">
-            <div className="text-sm text-gray-600 mb-1">
-              {t.chat.finalScore}
+              {/* Final score display */}
+              <div className="bg-blue-10 rounded-xl p-4 mb-6">
+                <div className="text-sm text-gray-600 mb-1">
+                  {t.chat.finalScore}
+                </div>
+                <div className="text-2xl font-bold text-blue-100">
+                  {Math.round(scorePercentage)}%
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={handleViewResults}
+                  className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-500 transition-colors"
+                >
+                  {t.chat.viewDetailedResults}
+                </button>
+
+                <button
+                  onClick={handleTryAgain}
+                  className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  {t.chat.practiceAgain}
+                </button>
+
+                <button
+                  onClick={handleBackToHome}
+                  className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
+                >
+                  {t.chat.backToHome}
+                </button>
+              </div>
             </div>
-            <div className="text-2xl font-bold text-blue-100">
-              {Math.round(scorePercentage)}%
-            </div>
-          </div>
-
-          {/* Action buttons */}
-          <div className="space-y-3">
-            <button
-              onClick={handleViewResults}
-              className="w-full py-3 bg-blue-100 text-white rounded-xl font-semibold hover:bg-blue-500 transition-colors"
-            >
-              {t.chat.viewDetailedResults}
-            </button>
-
-            <button
-              onClick={handleTryAgain}
-              className="w-full py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
-            >
-              {t.chat.practiceAgain}
-            </button>
-
-            <button
-              onClick={handleBackToHome}
-              className="w-full py-2 text-gray-500 text-sm hover:text-gray-700 transition-colors"
-            >
-              {t.chat.backToHome}
-            </button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   )
 }

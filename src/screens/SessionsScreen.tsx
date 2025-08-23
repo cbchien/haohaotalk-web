@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { StarIcon } from '@heroicons/react/24/solid'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useSessionsList } from '@/hooks/useSessionQueries'
@@ -37,6 +38,24 @@ export const SessionsScreen = () => {
   const formatScore = (score?: number) => {
     if (score === undefined || score === null) return 0
     return Math.round(((score + 5) / 10) * 100)
+  }
+
+  const renderStars = (rating?: number) => {
+    if (!rating) return null
+
+    return (
+      <div className="flex items-center space-x-1">
+        {[1, 2, 3, 4, 5].map(star => (
+          <StarIcon
+            key={star}
+            className={`w-3 h-3 ${
+              star <= rating ? 'text-yellow-400' : 'text-gray-300'
+            }`}
+          />
+        ))}
+        <span className="text-xs text-gray-500 ml-1">{rating}/5</span>
+      </div>
+    )
   }
 
   if (isLoading) {
@@ -151,6 +170,12 @@ export const SessionsScreen = () => {
                           </span>
                         </div>
                       </div>
+                      {/* Rating display */}
+                      {session.user_rating && (
+                        <div className="mt-2">
+                          {renderStars(session.user_rating)}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
