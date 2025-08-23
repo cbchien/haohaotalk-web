@@ -40,6 +40,7 @@ export interface ScenarioRole {
   role_description_en: string
   initial_message: string
   initial_message_en: string
+  avatar_url?: string
 }
 
 export interface ScenariosListParams {

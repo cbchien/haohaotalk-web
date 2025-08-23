@@ -17,6 +17,8 @@ interface MessageAreaProps {
   scenario: Scenario | null
   isTyping: boolean
   error: string | null
+  userAvatar?: string
+  characterAvatar?: string
 }
 
 export const MessageArea = ({
@@ -24,6 +26,8 @@ export const MessageArea = ({
   scenario,
   isTyping,
   error,
+  userAvatar,
+  characterAvatar,
 }: MessageAreaProps) => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
@@ -39,9 +43,9 @@ export const MessageArea = ({
   const TypingIndicator = () => (
     <div className="flex justify-start mb-4">
       <div className="flex-shrink-0 mr-3 mt-1">
-        {scenario?.image_url ? (
+        {characterAvatar || scenario?.image_url ? (
           <img
-            src={scenario.image_url}
+            src={characterAvatar || scenario?.image_url || ''}
             alt="Character"
             className="w-8 h-8 rounded-full object-cover"
           />
@@ -142,7 +146,8 @@ export const MessageArea = ({
               key={message.id}
               message={message}
               isUser={message.type === 'user'}
-              characterAvatar={scenario?.image_url || undefined}
+              characterAvatar={characterAvatar || scenario?.image_url || undefined}
+              userAvatar={userAvatar}
             />
           )
         })}

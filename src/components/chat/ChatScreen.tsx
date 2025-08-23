@@ -478,6 +478,10 @@ export const ChatScreen = () => {
             scenario={scenario}
             isTyping={isTyping}
             error={error}
+            userAvatar={globalSelectedRole?.avatar_url}
+            characterAvatar={
+              availableRoles.find(role => role.id !== globalSelectedRole?.id)?.avatar_url
+            }
           />
         </div>
       </div>

@@ -10,12 +10,14 @@ interface ChatBubbleProps {
   message: Message
   isUser: boolean
   characterAvatar?: string
+  userAvatar?: string
 }
 
 export const ChatBubble = ({
   message,
   isUser,
   characterAvatar,
+  userAvatar,
 }: ChatBubbleProps) => {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -23,7 +25,7 @@ export const ChatBubble = ({
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
-      {/* Character avatar for non-user messages */}
+      {/* Character avatar for AI messages */}
       {!isUser && (
         <div className="flex-shrink-0 mr-3 mt-1">
           {characterAvatar ? (
@@ -44,7 +46,7 @@ export const ChatBubble = ({
       <div
         className={`max-w-[280px] p-4 rounded-2xl ${
           isUser
-            ? 'bg-blue-100 text-white ml-12'
+            ? 'bg-blue-100 text-white'
             : 'bg-white text-gray-900 mr-12 border border-gray-200'
         }`}
       >
@@ -59,6 +61,23 @@ export const ChatBubble = ({
           </p>
         )}
       </div>
+
+      {/* User avatar for user messages */}
+      {isUser && (
+        <div className="flex-shrink-0 ml-3 mt-1">
+          {userAvatar ? (
+            <img
+              src={userAvatar}
+              alt="User"
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <span className="text-xs text-white">👤</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
