@@ -16,6 +16,8 @@ import { MessageArea } from './MessageArea'
 import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
 
+const SESSION_ENDING_MESSAGE_DISPLAY_DURATION = 1000
+
 interface Message {
   id: string
   content: string
@@ -312,7 +314,7 @@ export const ChatScreen = () => {
                 setIsEndingSession(false)
                 setShowCompletion(true)
               }
-            }, 1000) // 1 second delay to show "session ending..." message
+            }, SESSION_ENDING_MESSAGE_DISPLAY_DURATION)
           } else if (updatedSession.is_completed && !sessionEndCalled) {
             // Backend already completed the session (for other reasons)
             setSessionEndCalled(true)
@@ -367,42 +369,58 @@ export const ChatScreen = () => {
     setSessionEndCalled(true)
     setIsEndingSession(true)
 
-    try {
-      await sessionsApiService.endSession(sessionId)
+    // Add immediate "ending conversation early..." message
+    setMessages(prev => [
+      ...prev,
+      {
+        id: `session-ending-early-${Date.now()}`,
+        content: t.chat.sessionEndingEarly,
+        type: 'system',
+        timestamp: new Date(),
+      } as Message,
+    ])
 
-      // Invalidate sessions list cache to show the completed session
-      queryClient.invalidateQueries({
-        queryKey: cacheInvalidation.sessionsList(),
-      })
+    // Call endSession API after a brief delay to show the ending message
+    setTimeout(async () => {
+      try {
+        await sessionsApiService.endSession(sessionId)
 
-      setMessages(prev => [
-        ...prev,
-        {
-          id: `session-end-early-${Date.now()}`,
-          content: t.chat.practiceSessionEnded,
-          type: 'system',
-          timestamp: new Date(),
-        } as Message,
-      ])
+        // Invalidate sessions list cache to show the completed session
+        queryClient.invalidateQueries({
+          queryKey: cacheInvalidation.sessionsList(),
+        })
 
-      setIsEndingSession(false)
-      setShowCompletion(true)
-    } catch (error) {
-      console.error('Failed to end session early:', error) // eslint-disable-line no-console
+        // Replace ending message with completion message
+        setMessages(prev => [
+          ...prev.filter(msg => !msg.id.startsWith('session-ending-early-')),
+          {
+            id: `session-end-early-${Date.now()}`,
+            content: t.chat.practiceSessionEnded,
+            type: 'system',
+            timestamp: new Date(),
+          } as Message,
+        ])
 
-      setMessages(prev => [
-        ...prev,
-        {
-          id: `session-end-early-error-${Date.now()}`,
-          content: t.chat.sessionEndError,
-          type: 'system',
-          timestamp: new Date(),
-        } as Message,
-      ])
+        setIsEndingSession(false)
+        setShowCompletion(true)
+      } catch (error) {
+        console.error('Failed to end session early:', error) // eslint-disable-line no-console
 
-      setIsEndingSession(false)
-      setShowCompletion(true)
-    }
+        // Replace ending message with error message
+        setMessages(prev => [
+          ...prev.filter(msg => !msg.id.startsWith('session-ending-early-')),
+          {
+            id: `session-end-early-error-${Date.now()}`,
+            content: t.chat.sessionEndError,
+            type: 'system',
+            timestamp: new Date(),
+          } as Message,
+        ])
+
+        setIsEndingSession(false)
+        setShowCompletion(true)
+      }
+    }, SESSION_ENDING_MESSAGE_DISPLAY_DURATION)
   }
 
   const scenarioImage = scenario?.image_url ? (
