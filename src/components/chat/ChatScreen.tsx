@@ -356,6 +356,10 @@ export const ChatScreen = () => {
     setShowCompletion(true)
   }
 
+  const handleSessionUpdate = (updatedSession: Session) => {
+    setSession(updatedSession)
+  }
+
   const handleConfirmEndSession = async () => {
     if (!sessionId || sessionEndCalled) return
 
@@ -504,6 +508,7 @@ export const ChatScreen = () => {
           session={session}
           finalScore={connectionScore}
           onClose={() => setShowCompletion(false)}
+          onSessionUpdate={handleSessionUpdate}
         />
       )}
 

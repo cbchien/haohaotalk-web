@@ -10,14 +10,17 @@ interface CompletionModalProps {
   session: Session
   finalScore: number
   onClose: () => void
+  onSessionUpdate?: (updatedSession: Session) => void
 }
 
 export const CompletionModal = ({
   session,
   finalScore,
   onClose,
+  onSessionUpdate,
 }: CompletionModalProps) => {
-  const [showRating, setShowRating] = useState(true)
+  // Only show rating if session doesn't already have a rating
+  const [showRating, setShowRating] = useState(!session.rating)
 
   const navigate = useNavigate()
   const { currentLanguage, currentScenario } = useAppStore()
@@ -31,11 +34,17 @@ export const CompletionModal = ({
   )
 
   const handleRatingSubmit = async (rating: number, feedback?: string) => {
-    await rateSessionMutation.mutateAsync({
+    const updatedSession = await rateSessionMutation.mutateAsync({
       sessionId: session.id,
       rating,
       feedback,
     })
+    
+    // Update the parent component's session state
+    if (onSessionUpdate && updatedSession) {
+      onSessionUpdate(updatedSession)
+    }
+    
     setShowRating(false)
   }
 
