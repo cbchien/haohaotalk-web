@@ -1,6 +1,6 @@
 import { useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
-import { ProfilePageLayout } from './components/ProfilePageLayout'
+import { ProfilePageLayout } from '@/components/profile/ProfilePageLayout'
 
 export const PrivacyPolicyPage = () => {
   const { currentLanguage } = useAppStore()

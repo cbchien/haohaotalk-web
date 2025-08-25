@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
-import { ProfileHeader } from '@/pages/profile/components/ProfileHeader'
-import { ProfileMenuItem } from '@/pages/profile/components/ProfileMenuItem'
+import { ProfileHeader } from '@/components/profile/ProfileHeader'
+import { ProfileMenuItem } from '@/components/profile/ProfileMenuItem'
 import { ConversionModal } from '@/components/conversion'
 
 export const ProfileScreen = () => {

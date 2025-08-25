@@ -4,7 +4,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { useAppStore, useAuthStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 import { profileApiService } from '@/services'
-import { ProfilePageLayout } from './components/ProfilePageLayout'
+import { ProfilePageLayout } from '@/components/profile/ProfilePageLayout'
 
 export const DeleteAccountPage = () => {
   const navigate = useNavigate()

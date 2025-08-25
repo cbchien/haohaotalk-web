@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 import { profileApiService } from '@/services'
-import { ProfilePageLayout } from './components/ProfilePageLayout'
+import { ProfilePageLayout } from '@/components/profile/ProfilePageLayout'
 
 export const ContactUsPage = () => {
   const { currentLanguage } = useAppStore()
