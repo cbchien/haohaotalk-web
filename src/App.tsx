@@ -9,6 +9,7 @@ import { AuthGuard } from './components/auth/AuthGuard'
 import { AuthLoadingPage } from './components/auth/AuthLoadingPage'
 import { BottomTabBar } from './components/navigation/BottomTabBar'
 import { HomeScreen } from './screens/HomeScreen'
+import { LandingPage } from './components/landing'
 import { SearchScreen } from './screens/SearchScreen'
 import { SessionsScreen } from './screens/SessionsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
@@ -34,9 +35,9 @@ function AppContent() {
     return <AuthLoadingPage type={authLoadingType} />
   }
 
-  // Hide bottom navigation on fullscreen routes (chat and analytics)
+  // Hide bottom navigation on fullscreen routes (chat, analytics, and landing page)
   const hiddenBottomNavRoutes = ['/session/', '/chat']
-  const hideBottomNav = hiddenBottomNavRoutes.some(route =>
+  const hideBottomNav = location.pathname === '/' || hiddenBottomNavRoutes.some(route =>
     location.pathname.includes(route)
   )
 
@@ -45,7 +46,8 @@ function AppContent() {
       {/* Main Content */}
       <main className={hideBottomNav ? '' : 'pb-16'}>
         <Routes>
-          <Route path="/" element={<HomeScreen />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<HomeScreen />} />
           <Route path="/search" element={<SearchScreen />} />
           <Route path="/sessions" element={<SessionsScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />

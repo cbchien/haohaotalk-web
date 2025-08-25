@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/store'
 import { AuthModal } from './AuthModal'
 
@@ -11,8 +12,9 @@ export const AuthGuard = ({
   children,
   requireAuth = false,
 }: AuthGuardProps) => {
-  const { user, isAuthenticated, setLoading } = useAuthStore()
-  const [showAuthModal, setShowAuthModal] = useState(false)
+  const location = useLocation()
+  const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } = useAuthStore()
+  const isLandingPage = location.pathname === '/'
 
   useEffect(() => {
     // Check if we need to show authentication
@@ -27,15 +29,16 @@ export const AuthGuard = ({
     if (!user) {
       setLoading(false)
     }
-  }, [requireAuth, isAuthenticated, user, setLoading])
+  }, [requireAuth, isAuthenticated, user, setLoading, setShowAuthModal])
 
   // Show auth modal on app start if no user, hide when authenticated
+  // Skip auto auth modal on landing page
   useEffect(() => {
     if (user) {
       // User is authenticated, make sure modal is closed
       setShowAuthModal(false)
-    } else {
-      // No user, show modal after brief delay
+    } else if (!isLandingPage) {
+      // No user and not on landing page, show modal after brief delay
       const timer = setTimeout(() => {
         if (!user && !showAuthModal) {
           setShowAuthModal(true)
@@ -44,7 +47,7 @@ export const AuthGuard = ({
 
       return () => clearTimeout(timer)
     }
-  }, [user, showAuthModal])
+  }, [user, showAuthModal, isLandingPage, setShowAuthModal])
 
   return (
     <>

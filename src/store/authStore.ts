@@ -11,6 +11,7 @@ interface AuthState {
   isInitialized: boolean
   authToken: string | null
   authLoadingType: 'login' | 'logout' | null
+  showAuthModal: boolean
 
   // Actions
   setUser: (user: User, token?: string) => void
@@ -18,6 +19,7 @@ interface AuthState {
   logout: () => Promise<void>
   setLoading: (loading: boolean) => void
   setAuthLoading: (type: 'login' | 'logout' | null) => void
+  setShowAuthModal: (show: boolean) => void
   updateUserProfile: (updates: Partial<User>) => Promise<void>
   initializeAuth: () => Promise<void>
 }
@@ -32,6 +34,7 @@ export const useAuthStore = create<AuthState>()(
         isInitialized: false,
         authToken: null,
         authLoadingType: null,
+        showAuthModal: false,
 
         setUser: (user, token) => {
           if (token) {
@@ -84,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
             authLoadingType: null,
           })
 
-          // Navigate to home tab after logout
+          // Navigate to landing page after logout
           if (typeof window !== 'undefined') {
             window.location.pathname = '/'
           }
@@ -93,6 +96,8 @@ export const useAuthStore = create<AuthState>()(
         setLoading: loading => set({ isLoading: loading }),
 
         setAuthLoading: type => set({ authLoadingType: type }),
+
+        setShowAuthModal: show => set({ showAuthModal: show }),
 
         updateUserProfile: async updates => {
           const { user } = get()

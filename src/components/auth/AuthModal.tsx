@@ -83,7 +83,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/')
+        navigate('/home')
       } else {
         // Fall back to local guest creation for development
         const guestUser = {
@@ -95,7 +95,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(guestUser)
         onClose()
-        navigate('/')
+        navigate('/home')
       }
     } catch {
       // Guest access failed, but continue with fallback
@@ -150,7 +150,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         // Immediately set user and close modal - loading page will show
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/')
+        navigate('/home')
       } else {
         setErrors({
           general: response.error || t.auth.errors.authenticationFailed,
@@ -185,7 +185,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/')
+        navigate('/home')
       } else {
         // Use Google user data directly if backend call fails
         const user = {
@@ -199,7 +199,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(user)
         onClose()
-        navigate('/')
+        navigate('/home')
       }
     } catch (error) {
       const errorMessage =

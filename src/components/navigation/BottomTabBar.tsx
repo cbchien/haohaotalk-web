@@ -25,7 +25,7 @@ interface TabItem {
 const tabs: TabItem[] = [
   {
     id: 'home',
-    path: '/',
+    path: '/home',
     labelKey: 'home',
     icon: HomeIcon,
     iconActive: HomeIconSolid,
@@ -68,7 +68,7 @@ export const BottomTabBar = () => {
         {tabs.map(tab => {
           const isActive =
             location.pathname === tab.path ||
-            (tab.path !== '/' && location.pathname.startsWith(tab.path))
+            (tab.path !== '/home' && tab.path !== '/' && location.pathname.startsWith(tab.path))
           const Icon = isActive ? tab.iconActive : tab.icon
           const displayLabel = t.navigation[tab.labelKey]
 

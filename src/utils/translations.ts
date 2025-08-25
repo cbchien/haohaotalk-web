@@ -216,6 +216,18 @@ export interface Translations {
     understandNeedsDetail: string
   }
 
+  // Landing page
+  landing: {
+    heroTitle: string
+    heroSubtitle: string
+    startPracticing: string
+    userCount: string
+    testimonials: Array<{
+      text: string
+      author: string
+    }>
+  }
+
   // Common
   common: {
     goBack: string
@@ -425,6 +437,27 @@ export const translations: Record<Language, Translations> = {
       understandNeedsDetail:
         'Focus on what each person needs rather than what they did wrong.',
     },
+    landing: {
+      heroTitle: 'Master Any Conversation',
+      heroSubtitle:
+        'Practice real-world scenarios and build confidence in every day interaction',
+      startPracticing: 'Start Practicing',
+      userCount: 'Join 100+ users improving their conversation skills',
+      testimonials: [
+        {
+          text: 'HaoHaoTalk helped me feel confident in job interviews. The practice scenarios are incredibly realistic.',
+          author: '- Sarah M.'
+        },
+        {
+          text: 'I used to struggle with difficult conversations at work. Now I handle them with ease thanks to the practice sessions.',
+          author: '- David L.'
+        },
+        {
+          text: 'The relationship scenarios helped me communicate better with my partner. Our conversations are much more productive now.',
+          author: '- Jessica K.'
+        }
+      ]
+    },
     common: {
       goBack: 'Go Back',
       loading: 'Loading...',
@@ -617,6 +650,26 @@ export const translations: Record<Language, Translations> = {
       positiveResponseDetail: '展現理解並願意共同尋找解決方案的態度。',
       understandNeeds: '理解潛在需求',
       understandNeedsDetail: '專注於每個人需要什麼，而不是他們做錯了什麼。',
+    },
+    landing: {
+      heroTitle: '掌握每一次對話',
+      heroSubtitle: '練習實際的情境，建立日常互動中的信心。',
+      startPracticing: '開始練習',
+      userCount: '加入 100+ 名正在提升對話技巧的用戶',
+      testimonials: [
+        {
+          text: '好好說幫助我在面試中充滿自信。練習情境非常真實。',
+          author: '- Sarah M.'
+        },
+        {
+          text: '我以前在工作中很難處理困難對話。現在透過練習，我能輕鬆應對了。',
+          author: '- David L.'
+        },
+        {
+          text: '關係情境練習幫助我與伴侶溝通得更好。我們的對話現在更有建設性。',
+          author: '- Jessica K.'
+        }
+      ]
     },
     common: {
       goBack: '返回',
