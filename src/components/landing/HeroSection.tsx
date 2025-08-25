@@ -7,13 +7,7 @@ export const HeroSection = () => {
   const t = useTranslation(currentLanguage)
 
   const handleGetStarted = () => {
-    // eslint-disable-next-line no-console
-    console.log('Get Started button clicked')
-    // eslint-disable-next-line no-console
-    console.log('Current showAuthModal state:', useAuthStore.getState().showAuthModal)
     setShowAuthModal(true)
-    // eslint-disable-next-line no-console
-    console.log('After setting showAuthModal:', useAuthStore.getState().showAuthModal)
   }
 
   return (
