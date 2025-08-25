@@ -119,7 +119,7 @@ export const SessionsScreen = () => {
                 className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:border-blue-40 transition-colors active:scale-98"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                     {session.scenario_role?.avatar_url ? (
                       <img
                         src={session.scenario_role.avatar_url}
