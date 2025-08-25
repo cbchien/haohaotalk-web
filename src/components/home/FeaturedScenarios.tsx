@@ -68,12 +68,12 @@ export const ScenarioGrid = () => {
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer break-inside-avoid mb-3"
           >
             {/* Illustration - Same height for all cards */}
-            <div className="h-32 bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 p-4 flex items-center justify-center">
+            <div className="h-32 bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 flex items-center justify-center">
               {scenario.image_url ? (
                 <img
                   src={scenario.image_url}
                   alt={scenario.title}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-16 h-10 bg-white bg-opacity-90 rounded-lg flex items-center justify-center border border-gray-200">

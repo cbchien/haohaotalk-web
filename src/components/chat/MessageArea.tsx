@@ -87,7 +87,7 @@ export const MessageArea = ({
             <img
               src={scenario.image_url}
               alt={scenario.title}
-              className="w-full h-48 object-cover rounded-xl"
+              className="w-full h-48 object-contain rounded-xl"
             />
           </div>
         )}
