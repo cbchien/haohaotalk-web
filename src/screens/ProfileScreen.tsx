@@ -1,19 +1,28 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 import { ProfileHeader } from '@/pages/profile/components/ProfileHeader'
 import { ProfileMenuItem } from '@/pages/profile/components/ProfileMenuItem'
+import { ConversionModal } from '@/components/conversion'
 
 export const ProfileScreen = () => {
   const navigate = useNavigate()
-  const { logout } = useAuthStore()
+  const { logout, user } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
+  const [showConversionModal, setShowConversionModal] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  useEffect(() => {
+    // Show conversion modal for guest users accessing profile
+    if (user?.isGuest) {
+      setShowConversionModal(true)
+    }
+  }, [user?.isGuest])
 
   const handleLogout = async () => {
     await logout()
@@ -58,26 +67,35 @@ export const ProfileScreen = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="p-4">
-        <ProfileHeader />
+    <>
+      <div className="min-h-screen bg-gray-50">
+        <div className="p-4">
+          <ProfileHeader />
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          {menuItems.map((item, index) => (
-            <div key={item.title}>
-              <ProfileMenuItem
-                title={item.title}
-                onClick={item.onClick}
-                variant={item.variant}
-                showArrow={item.showArrow}
-              />
-              {index < menuItems.length - 1 && (
-                <div className="border-b border-gray-100 mx-4" />
-              )}
-            </div>
-          ))}
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            {menuItems.map((item, index) => (
+              <div key={item.title}>
+                <ProfileMenuItem
+                  title={item.title}
+                  onClick={item.onClick}
+                  variant={item.variant}
+                  showArrow={item.showArrow}
+                />
+                {index < menuItems.length - 1 && (
+                  <div className="border-b border-gray-100 mx-4" />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Conversion Modal for profile access */}
+      <ConversionModal
+        isOpen={showConversionModal}
+        onClose={() => setShowConversionModal(false)}
+        trigger="profile-access"
+      />
+    </>
   )
 }

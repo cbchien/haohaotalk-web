@@ -13,7 +13,8 @@ export const AuthGuard = ({
   requireAuth = false,
 }: AuthGuardProps) => {
   const location = useLocation()
-  const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } = useAuthStore()
+  const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } =
+    useAuthStore()
   const isLandingPage = location.pathname === '/'
 
   useEffect(() => {

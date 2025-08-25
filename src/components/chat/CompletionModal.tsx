@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from '@/utils/translations'
-import { useAppStore } from '@/store'
+import { useAppStore, useAuthStore } from '@/store'
 import { useRateSession } from '@/hooks/useSessionQueries'
 import { SessionRatingModal } from '@/components/sessions/SessionRatingModal'
+import { ConversionModal } from '@/components/conversion'
 import type { Session } from '@/services'
 
 interface CompletionModalProps {
@@ -23,11 +24,21 @@ export const CompletionModal = ({
 }: CompletionModalProps) => {
   // Only show rating if session doesn't already have a rating
   const [showRating, setShowRating] = useState(!session.rating)
+  const [showConversionModal, setShowConversionModal] = useState(false)
 
   const navigate = useNavigate()
   const { currentLanguage, currentScenario } = useAppStore()
+  const { user, incrementCompletedSessions, shouldShowConversionPrompt } =
+    useAuthStore()
   const t = useTranslation(currentLanguage)
   const rateSessionMutation = useRateSession()
+
+  // Track session completion for guest users
+  useEffect(() => {
+    if (user?.isGuest) {
+      incrementCompletedSessions()
+    }
+  }, [user?.isGuest, incrementCompletedSessions])
 
   // Convert score from -5/+5 range to percentage
   const scorePercentage = Math.max(
@@ -41,23 +52,43 @@ export const CompletionModal = ({
       rating,
       feedback,
     })
-    
+
     // Update the parent component's session state
     if (onSessionUpdate && updatedSession) {
       onSessionUpdate(updatedSession)
     }
-    
+
     setShowRating(false)
+    checkAndShowConversion()
   }
 
   const handleRatingSkip = () => {
     setShowRating(false)
+    checkAndShowConversion()
   }
+
+  const checkAndShowConversion = useCallback(() => {
+    // Check if we should show conversion prompt for guest users
+    if (user?.isGuest && shouldShowConversionPrompt()) {
+      setShowConversionModal(true)
+    }
+  }, [user?.isGuest, shouldShowConversionPrompt])
+
+  // If no rating needed, check for conversion after initial render
+  useEffect(() => {
+    if (!showRating && user?.isGuest) {
+      const timer = setTimeout(() => {
+        checkAndShowConversion()
+      }, 500) // Small delay to let completion modal settle
+
+      return () => clearTimeout(timer)
+    }
+  }, [showRating, user?.isGuest, checkAndShowConversion])
 
   const handleViewResults = () => {
     onClose()
     navigate(`/session/${sessionId}/insights`, {
-      state: { sessionId }
+      state: { sessionId },
     })
   }
 
@@ -159,6 +190,14 @@ export const CompletionModal = ({
           </div>
         </div>
       )}
+
+      {/* Conversion Modal - shown for guest users who meet criteria */}
+      <ConversionModal
+        isOpen={showConversionModal}
+        onClose={() => setShowConversionModal(false)}
+        trigger="post-session"
+        sessionData={{ session, finalScore, scorePercentage }}
+      />
     </>
   )
 }

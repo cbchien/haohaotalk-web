@@ -37,9 +37,9 @@ function AppContent() {
 
   // Hide bottom navigation on fullscreen routes (chat, analytics, and landing page)
   const hiddenBottomNavRoutes = ['/session/', '/chat']
-  const hideBottomNav = location.pathname === '/' || hiddenBottomNavRoutes.some(route =>
-    location.pathname.includes(route)
-  )
+  const hideBottomNav =
+    location.pathname === '/' ||
+    hiddenBottomNavRoutes.some(route => location.pathname.includes(route))
 
   return (
     <div className="min-h-screen bg-gray-50">

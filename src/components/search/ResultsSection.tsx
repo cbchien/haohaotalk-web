@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { Scenario } from '@/services/scenariosApi'
 import { useTranslation } from '@/utils/translations'
+import { useAuthStore } from '@/store'
 
 interface ResultsSectionProps {
   results: Scenario[]
@@ -21,9 +22,27 @@ export const ResultsSection = ({
   language,
 }: ResultsSectionProps) => {
   const navigate = useNavigate()
+  const {
+    incrementViewedScenarios,
+    shouldShowConversionPrompt,
+    setShowConversionPrompt,
+    user,
+  } = useAuthStore()
   const t = useTranslation(language)
 
   const handleScenarioClick = (scenario: Scenario) => {
+    // Track scenario viewing for guest users
+    if (user?.isGuest) {
+      incrementViewedScenarios()
+
+      // Check if we should show conversion prompt after navigation
+      setTimeout(() => {
+        if (shouldShowConversionPrompt()) {
+          setShowConversionPrompt(true)
+        }
+      }, 1000) // Short delay to allow navigation to complete
+    }
+
     navigate(`/scenario/${scenario.id}/configure`)
   }
 

@@ -3,6 +3,7 @@ import { persist, devtools } from 'zustand/middleware'
 import { User } from './types'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService, apiClient } from '@/services'
+import { ConversionEmailData } from '@/services/authApi'
 
 interface AuthState {
   user: User | null
@@ -13,6 +14,15 @@ interface AuthState {
   authLoadingType: 'login' | 'logout' | null
   showAuthModal: boolean
 
+  // Conversion state
+  isConverting: boolean
+  conversionError: string | null
+  showConversionPrompt: boolean
+
+  // Engagement tracking
+  viewedScenariosCount: number
+  completedSessionsCount: number
+
   // Actions
   setUser: (user: User, token?: string) => void
   clearUser: () => void
@@ -22,6 +32,17 @@ interface AuthState {
   setShowAuthModal: (show: boolean) => void
   updateUserProfile: (updates: Partial<User>) => Promise<void>
   initializeAuth: () => Promise<void>
+
+  // Conversion actions
+  convertGuestToEmail: (data: ConversionEmailData) => Promise<void>
+  convertGuestToGoogle: (idToken: string) => Promise<void>
+  setShowConversionPrompt: (show: boolean) => void
+  setConversionError: (error: string | null) => void
+
+  // Engagement tracking actions
+  incrementViewedScenarios: () => void
+  incrementCompletedSessions: () => void
+  shouldShowConversionPrompt: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -36,11 +57,20 @@ export const useAuthStore = create<AuthState>()(
         authLoadingType: null,
         showAuthModal: false,
 
+        // Conversion state
+        isConverting: false,
+        conversionError: null,
+        showConversionPrompt: false,
+
+        // Engagement tracking
+        viewedScenariosCount: 0,
+        completedSessionsCount: 0,
+
         setUser: (user, token) => {
           if (token) {
             apiClient.setAuthToken(token)
           }
-          
+
           set({
             user,
             isAuthenticated: true,
@@ -143,23 +173,132 @@ export const useAuthStore = create<AuthState>()(
             set({ isInitialized: true })
           }
         },
+
+        // Conversion methods
+        convertGuestToEmail: async (data: ConversionEmailData) => {
+          const { user } = get()
+          if (!user?.isGuest) {
+            set({ conversionError: 'Only guest users can be converted' })
+            return
+          }
+
+          set({ isConverting: true, conversionError: null })
+
+          try {
+            const response = await authApiService.convertGuestToEmail(data)
+
+            if (response.success && response.data) {
+              set({
+                user: response.data.user,
+                authToken: response.data.token,
+                isConverting: false,
+                showConversionPrompt: false,
+                conversionError: null,
+              })
+            } else {
+              set({
+                isConverting: false,
+                conversionError: response.error || 'Conversion failed',
+              })
+            }
+          } catch {
+            set({
+              isConverting: false,
+              conversionError: 'Network error. Please try again.',
+            })
+          }
+        },
+
+        convertGuestToGoogle: async (idToken: string) => {
+          const { user } = get()
+          if (!user?.isGuest) {
+            set({ conversionError: 'Only guest users can be converted' })
+            return
+          }
+
+          set({ isConverting: true, conversionError: null })
+
+          try {
+            const response = await authApiService.convertGuestToGoogle({
+              idToken,
+            })
+
+            if (response.success && response.data) {
+              set({
+                user: response.data.user,
+                authToken: response.data.token,
+                isConverting: false,
+                showConversionPrompt: false,
+                conversionError: null,
+              })
+            } else {
+              set({
+                isConverting: false,
+                conversionError: response.error || 'Conversion failed',
+              })
+            }
+          } catch {
+            set({
+              isConverting: false,
+              conversionError: 'Network error. Please try again.',
+            })
+          }
+        },
+
+        setShowConversionPrompt: show => set({ showConversionPrompt: show }),
+
+        setConversionError: error => set({ conversionError: error }),
+
+        // Engagement tracking methods
+        incrementViewedScenarios: () => {
+          const { viewedScenariosCount } = get()
+          const newCount = viewedScenariosCount + 1
+          set({ viewedScenariosCount: newCount })
+        },
+
+        incrementCompletedSessions: () => {
+          const { completedSessionsCount } = get()
+          const newCount = completedSessionsCount + 1
+          set({ completedSessionsCount: newCount })
+        },
+
+        shouldShowConversionPrompt: () => {
+          const {
+            user,
+            viewedScenariosCount,
+            completedSessionsCount,
+            showConversionPrompt,
+          } = get()
+
+          // Don't show if already showing, user is not guest, or already converted
+          if (showConversionPrompt || !user?.isGuest) {
+            return false
+          }
+
+          // Show based on engagement thresholds
+          return viewedScenariosCount >= 4 || completedSessionsCount >= 2
+        },
       }),
       {
         name: 'haohaotalk-auth',
         partialize: state => {
-          // Only persist registered users, not guest users
-          // Guest sessions should start fresh each browser session
+          // For guest users, persist engagement tracking but not auth state
           if (state.user?.isGuest) {
             return {
-              user: null,
-              isAuthenticated: false,
-              authToken: null,
+              user: state.user,
+              isAuthenticated: state.isAuthenticated,
+              authToken: state.authToken,
+              viewedScenariosCount: state.viewedScenariosCount,
+              completedSessionsCount: state.completedSessionsCount,
             }
           }
+          // For registered users, persist auth state and engagement
           return {
             user: state.user,
             isAuthenticated: state.isAuthenticated,
             authToken: state.authToken,
+            viewedScenariosCount: state.viewedScenariosCount,
+            completedSessionsCount: state.completedSessionsCount,
           }
         },
       }

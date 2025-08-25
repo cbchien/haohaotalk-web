@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
-import { useAppStore } from '@/store'
+import { useAppStore, useAuthStore } from '@/store'
 import type { Scenario } from '@/services'
 import { useTranslation } from '@/utils/translations'
 import { useHomeScenarios } from '@/hooks/useHomeQueries'
@@ -10,6 +10,12 @@ const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 export const ScenarioGrid = () => {
   const navigate = useNavigate()
   const { selectedCategories, currentLanguage } = useAppStore()
+  const {
+    incrementViewedScenarios,
+    shouldShowConversionPrompt,
+    setShowConversionPrompt,
+    user,
+  } = useAuthStore()
   const t = useTranslation(currentLanguage)
 
   const category =
@@ -20,6 +26,18 @@ export const ScenarioGrid = () => {
   const loading = scenariosQuery.isLoading
 
   const handleScenarioClick = (scenario: Scenario) => {
+    // Track scenario viewing for guest users
+    if (user?.isGuest) {
+      incrementViewedScenarios()
+
+      // Check if we should show conversion prompt after navigation
+      setTimeout(() => {
+        if (shouldShowConversionPrompt()) {
+          setShowConversionPrompt(true)
+        }
+      }, 1000) // Short delay to allow navigation to complete
+    }
+
     navigate(`/scenario/${scenario.id}/configure`)
   }
 

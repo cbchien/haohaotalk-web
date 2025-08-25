@@ -124,7 +124,7 @@ export const MessageArea = ({
           if (message.type === 'system') {
             // Special handling for session ending message with loading animation
             const isSessionEnding = message.id.startsWith('session-ending-')
-            
+
             return (
               <div key={message.id} className="flex justify-center mb-4">
                 <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 max-w-xs">
@@ -146,7 +146,9 @@ export const MessageArea = ({
               key={message.id}
               message={message}
               isUser={message.type === 'user'}
-              characterAvatar={characterAvatar || scenario?.image_url || undefined}
+              characterAvatar={
+                characterAvatar || scenario?.image_url || undefined
+              }
               userAvatar={userAvatar}
             />
           )

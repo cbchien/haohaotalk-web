@@ -228,6 +228,59 @@ export interface Translations {
     }>
   }
 
+  // Conversion
+  conversion: {
+    secureYourProgress: string
+    createAccount: string
+    continueWithGoogle: string
+    createWithEmail: string
+    convertWithGoogle: string
+    converting: string
+    optional: string
+    passwordRequirement: string
+    progressPreservationNote: string
+
+    triggerMessages: {
+      postSession: string
+      profileAccess: string
+      scenarioBrowsing: string
+      sessionMilestone: string
+      default: string
+    }
+
+    benefits: {
+      secureProgress: {
+        title: string
+        description: string
+      }
+      fasterLogin: {
+        title: string
+        description: string
+      }
+      advancedInsights: {
+        title: string
+        description: string
+      }
+    }
+
+    emailExists: {
+      title: string
+      message: string
+      loginInstead: string
+    }
+
+    googleExists: {
+      title: string
+      message: string
+      loginInstead: string
+    }
+
+    googleConversion: {
+      title: string
+      description: string
+    }
+  }
+
   // Common
   common: {
     goBack: string
@@ -446,17 +499,76 @@ export const translations: Record<Language, Translations> = {
       testimonials: [
         {
           text: 'HaoHaoTalk helped me feel confident in job interviews. The practice scenarios are incredibly realistic.',
-          author: '- Sarah M.'
+          author: '- Sarah M.',
         },
         {
           text: 'I used to struggle with difficult conversations at work. Now I handle them with ease thanks to the practice sessions.',
-          author: '- David L.'
+          author: '- David L.',
         },
         {
           text: 'The relationship scenarios helped me communicate better with my partner. Our conversations are much more productive now.',
-          author: '- Jessica K.'
-        }
-      ]
+          author: '- Jessica K.',
+        },
+      ],
+    },
+    conversion: {
+      secureYourProgress: 'Secure Your Progress',
+      createAccount: 'Create Account',
+      continueWithGoogle: 'Continue with Google',
+      createWithEmail: 'Create with Email',
+      convertWithGoogle: 'Convert with Google',
+      converting: 'Converting...',
+      optional: 'optional',
+      passwordRequirement: 'Minimum 8 characters required',
+      progressPreservationNote:
+        'All your practice sessions and progress will be preserved',
+
+      triggerMessages: {
+        postSession:
+          'Great job! Create an account to track your progress and see detailed insights.',
+        profileAccess:
+          'Create an account to access your profile and unlock advanced features.',
+        scenarioBrowsing:
+          'Loving the variety? Create an account to save your favorites and track progress.',
+        sessionMilestone:
+          "You're getting better! Create an account to see your detailed progress.",
+        default: 'Create an account to unlock the full HaoHaoTalk experience.',
+      },
+
+      benefits: {
+        secureProgress: {
+          title: 'Secure Your Progress',
+          description:
+            'Never lose your session history and conversation improvements',
+        },
+        fasterLogin: {
+          title: 'Faster Login',
+          description: 'No more guest setup - quick access every time',
+        },
+        advancedInsights: {
+          title: 'Advanced Insights',
+          description:
+            'Unlock detailed performance analytics and personalized recommendations',
+        },
+      },
+
+      emailExists: {
+        title: 'Account Already Exists',
+        message: 'This email is already registered with HaoHaoTalk.',
+        loginInstead: 'Sign in instead',
+      },
+
+      googleExists: {
+        title: 'Google Account Already Used',
+        message: 'This Google account is already registered with HaoHaoTalk.',
+        loginInstead: 'Sign in with Google instead',
+      },
+
+      googleConversion: {
+        title: 'Convert with Google',
+        description:
+          'Your Google account will be used to secure your HaoHaoTalk progress and settings.',
+      },
     },
     common: {
       goBack: 'Go Back',
@@ -659,17 +771,68 @@ export const translations: Record<Language, Translations> = {
       testimonials: [
         {
           text: '好好說幫助我在面試中充滿自信。練習情境非常真實。',
-          author: '- Sarah M.'
+          author: '- Sarah M.',
         },
         {
           text: '我以前在工作中很難處理困難對話。現在透過練習，我能輕鬆應對了。',
-          author: '- David L.'
+          author: '- David L.',
         },
         {
           text: '關係情境練習幫助我與伴侶溝通得更好。我們的對話現在更有建設性。',
-          author: '- Jessica K.'
-        }
-      ]
+          author: '- Jessica K.',
+        },
+      ],
+    },
+    conversion: {
+      secureYourProgress: '保護您的進度',
+      createAccount: '建立帳戶',
+      continueWithGoogle: '使用 Google 繼續',
+      createWithEmail: '使用 Email 繼續',
+      convertWithGoogle: '使用 Google 登入',
+      converting: '轉換中...',
+      optional: '選填',
+      passwordRequirement: '密碼至少需要 8 個字符',
+      progressPreservationNote: '所有的練習會話都會被保留',
+
+      triggerMessages: {
+        postSession: '恭喜完成對話練習！建立帳戶以保留進度並查看詳細見解。',
+        profileAccess: '建立帳戶以存取您的個人資料。',
+        scenarioBrowsing: '建立帳戶以保存您的最愛並追蹤進度。',
+        sessionMilestone: '建立帳戶以查看您的詳細進度。',
+        default: '建立帳戶以解鎖完整的好好說體驗。',
+      },
+
+      benefits: {
+        secureProgress: {
+          title: '保護您的進度',
+          description: '永遠不會丟失您的會話記錄和對話改善',
+        },
+        fasterLogin: {
+          title: '更快登入',
+          description: '不再需要訪客設定 - 每次都能快速存取',
+        },
+        advancedInsights: {
+          title: '進階洞察',
+          description: '解鎖詳細的表現分析和個人化建議',
+        },
+      },
+
+      emailExists: {
+        title: '帳戶已存在',
+        message: '此電子郵件已在好好說註冊。',
+        loginInstead: '改為登入',
+      },
+
+      googleExists: {
+        title: 'Google 帳戶已被使用',
+        message: '此 Google 帳戶已在好好說註冊。',
+        loginInstead: '改為使用 Google 登入',
+      },
+
+      googleConversion: {
+        title: '使用 Google 轉換',
+        description: '您的 Google 帳戶將用於保護您的好好說進度和設定。',
+      },
     },
     common: {
       goBack: '返回',

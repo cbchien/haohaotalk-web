@@ -25,6 +25,12 @@ export interface GoogleAuthData {
   idToken: string
 }
 
+export interface ConversionEmailData {
+  email: string
+  password: string
+  displayName?: string
+}
+
 class AuthApiService {
   async createGuestUser(data: GuestData): Promise<ApiResponse<AuthResponse>> {
     const response = await apiClient.post<AuthResponse>('auth/guest', data)
@@ -90,13 +96,18 @@ class AuthApiService {
   }
 
   async convertGuestToEmail(
-    email: string,
-    password: string
+    data: ConversionEmailData
   ): Promise<ApiResponse<AuthResponse>> {
-    const response = await apiClient.post<AuthResponse>('auth/convert-guest', {
-      email,
-      password,
-    })
+    const payload = {
+      email: data.email,
+      password: data.password,
+      ...(data.displayName && { displayName: data.displayName }),
+    }
+
+    const response = await apiClient.post<AuthResponse>(
+      'auth/convert-guest',
+      payload
+    )
 
     if (response.success && response.data) {
       apiClient.setAuthToken(response.data.token)
