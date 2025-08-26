@@ -108,9 +108,14 @@ export const CompletionModal = ({
     navigate('/')
   }
 
+  const handleClose = () => {
+    onClose()
+    navigate('/sessions')
+  }
+
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
-      onClose()
+      handleClose()
     }
   }
 
@@ -133,7 +138,7 @@ export const CompletionModal = ({
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full animate-bounce-in relative">
             {/* Close button */}
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
             >
               <span className="text-lg">×</span>
