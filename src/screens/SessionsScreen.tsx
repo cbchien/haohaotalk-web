@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { useTranslation } from '@/utils/translations'
@@ -9,6 +10,7 @@ export const SessionsScreen = () => {
   const navigate = useNavigate()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
 
   // Use React Query for cached sessions list
   const { data: sessions = [], isLoading, error, isError } = useSessionsList(20)
@@ -38,6 +40,10 @@ export const SessionsScreen = () => {
   const formatScore = (score?: number) => {
     if (score === undefined || score === null) return 0
     return Math.round(((score + 5) / 10) * 100)
+  }
+
+  const handleImageError = (imageUrl: string) => {
+    setFailedImages(prev => new Set(prev).add(imageUrl))
   }
 
   const renderStars = (rating?: number) => {
@@ -120,12 +126,15 @@ export const SessionsScreen = () => {
               >
                 <div className="flex items-start space-x-3">
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                    {session.scenario_role?.avatar_url ? (
+                    {session.scenario_role?.avatar_url && !failedImages.has(session.scenario_role.avatar_url) ? (
                       <img
                         src={session.scenario_role.avatar_url}
                         alt={session.scenario_role.role_name}
                         className="w-full h-full object-cover"
+                        onError={() => handleImageError(session.scenario_role.avatar_url)}
                       />
+                    ) : session.scenario_role?.avatar_url && failedImages.has(session.scenario_role.avatar_url) ? (
+                      <span className="text-lg">🗣️</span>
                     ) : (
                       <span className="text-lg">💬</span>
                     )}
