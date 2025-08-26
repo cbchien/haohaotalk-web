@@ -41,10 +41,49 @@ export const ScenarioGrid = () => {
     navigate(`/scenario/${scenario.id}/configure`)
   }
 
+  const renderScenarioSkeleton = (index: number) => (
+    <div
+      key={`skeleton-${index}`}
+      className="bg-white rounded-2xl overflow-hidden shadow-sm break-inside-avoid mb-3"
+    >
+      {/* Image skeleton */}
+      <div className="h-32 bg-gray-200 animate-pulse" />
+      
+      {/* Content skeleton */}
+      <div className="p-4">
+        {/* Title skeleton */}
+        <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4 mb-2" />
+        
+        {/* Description skeleton - varies by index to simulate different content lengths */}
+        <div className="space-y-2 mb-3">
+          <div className="h-3 bg-gray-200 rounded animate-pulse w-full" />
+          <div className="h-3 bg-gray-200 rounded animate-pulse w-5/6" />
+          {index % 3 === 0 && <div className="h-3 bg-gray-200 rounded animate-pulse w-4/5" />}
+        </div>
+        
+        {/* Tags skeleton */}
+        <div className="flex flex-wrap gap-1 mb-8">
+          <div className="h-6 bg-gray-200 rounded-full animate-pulse w-16" />
+          <div className="h-6 bg-gray-200 rounded-full animate-pulse w-12" />
+          <div className="h-6 bg-gray-200 rounded-full animate-pulse w-14" />
+        </div>
+        
+        {/* Practice count skeleton */}
+        <div className="flex items-center space-x-1 justify-end">
+          <div className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
+          <div className="h-3 bg-gray-200 rounded animate-pulse w-8" />
+        </div>
+      </div>
+    </div>
+  )
+
   if (loading) {
     return (
-      <div className="px-4 pb-4 flex justify-center items-center h-32">
-        <div className="text-gray-500">{t.scenarios.loading}</div>
+      <div className="px-4 pb-4">
+        {/* Pinterest-style masonry layout with skeletons */}
+        <div className="columns-2 gap-3">
+          {Array.from({ length: 6 }).map((_, index) => renderScenarioSkeleton(index))}
+        </div>
       </div>
     )
   }

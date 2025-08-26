@@ -17,7 +17,7 @@ export const SessionsScreen = () => {
   const [isRetrying, setIsRetrying] = useState(false)
 
   // Use React Query for cached sessions list
-  const { data: sessions = [], isLoading, error, isError } = useSessionsList(20)
+  const { data: sessions = [], isLoading, error, isError, isFetching } = useSessionsList(20)
 
   const handleSessionClick = (session: SessionListItem) => {
     navigate(`/session/${session.id}/insights`, {
@@ -82,12 +82,45 @@ export const SessionsScreen = () => {
     )
   }
 
+  const renderSessionSkeleton = () => (
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="flex items-start space-x-3">
+        <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse" />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between mb-1">
+            <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+            <div className="w-5 h-5 bg-gray-200 rounded animate-pulse ml-2" />
+          </div>
+          <div className="h-3 bg-gray-200 rounded animate-pulse w-1/2 mb-2" />
+          <div className="flex items-center justify-between">
+            <div className="h-3 bg-gray-200 rounded animate-pulse w-20" />
+            <div className="flex items-center space-x-3">
+              <div className="h-3 bg-gray-200 rounded animate-pulse w-12" />
+              <div className="px-2 py-1 bg-gray-200 rounded-full animate-pulse w-10 h-5" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">{t.common.loading}</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="px-6 py-5 bg-white border-b border-gray-100">
+          <h1 className="text-lg font-medium text-gray-900">
+            {t.sessions.pastPracticeSessions}
+          </h1>
+        </div>
+
+        <div className="p-4">
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={`initial-skeleton-${index}`}>
+                {renderSessionSkeleton()}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -137,7 +170,16 @@ export const SessionsScreen = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {sessions.map(session => (
+            {isFetching && sessions.length > 0 && (
+              <div className="space-y-3">
+                {Array.from({ length: Math.min(3, sessions.length) }).map((_, index) => (
+                  <div key={`skeleton-${index}`}>
+                    {renderSessionSkeleton()}
+                  </div>
+                ))}
+              </div>
+            )}
+            {(!isFetching || sessions.length === 0) && sessions.map(session => (
               <div
                 key={session.id}
                 onClick={() => handleSessionClick(session)}
