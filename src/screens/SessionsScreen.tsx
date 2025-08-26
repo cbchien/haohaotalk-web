@@ -1,16 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useSessionsList } from '@/hooks/useSessionQueries'
+import { cacheKeys } from '@/utils/cacheKeys'
 import type { SessionListItem } from '@/types/sessionPerformance'
 
 export const SessionsScreen = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
+  const [isRetrying, setIsRetrying] = useState(false)
 
   // Use React Query for cached sessions list
   const { data: sessions = [], isLoading, error, isError } = useSessionsList(20)
@@ -44,6 +48,20 @@ export const SessionsScreen = () => {
 
   const handleImageError = (imageUrl: string) => {
     setFailedImages(prev => new Set(prev).add(imageUrl))
+  }
+
+  const handleRetry = async () => {
+    setIsRetrying(true)
+    try {
+      await queryClient.refetchQueries({
+        queryKey: [...cacheKeys.sessions.list, { limit: 20 }],
+      })
+    } catch (error) {
+      // Error will be handled by React Query's error state
+      console.error('Retry failed:', error)
+    } finally {
+      setIsRetrying(false)
+    }
   }
 
   const renderStars = (rating?: number) => {
@@ -90,10 +108,11 @@ export const SessionsScreen = () => {
               {error?.message || 'Failed to load session history'}
             </p>
             <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-100 text-white rounded-lg"
+              onClick={handleRetry}
+              disabled={isRetrying}
+              className="px-4 py-2 bg-blue-100 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {t.common.retry}
+              {isRetrying ? t.common.loading : t.common.retry}
             </button>
           </div>
         ) : sessions.length === 0 ? (

@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore, useAuthStore } from '@/store'
 import { useRateSession } from '@/hooks/useSessionQueries'
 import { SessionRatingModal } from '@/components/sessions/SessionRatingModal'
 import { ConversionModal } from '@/components/conversion'
+import { cacheKeys } from '@/utils/cacheKeys'
 import type { Session } from '@/services'
 
 interface CompletionModalProps {
@@ -27,18 +29,24 @@ export const CompletionModal = ({
   const [showConversionModal, setShowConversionModal] = useState(false)
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { currentLanguage, currentScenario } = useAppStore()
   const { user, incrementCompletedSessions, shouldShowConversionPrompt } =
     useAuthStore()
   const t = useTranslation(currentLanguage)
   const rateSessionMutation = useRateSession()
 
-  // Track session completion for guest users
+  // Track session completion for guest users and invalidate sessions cache
   useEffect(() => {
     if (user?.isGuest) {
       incrementCompletedSessions()
     }
-  }, [user?.isGuest, incrementCompletedSessions])
+    
+    // Invalidate sessions list to show the new completed session
+    queryClient.invalidateQueries({
+      queryKey: cacheKeys.sessions.list,
+    })
+  }, [user?.isGuest, incrementCompletedSessions, queryClient])
 
   // Convert score from -5/+5 range to percentage
   const scorePercentage = Math.max(
