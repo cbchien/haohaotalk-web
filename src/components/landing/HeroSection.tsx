@@ -1,13 +1,27 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 
 export const HeroSection = () => {
-  const { setShowAuthModal } = useAuthStore()
+  const navigate = useNavigate()
+  const { user, isAuthenticated, setShowAuthModal } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
+  // Redirect authenticated users to /home
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/home')
+    }
+  }, [isAuthenticated, user, navigate])
+
   const handleGetStarted = () => {
-    setShowAuthModal(true)
+    if (isAuthenticated && user) {
+      navigate('/home')
+    } else {
+      setShowAuthModal(true)
+    }
   }
 
   return (

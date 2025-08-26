@@ -205,8 +205,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error'
       if (errorMessage !== 'Google sign-in cancelled') {
-        // Re-throw error to let user know Google OAuth failed
-        throw error
+        setErrors({ general: errorMessage })
       }
     } finally {
       setIsGoogleLoading(false)
