@@ -41,7 +41,7 @@ export const CompletionModal = ({
     if (user?.isGuest) {
       incrementCompletedSessions()
     }
-    
+
     // Invalidate sessions list to show the new completed session
     queryClient.invalidateQueries({
       queryKey: cacheKeys.sessions.list,

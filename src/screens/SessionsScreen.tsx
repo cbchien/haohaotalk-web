@@ -17,7 +17,13 @@ export const SessionsScreen = () => {
   const [isRetrying, setIsRetrying] = useState(false)
 
   // Use React Query for cached sessions list
-  const { data: sessions = [], isLoading, error, isError, isFetching } = useSessionsList(20)
+  const {
+    data: sessions = [],
+    isLoading,
+    error,
+    isError,
+    isFetching,
+  } = useSessionsList(20)
 
   const handleSessionClick = (session: SessionListItem) => {
     navigate(`/session/${session.id}/insights`, {
@@ -58,9 +64,8 @@ export const SessionsScreen = () => {
       await queryClient.refetchQueries({
         queryKey: [...cacheKeys.sessions.list, { limit: 20 }],
       })
-    } catch (error) {
+    } catch {
       // Error will be handled by React Query's error state
-      console.error('Retry failed:', error)
     } finally {
       setIsRetrying(false)
     }
@@ -174,85 +179,93 @@ export const SessionsScreen = () => {
           <div className="space-y-3">
             {isFetching && sessions.length > 0 && (
               <div className="space-y-3">
-                {Array.from({ length: Math.min(3, sessions.length) }).map((_, index) => (
-                  <div key={`skeleton-${index}`}>
-                    {renderSessionSkeleton()}
-                  </div>
-                ))}
+                {Array.from({ length: Math.min(3, sessions.length) }).map(
+                  (_, index) => (
+                    <div key={`skeleton-${index}`}>
+                      {renderSessionSkeleton()}
+                    </div>
+                  )
+                )}
               </div>
             )}
-            {(!isFetching || sessions.length === 0) && sessions.map(session => (
-              <div
-                key={session.id}
-                onClick={() => handleSessionClick(session)}
-                className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:border-blue-40 transition-colors active:scale-98"
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                    {session.scenario_role?.avatar_url && !failedImages.has(session.scenario_role.avatar_url) ? (
-                      <img
-                        src={session.scenario_role.avatar_url}
-                        alt={session.scenario_role.role_name}
-                        className="w-full h-full object-cover"
-                        onError={() => handleImageError(session.scenario_role.avatar_url)}
-                      />
-                    ) : session.scenario_role?.avatar_url && failedImages.has(session.scenario_role.avatar_url) ? (
-                      <span className="text-lg">🗣️</span>
-                    ) : (
-                      <span className="text-lg">💬</span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <h3 className="font-semibold text-gray-900 truncate">
-                        {session.scenario?.title || t.sessions.practiceSession}
-                      </h3>
-                      <div className="text-gray-400 ml-2">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-500 truncate">
-                      {session.scenario_role?.role_name}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-400">
-                        {session.completed_at
-                          ? formatDate(session.completed_at)
-                          : formatDate(session.started_at)}
-                      </span>
-                      <div className="flex items-center space-x-3">
-                        <span className="text-xs text-gray-500">
-                          {session.current_turn} turns
-                        </span>
-                        <div className="px-2 py-1 bg-blue-10 rounded-full">
-                          <span className="text-xs font-medium text-blue-100">
-                            {formatScore(session.connection_score)}%
-                          </span>
-                        </div>
-                      </div>
-                      {/* Rating display */}
-                      {session.user_rating && (
-                        <div className="mt-2">
-                          {renderStars(session.user_rating)}
-                        </div>
+            {(!isFetching || sessions.length === 0) &&
+              sessions.map(session => (
+                <div
+                  key={session.id}
+                  onClick={() => handleSessionClick(session)}
+                  className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:border-blue-40 transition-colors active:scale-98"
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                      {session.scenario_role?.avatar_url &&
+                      !failedImages.has(session.scenario_role.avatar_url) ? (
+                        <img
+                          src={session.scenario_role.avatar_url}
+                          alt={session.scenario_role.role_name}
+                          className="w-full h-full object-cover"
+                          onError={() =>
+                            handleImageError(session.scenario_role.avatar_url)
+                          }
+                        />
+                      ) : session.scenario_role?.avatar_url &&
+                        failedImages.has(session.scenario_role.avatar_url) ? (
+                        <span className="text-lg">🗣️</span>
+                      ) : (
+                        <span className="text-lg">💬</span>
                       )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-1">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {session.scenario?.title ||
+                            t.sessions.practiceSession}
+                        </h3>
+                        <div className="text-gray-400 ml-2">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-500 truncate">
+                        {session.scenario_role?.role_name}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">
+                          {session.completed_at
+                            ? formatDate(session.completed_at)
+                            : formatDate(session.started_at)}
+                        </span>
+                        <div className="flex items-center space-x-3">
+                          <span className="text-xs text-gray-500">
+                            {session.current_turn} turns
+                          </span>
+                          <div className="px-2 py-1 bg-blue-10 rounded-full">
+                            <span className="text-xs font-medium text-blue-100">
+                              {formatScore(session.connection_score)}%
+                            </span>
+                          </div>
+                        </div>
+                        {/* Rating display */}
+                        {session.user_rating && (
+                          <div className="mt-2">
+                            {renderStars(session.user_rating)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

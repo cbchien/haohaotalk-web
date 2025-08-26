@@ -12,7 +12,7 @@ import type {
 // High Priority: Session Performance Hook
 export const useSessionPerformance = (sessionId: string | undefined) => {
   const { isInitialized, isAuthenticated } = useAuthStore()
-  
+
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.performance(sessionId) : [],
     queryFn: async (): Promise<SessionPerformance> => {
@@ -38,7 +38,7 @@ export const useSessionPerformance = (sessionId: string | undefined) => {
 // High Priority: Session Insights Hook
 export const useSessionInsights = (sessionId: string | undefined) => {
   const { isInitialized, isAuthenticated } = useAuthStore()
-  
+
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.insights(sessionId) : [],
     queryFn: async (): Promise<SessionInsights> => {
@@ -63,7 +63,7 @@ export const useSessionInsights = (sessionId: string | undefined) => {
 // Medium Priority: Sessions List Hook
 export const useSessionsList = (limit: number = 20) => {
   const { isInitialized, isAuthenticated } = useAuthStore()
-  
+
   return useQuery({
     queryKey: [...cacheKeys.sessions.list, { limit }],
     queryFn: async (): Promise<SessionListItem[]> => {
@@ -86,7 +86,7 @@ export const useSessionsList = (limit: number = 20) => {
 // Utility hook: Single Session Detail (for navigation state)
 export const useSessionDetail = (sessionId: string | undefined) => {
   const { isInitialized, isAuthenticated } = useAuthStore()
-  
+
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.detail(sessionId) : [],
     queryFn: async (): Promise<SessionListItem> => {
