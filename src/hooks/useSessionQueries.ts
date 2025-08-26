@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
 import { sessionsApiService } from '@/services/sessionsApi'
 import { cacheKeys, cacheTime, staleTime } from '@/utils/cacheKeys'
+import { useAuthStore } from '@/store'
 import type {
   SessionPerformance,
   SessionInsights,
@@ -10,6 +11,8 @@ import type {
 
 // High Priority: Session Performance Hook
 export const useSessionPerformance = (sessionId: string | undefined) => {
+  const { isInitialized, isAuthenticated } = useAuthStore()
+  
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.performance(sessionId) : [],
     queryFn: async (): Promise<SessionPerformance> => {
@@ -21,7 +24,7 @@ export const useSessionPerformance = (sessionId: string | undefined) => {
       }
       return response.data
     },
-    enabled: !!sessionId,
+    enabled: !!sessionId && isInitialized && isAuthenticated,
     // Permanent cache for completed sessions (immutable data)
     staleTime: staleTime.NEVER,
     gcTime: cacheTime.PERMANENT,
@@ -34,6 +37,8 @@ export const useSessionPerformance = (sessionId: string | undefined) => {
 
 // High Priority: Session Insights Hook
 export const useSessionInsights = (sessionId: string | undefined) => {
+  const { isInitialized, isAuthenticated } = useAuthStore()
+  
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.insights(sessionId) : [],
     queryFn: async (): Promise<SessionInsights> => {
@@ -44,7 +49,7 @@ export const useSessionInsights = (sessionId: string | undefined) => {
       }
       return response.data
     },
-    enabled: !!sessionId,
+    enabled: !!sessionId && isInitialized && isAuthenticated,
     // Permanent cache for insights (immutable data)
     staleTime: staleTime.NEVER,
     gcTime: cacheTime.PERMANENT,
@@ -57,6 +62,8 @@ export const useSessionInsights = (sessionId: string | undefined) => {
 
 // Medium Priority: Sessions List Hook
 export const useSessionsList = (limit: number = 20) => {
+  const { isInitialized, isAuthenticated } = useAuthStore()
+  
   return useQuery({
     queryKey: [...cacheKeys.sessions.list, { limit }],
     queryFn: async (): Promise<SessionListItem[]> => {
@@ -66,6 +73,8 @@ export const useSessionsList = (limit: number = 20) => {
       }
       return response.data
     },
+    // Only run query after auth is initialized and user is authenticated
+    enabled: isInitialized && isAuthenticated,
     // Smart caching - stale after 2 minutes, cache for 30 minutes
     staleTime: staleTime.MEDIUM,
     gcTime: cacheTime.LONG,
@@ -76,6 +85,8 @@ export const useSessionsList = (limit: number = 20) => {
 
 // Utility hook: Single Session Detail (for navigation state)
 export const useSessionDetail = (sessionId: string | undefined) => {
+  const { isInitialized, isAuthenticated } = useAuthStore()
+  
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.detail(sessionId) : [],
     queryFn: async (): Promise<SessionListItem> => {
@@ -91,7 +102,7 @@ export const useSessionDetail = (sessionId: string | undefined) => {
       if (!data) throw new Error('Session not found')
       return data as SessionListItem
     },
-    enabled: !!sessionId,
+    enabled: !!sessionId && isInitialized && isAuthenticated,
     // Medium cache time for session metadata
     staleTime: staleTime.MEDIUM,
     gcTime: cacheTime.LONG,
