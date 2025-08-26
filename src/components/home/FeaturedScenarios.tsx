@@ -1,14 +1,18 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { useAppStore, useAuthStore } from '@/store'
 import type { Scenario } from '@/services'
 import { useTranslation } from '@/utils/translations'
 import { useHomeScenarios } from '@/hooks/useHomeQueries'
+import { cacheKeys } from '@/utils/cacheKeys'
 
 const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 
 export const ScenarioGrid = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { selectedCategories, currentLanguage } = useAppStore()
   const {
     incrementViewedScenarios,
@@ -17,6 +21,7 @@ export const ScenarioGrid = () => {
     user,
   } = useAuthStore()
   const t = useTranslation(currentLanguage)
+  const [isRetrying, setIsRetrying] = useState(false)
 
   const category =
     selectedCategories.length > 0 ? selectedCategories[0] : undefined
@@ -24,6 +29,7 @@ export const ScenarioGrid = () => {
 
   const scenarios = scenariosQuery.data || []
   const loading = scenariosQuery.isLoading
+  const { error, isError } = scenariosQuery
 
   const handleScenarioClick = (scenario: Scenario) => {
     // Track scenario viewing for guest users
@@ -39,6 +45,19 @@ export const ScenarioGrid = () => {
     }
 
     navigate(`/scenario/${scenario.id}/configure`)
+  }
+
+  const handleRetry = async () => {
+    setIsRetrying(true)
+    try {
+      await queryClient.refetchQueries({
+        queryKey: cacheKeys.scenarios.home(category, currentLanguage),
+      })
+    } catch (error) {
+      console.error('Retry failed:', error)
+    } finally {
+      setIsRetrying(false)
+    }
   }
 
   const renderScenarioSkeleton = (index: number) => (
@@ -83,6 +102,25 @@ export const ScenarioGrid = () => {
         {/* Pinterest-style masonry layout with skeletons */}
         <div className="columns-2 gap-3">
           {Array.from({ length: 6 }).map((_, index) => renderScenarioSkeleton(index))}
+        </div>
+      </div>
+    )
+  }
+
+  if (isError || error) {
+    return (
+      <div className="px-4 pb-4 flex justify-center items-center h-32">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">
+            {error?.message || 'Failed to load scenarios'}
+          </p>
+          <button
+            onClick={handleRetry}
+            disabled={isRetrying}
+            className="px-4 py-2 bg-blue-100 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isRetrying ? t.common.loading : t.common.retry}
+          </button>
         </div>
       </div>
     )
