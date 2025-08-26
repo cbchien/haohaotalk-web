@@ -135,15 +135,15 @@ export const ResultsSection = ({
             className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:shadow-sm transition-shadow"
           >
             <div className="flex">
-              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-10 to-green-10 flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-10 to-green-10 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {scenario.image_url ? (
                   <img
                     src={scenario.image_url}
                     alt={scenario.title}
-                    className="w-12 h-12 rounded-lg object-cover"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-8 bg-white bg-opacity-90 rounded flex items-center justify-center border border-gray-200">
+                  <div className="w-full h-full bg-white bg-opacity-90 flex items-center justify-center">
                     <span className="text-xs font-medium text-gray-600">
                       [Image]
                     </span>
@@ -172,7 +172,7 @@ export const ResultsSection = ({
                         </span>
                       ))}
                   </div>
-                  <div className="flex items-center text-blue-55 text-sm">
+                  <div className="flex items-center text-gray-500 text-sm">
                     <ChatBubbleLeftIcon className="w-4 h-4 mr-1" />
                     <span>{scenario.practice_count}</span>
                   </div>
