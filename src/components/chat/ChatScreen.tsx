@@ -113,7 +113,7 @@ export const ChatScreen = () => {
               const initialMessage =
                 currentLanguage === 'zh'
                   ? otherRole.initial_message
-                  : otherRole.initial_message_en
+                  : otherRole.initial_message_en || otherRole.initial_message
 
               if (initialMessage) {
                 setMessages([
