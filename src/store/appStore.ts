@@ -1,7 +1,8 @@
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { devtools, persist } from 'zustand/middleware'
 import { ChatSession } from './types'
 import type { Scenario, ScenarioRole } from '@/services'
+import { getDefaultLanguage } from '@/utils/browserLanguage'
 
 interface AppState {
   // UI State
@@ -57,9 +58,10 @@ interface AppState {
 
 export const useAppStore = create<AppState>()(
   devtools(
-    set => ({
-      // Initial state
-      currentLanguage: 'zh',
+    persist(
+      set => ({
+        // Initial state - use browser language as default
+        currentLanguage: getDefaultLanguage(),
       isOffline: false,
       scenarios: [],
       popularScenarios: [],
@@ -113,7 +115,15 @@ export const useAppStore = create<AppState>()(
           selectedCategories: [],
           selectedDifficulty: [],
         }),
-    }),
+      }),
+      {
+        name: 'haohaotalk-app',
+        partialize: state => ({
+          // Only persist language setting
+          currentLanguage: state.currentLanguage,
+        }),
+      }
+    ),
     {
       name: 'AppStore',
     }

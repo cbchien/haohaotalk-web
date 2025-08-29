@@ -4,6 +4,8 @@ import { User } from './types'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService, apiClient } from '@/services'
 import { ConversionEmailData } from '@/services/authApi'
+import { getDefaultLanguage } from '@/utils/browserLanguage'
+import { useAppStore } from './appStore'
 
 interface AuthState {
   user: User | null
@@ -108,6 +110,10 @@ export const useAuthStore = create<AuthState>()(
 
           apiClient.setAuthToken(null)
           authApiService.logout()
+
+          // Reset language to browser default on logout
+          const browserLanguage = getDefaultLanguage()
+          useAppStore.getState().setLanguage(browserLanguage)
 
           set({
             user: null,
