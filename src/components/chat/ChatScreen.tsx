@@ -457,6 +457,8 @@ export const ChatScreen = () => {
     />
   ) : null
 
+  const characterRole = availableRoles.find(role => role.id !== globalSelectedRole?.id)
+
   if (isLoading) {
     return (
       <div className="flex flex-col h-screen bg-gray-50">
@@ -529,9 +531,18 @@ export const ChatScreen = () => {
             isTyping={isTyping}
             error={error}
             userAvatar={globalSelectedRole?.avatar_url}
-            characterAvatar={
-              availableRoles.find(role => role.id !== globalSelectedRole?.id)
-                ?.avatar_url
+            characterAvatar={characterRole?.avatar_url}
+            userRoleName={
+              currentLanguage === 'zh'
+                ? globalSelectedRole?.role_name
+                : globalSelectedRole?.role_name_en || globalSelectedRole?.role_name
+            }
+            characterRoleName={
+              characterRole
+                ? (currentLanguage === 'zh'
+                    ? characterRole.role_name
+                    : characterRole.role_name_en || characterRole.role_name)
+                : undefined
             }
           />
         </div>

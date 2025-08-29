@@ -19,6 +19,8 @@ interface MessageAreaProps {
   error: string | null
   userAvatar?: string
   characterAvatar?: string
+  userRoleName?: string
+  characterRoleName?: string
 }
 
 export const MessageArea = ({
@@ -28,6 +30,8 @@ export const MessageArea = ({
   error,
   userAvatar,
   characterAvatar,
+  userRoleName,
+  characterRoleName,
 }: MessageAreaProps) => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
@@ -150,6 +154,8 @@ export const MessageArea = ({
                 characterAvatar || scenario?.image_url || undefined
               }
               userAvatar={userAvatar}
+              userRoleName={userRoleName}
+              characterRoleName={characterRoleName}
             />
           )
         })}
