@@ -34,6 +34,7 @@ interface AuthState {
   setShowAuthModal: (show: boolean) => void
   updateUserProfile: (updates: Partial<User>) => Promise<void>
   initializeAuth: () => Promise<void>
+  refreshAuth: () => Promise<void>
 
   // Conversion actions
   convertGuestToEmail: (data: ConversionEmailData) => Promise<void>
@@ -177,6 +178,32 @@ export const useAuthStore = create<AuthState>()(
             console.error('Failed to initialize auth:', error)
             get().clearUser()
             set({ isInitialized: true })
+          }
+        },
+
+        refreshAuth: async () => {
+          const { authToken, isInitialized } = get()
+          if (!authToken || !isInitialized) {
+            return
+          }
+
+          try {
+            apiClient.setAuthToken(authToken)
+            const response = await authApiService.getCurrentUser()
+
+            if (response.success && response.data) {
+              set({
+                user: response.data.user,
+                isAuthenticated: true,
+              })
+            } else {
+              // Token is invalid, clear auth state but keep initialized
+              get().clearUser()
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to refresh auth:', error)
+            get().clearUser()
           }
         },
 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
@@ -87,12 +87,49 @@ function AppContent() {
 }
 
 function App() {
-  const { initializeAuth } = useAuthStore()
+  const { initializeAuth, refreshAuth, isInitialized, authToken } = useAuthStore()
 
   useEffect(() => {
     // Initialize authentication on app startup
     initializeAuth()
   }, [initializeAuth])
+
+  // Use refs to avoid recreating event handlers on every dependency change
+  const isInitializedRef = useRef(isInitialized)
+  const authTokenRef = useRef(authToken)
+  
+  // Update refs when values change
+  useEffect(() => {
+    isInitializedRef.current = isInitialized
+  }, [isInitialized])
+  
+  useEffect(() => {
+    authTokenRef.current = authToken
+  }, [authToken])
+
+  // Memoize the refresh handlers to prevent effect recreation
+  const handleVisibilityChange = useCallback(() => {
+    if (!document.hidden && isInitializedRef.current && authTokenRef.current) {
+      refreshAuth()
+    }
+  }, [refreshAuth])
+
+  const handleWindowFocus = useCallback(() => {
+    if (isInitializedRef.current && authTokenRef.current) {
+      refreshAuth()
+    }
+  }, [refreshAuth])
+
+  useEffect(() => {
+    // Add event listeners only once (or when handlers change)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleWindowFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleWindowFocus)
+    }
+  }, [handleVisibilityChange, handleWindowFocus])
 
   return (
     <Router>

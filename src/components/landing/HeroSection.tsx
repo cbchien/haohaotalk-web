@@ -5,16 +5,16 @@ import { useTranslation } from '@/utils/translations'
 
 export const HeroSection = () => {
   const navigate = useNavigate()
-  const { user, isAuthenticated, setShowAuthModal } = useAuthStore()
+  const { user, isAuthenticated, isInitialized, setShowAuthModal } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
-  // Redirect authenticated users to /home
+  // Redirect authenticated users to /home, but only after auth is initialized
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isInitialized && isAuthenticated && user) {
       navigate('/home')
     }
-  }, [isAuthenticated, user, navigate])
+  }, [isInitialized, isAuthenticated, user, navigate])
 
   const handleGetStarted = () => {
     if (isAuthenticated && user) {
