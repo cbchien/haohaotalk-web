@@ -3,6 +3,21 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontSize: {
+        'xs': '0.875rem',    // 14px (improved from 12px)
+        'sm': '1rem',        // 16px (improved from 14px) 
+        'base': '1.125rem',  // 18px (improved from 16px)
+        'lg': '1.25rem',     // 20px (unchanged)
+        'xl': '1.5rem',      // 24px (unchanged)
+        '2xl': '1.875rem',   // 30px (unchanged)
+        '3xl': '2.25rem',    // 36px (unchanged)
+        '4xl': '3rem',       // 48px (unchanged)
+        '5xl': '3.75rem',    // 60px (unchanged)
+        '6xl': '4.5rem',     // 72px (unchanged)
+        '7xl': '6rem',       // 96px (unchanged)
+        '8xl': '8rem',       // 128px (unchanged)
+        '9xl': '10rem',      // 160px (unchanged)
+      },
       colors: {
         // Blue (Primary Brand Colors - Mandatory)
         'blue-100': '#00A8E1', // Primary blue
