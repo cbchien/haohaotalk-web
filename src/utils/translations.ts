@@ -582,7 +582,7 @@ export const translations: Record<Language, Translations> = {
     navigation: {
       home: '首頁',
       search: '搜尋',
-      progress: '歷史',
+      progress: '進度',
       profile: '我的',
     },
     scenarios: {
@@ -621,7 +621,7 @@ export const translations: Record<Language, Translations> = {
         emailRequired: '電子郵件為必填',
         emailInvalid: '請輸入有效的電子郵件地址',
         passwordRequired: '密碼為必填',
-        passwordTooShort: '密碼必須至少8個字符',
+        passwordTooShort: '密碼至少需8個字元',
         displayNameRequired: '顯示名稱為必填',
       },
       errors: {
@@ -639,8 +639,8 @@ export const translations: Record<Language, Translations> = {
         howToUse: '如何使用「好好說」',
         connectionScore: '關於「對話中的距離」',
         privacy: '隱私政策',
-        terms: '使用者條款',
-        contact: '回報問題',
+        terms: '使用條款',
+        contact: '聯絡我們',
         language: '語言設定',
         deleteAccount: '刪除帳號',
         logout: '登出',
@@ -682,14 +682,14 @@ export const translations: Record<Language, Translations> = {
     chat: {
       loading: '載入對話中...',
       conversation: '對話',
-      connectionScore: '關係係',
+      connectionScore: '連結強度',
       scenarioContext: '本對話純屬模擬劇情。',
       storyBackground: '故事背景：',
       typeResponse: '輸入回覆...',
       conversationComplete: '對話完成！',
       conversationCompleteMessage: '很棒的對話練習！',
       finalScore: '最終分數',
-      turnsCompleted: '回合完成',
+      turnsCompleted: '已完成回合',
       viewDetailedResults: '查看詳細結果',
       practiceAgain: '再次練習',
       backToHome: '回到首頁',
@@ -749,7 +749,7 @@ export const translations: Record<Language, Translations> = {
       whatWentWell: '做得很好的地方',
       keyMoments: '關鍵時刻',
       thingsToTryNext: '下次可以嘗試',
-      neutralDescription: '用中性描述取代情緒引爆詞',
+      neutralDescription: '用中性描述取代情緒化用語',
       neutralDescriptionDetail:
         '可以改成：「你一來就問我要去吃什麼，我有點錯愕，因為我等了一個小時」來降低衝突感。',
       expressEmotions: '善用「我訊息」表達情緒與影響',
@@ -758,10 +758,10 @@ export const translations: Record<Language, Translations> = {
       clarifyNeeds: '主動釐清自己的需求',
       clarifyNeedsDetail:
         '「如果你下次可能會遲到，我希望你可以提前告訴我，這樣我可以自己調整安排，也不會這麼焦躁。」',
-      positiveResponse: '適時肯定對方的回應，讓溝通形成正循環',
+      positiveResponse: '適時肯定對方，讓溝通形成正向循環。',
       positiveResponseDetail: '展現理解並願意共同尋找解決方案的態度。',
       understandNeeds: '理解潛在需求',
-      understandNeedsDetail: '專注於每個人需要什麼，而不是他們做錯了什麼。',
+      understandNeedsDetail: '專注於彼此的需求，而不是彼此的錯誤。',
     },
     landing: {
       heroTitle: '掌握每一次對話',
@@ -791,7 +791,7 @@ export const translations: Record<Language, Translations> = {
       convertWithGoogle: '使用 Google 登入',
       converting: '轉換中...',
       optional: '選填',
-      passwordRequirement: '密碼至少需要 8 個字符',
+      passwordRequirement: '密碼至少需8個字元',
       progressPreservationNote: '所有的練習會話都會被保留',
 
       triggerMessages: {
@@ -830,7 +830,7 @@ export const translations: Record<Language, Translations> = {
       },
 
       googleConversion: {
-        title: '使用 Google 轉換',
+        title: '透過 Google 轉換',
         description: '您的 Google 帳戶將用於保護您的好好說進度和設定。',
       },
     },
