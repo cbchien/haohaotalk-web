@@ -8,6 +8,7 @@ import {
 import { AuthGuard } from './components/auth/AuthGuard'
 import { AuthLoadingPage } from './components/auth/AuthLoadingPage'
 import { BottomTabBar } from './components/navigation/BottomTabBar'
+import { OnboardingModal } from './components/onboarding'
 import { HomeScreen } from './screens/HomeScreen'
 import { LandingPage } from './components/landing'
 import { SearchScreen } from './screens/SearchScreen'
@@ -24,11 +25,48 @@ import { ChatSettingsScreen } from './components/chat-settings'
 import { ChatScreen } from './components/chat'
 import { SessionInsightsPage } from './screens/SessionInsightsPage'
 import { SessionPerfComparisonPage } from './screens/SessionPerfComparisonPage'
-import { useAuthStore } from './store'
+import { useAuthStore, useAppStore } from './store'
+import { OnboardingAPI } from './services/onboardingApi'
 
 function AppContent() {
   const location = useLocation()
-  const { authLoadingType } = useAuthStore()
+  const { authLoadingType, user, isAuthenticated } = useAuthStore()
+  const { onboarding, showOnboarding, completeOnboarding } = useAppStore()
+
+  // Check onboarding status for authenticated users
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (isAuthenticated && user && !user.isGuest && !onboarding.hasCompletedOnboarding) {
+        try {
+          const response = await OnboardingAPI.getOnboardingStatus()
+          if (response.success && response.data && !response.data.user.onboardingCompleted) {
+            setTimeout(() => showOnboarding(), 1000) // Delay for smooth UX
+          }
+        } catch {
+          // Fallback to local storage for offline scenarios
+          const localStatus = OnboardingAPI.getLocalOnboardingStatus(user.id)
+          if (!localStatus) {
+            setTimeout(() => showOnboarding(), 1000)
+          }
+        }
+      }
+    }
+
+    checkOnboardingStatus()
+  }, [isAuthenticated, user, onboarding.hasCompletedOnboarding, showOnboarding])
+
+  const handleOnboardingComplete = async () => {
+    if (user && !user.isGuest) {
+      try {
+        await OnboardingAPI.updateOnboardingStatus(true)
+        OnboardingAPI.setLocalOnboardingStatus(user.id, true)
+      } catch {
+        // Still complete locally even if API fails
+        OnboardingAPI.setLocalOnboardingStatus(user.id, true)
+      }
+    }
+    completeOnboarding()
+  }
 
   // Show loading page during auth operations
   if (authLoadingType) {
@@ -82,6 +120,13 @@ function AppContent() {
 
       {/* Bottom Navigation - Hidden during chat sessions */}
       {!hideBottomNav && <BottomTabBar />}
+
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        isVisible={onboarding?.isVisible || false}
+        onComplete={handleOnboardingComplete}
+        onSkip={handleOnboardingComplete}
+      />
     </div>
   )
 }

@@ -281,6 +281,39 @@ export interface Translations {
     }
   }
 
+  // Onboarding
+  onboarding: {
+    tutorial: string
+    step: string
+    of: string
+    previous: string
+    next: string
+    getStarted: string
+    skip: string
+    steps: {
+      searchScenario: {
+        title: string
+        description: string
+      }
+      pickRole: {
+        title: string
+        description: string
+      }
+      startConversation: {
+        title: string
+        description: string
+      }
+      connectionScore: {
+        title: string
+        description: string
+      }
+      viewInsights: {
+        title: string
+        description: string
+      }
+    }
+  }
+
   // Common
   common: {
     goBack: string
@@ -570,6 +603,37 @@ export const translations: Record<Language, Translations> = {
           'Your Google account will be used to secure your HaoHaoTalk progress and settings.',
       },
     },
+    onboarding: {
+      tutorial: 'Tutorial',
+      step: 'Step',
+      of: 'of',
+      previous: 'Previous',
+      next: 'Next',
+      getStarted: 'Get Started',
+      skip: 'Skip',
+      steps: {
+        searchScenario: {
+          title: 'Discover Scenarios',
+          description: 'Browse and search for conversation scenarios that match your learning goals'
+        },
+        pickRole: {
+          title: 'Choose Your Role',
+          description: 'Select which character you want to play in the conversation'
+        },
+        startConversation: {
+          title: 'Begin Chatting',
+          description: 'Start your practice conversation and engage naturally'
+        },
+        connectionScore: {
+          title: 'Track Your Progress',
+          description: 'Watch your connection score change in real-time as you communicate'
+        },
+        viewInsights: {
+          title: 'Get Personalized Insights',
+          description: 'Review AI-powered feedback and recommendations after each session'
+        }
+      }
+    },
     common: {
       goBack: 'Go Back',
       loading: 'Loading...',
@@ -833,6 +897,37 @@ export const translations: Record<Language, Translations> = {
         title: '透過 Google 轉換',
         description: '您的 Google 帳戶將用於保護您的好好說進度和設定。',
       },
+    },
+    onboarding: {
+      tutorial: '教學',
+      step: '步驟',
+      of: '共',
+      previous: '上一步',
+      next: '下一步',
+      getStarted: '開始使用',
+      skip: '跳過',
+      steps: {
+        searchScenario: {
+          title: '探索情境',
+          description: '瀏覽並搜尋符合您學習目標的對話情境'
+        },
+        pickRole: {
+          title: '選擇角色',
+          description: '選擇您想要在對話中扮演的角色'
+        },
+        startConversation: {
+          title: '開始對話',
+          description: '開始您的練習對話，自然地參與互動'
+        },
+        connectionScore: {
+          title: '追蹤進度',
+          description: '觀察您的連結強度如何隨著溝通而即時變化'
+        },
+        viewInsights: {
+          title: '獲得個人化見解',
+          description: '檢視 AI 驅動的回饋和每次會話後的建議'
+        }
+      }
     },
     common: {
       goBack: '返回',

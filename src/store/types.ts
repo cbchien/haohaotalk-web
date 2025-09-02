@@ -6,6 +6,7 @@ export interface User {
   isGuest: boolean
   isAdmin?: boolean
   emailVerified?: boolean
+  onboardingCompleted?: boolean
   createdAt: string
   lastLoginAt?: string
 }

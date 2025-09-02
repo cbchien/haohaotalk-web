@@ -3,6 +3,7 @@ import { devtools, persist } from 'zustand/middleware'
 import { ChatSession } from './types'
 import type { Scenario, ScenarioRole } from '@/services'
 import { getDefaultLanguage } from '@/utils/browserLanguage'
+import type { OnboardingState } from '@/types/onboarding'
 
 interface AppState {
   // UI State
@@ -30,6 +31,9 @@ interface AppState {
   selectedCategories: string[]
   selectedDifficulty: string[]
 
+  // Onboarding
+  onboarding: OnboardingState
+
   // Actions
   setLanguage: (language: 'en' | 'zh') => void
   setOfflineStatus: (isOffline: boolean) => void
@@ -54,6 +58,12 @@ interface AppState {
   setSelectedCategories: (categories: string[]) => void
   setSelectedDifficulty: (difficulty: string[]) => void
   clearFilters: () => void
+  
+  // Onboarding actions
+  showOnboarding: () => void
+  hideOnboarding: () => void
+  setOnboardingStep: (step: number) => void
+  completeOnboarding: () => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -76,6 +86,11 @@ export const useAppStore = create<AppState>()(
       searchQuery: '',
       selectedCategories: [],
       selectedDifficulty: [],
+      onboarding: {
+        isVisible: false,
+        currentStep: 0,
+        hasCompletedOnboarding: false,
+      },
 
       // Actions
       setLanguage: language => set({ currentLanguage: language }),
@@ -115,12 +130,39 @@ export const useAppStore = create<AppState>()(
           selectedCategories: [],
           selectedDifficulty: [],
         }),
+      
+      // Onboarding actions
+      showOnboarding: () => 
+        set(state => ({ 
+          onboarding: { ...state.onboarding, isVisible: true } 
+        })),
+      hideOnboarding: () => 
+        set(state => ({ 
+          onboarding: { ...state.onboarding, isVisible: false } 
+        })),
+      setOnboardingStep: (step: number) => 
+        set(state => ({ 
+          onboarding: { ...state.onboarding, currentStep: step } 
+        })),
+      completeOnboarding: () => 
+        set(state => ({ 
+          onboarding: { 
+            ...state.onboarding, 
+            isVisible: false, 
+            hasCompletedOnboarding: true 
+          } 
+        })),
       }),
       {
         name: 'haohaotalk-app',
         partialize: state => ({
-          // Only persist language setting
+          // Only persist language setting and onboarding completion
           currentLanguage: state.currentLanguage,
+          onboarding: {
+            isVisible: false, // Never persist modal visibility
+            currentStep: 0,   // Always start from step 0
+            hasCompletedOnboarding: state.onboarding.hasCompletedOnboarding,
+          },
         }),
       }
     ),
