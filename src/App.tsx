@@ -36,10 +36,19 @@ function AppContent() {
   // Check onboarding status for authenticated users
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      if (isAuthenticated && user && !user.isGuest && !onboarding.hasCompletedOnboarding) {
+      if (
+        isAuthenticated &&
+        user &&
+        !user.isGuest &&
+        !onboarding.hasCompletedOnboarding
+      ) {
         try {
           const response = await OnboardingAPI.getOnboardingStatus()
-          if (response.success && response.data && !response.data.user.onboardingCompleted) {
+          if (
+            response.success &&
+            response.data &&
+            !response.data.user.onboardingCompleted
+          ) {
             setTimeout(() => showOnboarding(), 1000) // Delay for smooth UX
           }
         } catch {
@@ -132,7 +141,8 @@ function AppContent() {
 }
 
 function App() {
-  const { initializeAuth, refreshAuth, isInitialized, authToken } = useAuthStore()
+  const { initializeAuth, refreshAuth, isInitialized, authToken } =
+    useAuthStore()
 
   useEffect(() => {
     // Initialize authentication on app startup
@@ -142,12 +152,12 @@ function App() {
   // Use refs to avoid recreating event handlers on every dependency change
   const isInitializedRef = useRef(isInitialized)
   const authTokenRef = useRef(authToken)
-  
+
   // Update refs when values change
   useEffect(() => {
     isInitializedRef.current = isInitialized
   }, [isInitialized])
-  
+
   useEffect(() => {
     authTokenRef.current = authToken
   }, [authToken])

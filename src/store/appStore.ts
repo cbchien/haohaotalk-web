@@ -58,7 +58,7 @@ interface AppState {
   setSelectedCategories: (categories: string[]) => void
   setSelectedDifficulty: (difficulty: string[]) => void
   clearFilters: () => void
-  
+
   // Onboarding actions
   showOnboarding: () => void
   hideOnboarding: () => void
@@ -72,86 +72,87 @@ export const useAppStore = create<AppState>()(
       set => ({
         // Initial state - use browser language as default
         currentLanguage: getDefaultLanguage(),
-      isOffline: false,
-      scenarios: [],
-      popularScenarios: [],
-      featuredScenarios: [],
-      isLoadingScenarios: false,
-      activeSession: null,
-      isLoadingSession: false,
-      currentScenario: null,
-      availableRoles: [],
-      selectedRole: null,
-      relationshipLevel: 'normal',
-      searchQuery: '',
-      selectedCategories: [],
-      selectedDifficulty: [],
-      onboarding: {
-        isVisible: false,
-        currentStep: 0,
-        hasCompletedOnboarding: false,
-      },
+        isOffline: false,
+        scenarios: [],
+        popularScenarios: [],
+        featuredScenarios: [],
+        isLoadingScenarios: false,
+        activeSession: null,
+        isLoadingSession: false,
+        currentScenario: null,
+        availableRoles: [],
+        selectedRole: null,
+        relationshipLevel: 'normal',
+        searchQuery: '',
+        selectedCategories: [],
+        selectedDifficulty: [],
+        onboarding: {
+          isVisible: false,
+          currentStep: 0,
+          hasCompletedOnboarding: false,
+        },
 
-      // Actions
-      setLanguage: language => set({ currentLanguage: language }),
-      setOfflineStatus: isOffline => set({ isOffline }),
-      setScenarios: scenarios => set({ scenarios }),
-      setPopularScenarios: scenarios => set({ popularScenarios: scenarios }),
-      setFeaturedScenarios: scenarios => set({ featuredScenarios: scenarios }),
-      setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
-      setActiveSession: session => set({ activeSession: session }),
-      setSessionLoading: loading => set({ isLoadingSession: loading }),
-      setCurrentScenario: scenario => set({ currentScenario: scenario }),
-      setAvailableRoles: roles => set({ availableRoles: roles }),
-      setSelectedRole: role => set({ selectedRole: role }),
-      setRelationshipLevel: level => set({ relationshipLevel: level }),
-      clearSessionConfiguration: () =>
-        set({
-          currentScenario: null,
-          availableRoles: [],
-          selectedRole: null,
-          relationshipLevel: 'normal',
-        }),
-      setSessionConfiguration: (scenario, roles, role, relationshipLevel) =>
-        set({
-          currentScenario: scenario,
-          availableRoles: roles,
-          selectedRole: role,
-          relationshipLevel,
-        }),
-      setSearchQuery: query => set({ searchQuery: query }),
-      setSelectedCategories: categories =>
-        set({ selectedCategories: categories }),
-      setSelectedDifficulty: difficulty =>
-        set({ selectedDifficulty: difficulty }),
-      clearFilters: () =>
-        set({
-          searchQuery: '',
-          selectedCategories: [],
-          selectedDifficulty: [],
-        }),
-      
-      // Onboarding actions
-      showOnboarding: () => 
-        set(state => ({ 
-          onboarding: { ...state.onboarding, isVisible: true } 
-        })),
-      hideOnboarding: () => 
-        set(state => ({ 
-          onboarding: { ...state.onboarding, isVisible: false } 
-        })),
-      setOnboardingStep: (step: number) => 
-        set(state => ({ 
-          onboarding: { ...state.onboarding, currentStep: step } 
-        })),
-      completeOnboarding: () => 
-        set(state => ({ 
-          onboarding: { 
-            ...state.onboarding, 
-            isVisible: false, 
-            hasCompletedOnboarding: true 
-          } 
-        })),
+        // Actions
+        setLanguage: language => set({ currentLanguage: language }),
+        setOfflineStatus: isOffline => set({ isOffline }),
+        setScenarios: scenarios => set({ scenarios }),
+        setPopularScenarios: scenarios => set({ popularScenarios: scenarios }),
+        setFeaturedScenarios: scenarios =>
+          set({ featuredScenarios: scenarios }),
+        setScenariosLoading: loading => set({ isLoadingScenarios: loading }),
+        setActiveSession: session => set({ activeSession: session }),
+        setSessionLoading: loading => set({ isLoadingSession: loading }),
+        setCurrentScenario: scenario => set({ currentScenario: scenario }),
+        setAvailableRoles: roles => set({ availableRoles: roles }),
+        setSelectedRole: role => set({ selectedRole: role }),
+        setRelationshipLevel: level => set({ relationshipLevel: level }),
+        clearSessionConfiguration: () =>
+          set({
+            currentScenario: null,
+            availableRoles: [],
+            selectedRole: null,
+            relationshipLevel: 'normal',
+          }),
+        setSessionConfiguration: (scenario, roles, role, relationshipLevel) =>
+          set({
+            currentScenario: scenario,
+            availableRoles: roles,
+            selectedRole: role,
+            relationshipLevel,
+          }),
+        setSearchQuery: query => set({ searchQuery: query }),
+        setSelectedCategories: categories =>
+          set({ selectedCategories: categories }),
+        setSelectedDifficulty: difficulty =>
+          set({ selectedDifficulty: difficulty }),
+        clearFilters: () =>
+          set({
+            searchQuery: '',
+            selectedCategories: [],
+            selectedDifficulty: [],
+          }),
+
+        // Onboarding actions
+        showOnboarding: () =>
+          set(state => ({
+            onboarding: { ...state.onboarding, isVisible: true },
+          })),
+        hideOnboarding: () =>
+          set(state => ({
+            onboarding: { ...state.onboarding, isVisible: false },
+          })),
+        setOnboardingStep: (step: number) =>
+          set(state => ({
+            onboarding: { ...state.onboarding, currentStep: step },
+          })),
+        completeOnboarding: () =>
+          set(state => ({
+            onboarding: {
+              ...state.onboarding,
+              isVisible: false,
+              hasCompletedOnboarding: true,
+            },
+          })),
       }),
       {
         name: 'haohaotalk-app',
@@ -160,7 +161,7 @@ export const useAppStore = create<AppState>()(
           currentLanguage: state.currentLanguage,
           onboarding: {
             isVisible: false, // Never persist modal visibility
-            currentStep: 0,   // Always start from step 0
+            currentStep: 0, // Always start from step 0
             hasCompletedOnboarding: state.onboarding.hasCompletedOnboarding,
           },
         }),

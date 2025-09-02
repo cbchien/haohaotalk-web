@@ -614,25 +614,29 @@ export const translations: Record<Language, Translations> = {
       steps: {
         searchScenario: {
           title: 'Discover Scenarios',
-          description: 'Browse and search for conversation scenarios that match your learning goals'
+          description:
+            'Browse and search for conversation scenarios that match your learning goals',
         },
         pickRole: {
           title: 'Choose Your Role',
-          description: 'Select which character you want to play in the conversation'
+          description:
+            'Select which character you want to play in the conversation',
         },
         startConversation: {
           title: 'Begin Chatting',
-          description: 'Start your practice conversation and engage naturally'
+          description: 'Start your practice conversation and engage naturally',
         },
         connectionScore: {
           title: 'Track Your Progress',
-          description: 'Watch your connection score change in real-time as you communicate'
+          description:
+            'Watch your connection score change in real-time as you communicate',
         },
         viewInsights: {
           title: 'Get Personalized Insights',
-          description: 'Review AI-powered feedback and recommendations after each session'
-        }
-      }
+          description:
+            'Review AI-powered feedback and recommendations after each session',
+        },
+      },
     },
     common: {
       goBack: 'Go Back',
@@ -909,25 +913,25 @@ export const translations: Record<Language, Translations> = {
       steps: {
         searchScenario: {
           title: '探索情境',
-          description: '瀏覽並搜尋符合您學習目標的對話情境'
+          description: '瀏覽並搜尋符合您學習目標的對話情境',
         },
         pickRole: {
           title: '選擇角色',
-          description: '選擇您想要在對話中扮演的角色'
+          description: '選擇您想要在對話中扮演的角色',
         },
         startConversation: {
           title: '開始對話',
-          description: '開始您的練習對話，自然地參與互動'
+          description: '開始您的練習對話，自然地參與互動',
         },
         connectionScore: {
           title: '追蹤進度',
-          description: '觀察您的連結強度如何隨著溝通而即時變化'
+          description: '觀察您的連結強度如何隨著溝通而即時變化',
         },
         viewInsights: {
           title: '獲得個人化見解',
-          description: '檢視 AI 驅動的回饋和每次會話後的建議'
-        }
-      }
+          description: '檢視 AI 驅動的回饋和每次會話後的建議',
+        },
+      },
     },
     common: {
       goBack: '返回',

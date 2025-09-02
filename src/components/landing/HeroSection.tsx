@@ -5,7 +5,8 @@ import { useTranslation } from '@/utils/translations'
 
 export const HeroSection = () => {
   const navigate = useNavigate()
-  const { user, isAuthenticated, isInitialized, setShowAuthModal } = useAuthStore()
+  const { user, isAuthenticated, isInitialized, setShowAuthModal } =
+    useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 

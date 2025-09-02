@@ -26,7 +26,7 @@ export const OnboardingModal = ({
   const currentStepKey = onboardingStepKeys[currentStep]
   const currentStepContent = t.onboarding.steps[currentStepKey]
   const currentIllustration = onboardingIllustrations[currentStep]
-  
+
   const isFirstStep = currentStep === 0
   const isLastStep = currentStep === onboardingStepKeys.length - 1
 

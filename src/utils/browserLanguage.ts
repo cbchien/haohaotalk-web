@@ -19,12 +19,12 @@ export function detectBrowserLanguage(): SupportedLanguage {
 
   for (const lang of languages) {
     const langCode = lang.toLowerCase()
-    
+
     // Check for English variants
     if (langCode.startsWith('en')) {
       return 'en'
     }
-    
+
     // Check for Chinese variants (zh, zh-CN, zh-TW, zh-HK, etc.)
     if (langCode.startsWith('zh')) {
       return 'zh'

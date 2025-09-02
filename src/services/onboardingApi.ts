@@ -5,7 +5,7 @@ import type { User } from '@/store/types'
 class OnboardingApiService {
   async updateOnboardingStatus(completed: boolean): Promise<ApiResponse<User>> {
     return apiClient.put('users/profile', {
-      onboardingCompleted: completed
+      onboardingCompleted: completed,
     })
   }
 

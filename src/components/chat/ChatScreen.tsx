@@ -457,7 +457,9 @@ export const ChatScreen = () => {
     />
   ) : null
 
-  const characterRole = availableRoles.find(role => role.id !== globalSelectedRole?.id)
+  const characterRole = availableRoles.find(
+    role => role.id !== globalSelectedRole?.id
+  )
 
   if (isLoading) {
     return (
@@ -535,13 +537,14 @@ export const ChatScreen = () => {
             userRoleName={
               currentLanguage === 'zh'
                 ? globalSelectedRole?.role_name
-                : globalSelectedRole?.role_name_en || globalSelectedRole?.role_name
+                : globalSelectedRole?.role_name_en ||
+                  globalSelectedRole?.role_name
             }
             characterRoleName={
               characterRole
-                ? (currentLanguage === 'zh'
-                    ? characterRole.role_name
-                    : characterRole.role_name_en || characterRole.role_name)
+                ? currentLanguage === 'zh'
+                  ? characterRole.role_name
+                  : characterRole.role_name_en || characterRole.role_name
                 : undefined
             }
           />

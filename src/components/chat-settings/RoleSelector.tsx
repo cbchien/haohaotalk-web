@@ -24,8 +24,8 @@ export const RoleSelector = ({
           roles.map(role => {
             const isSelected = selectedRole === role.id
             const roleName =
-              language === 'zh' 
-                ? role.role_name 
+              language === 'zh'
+                ? role.role_name
                 : role.role_name_en || role.role_name
 
             return (
