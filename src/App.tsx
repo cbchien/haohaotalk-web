@@ -36,12 +36,7 @@ function AppContent() {
   // Check onboarding status for authenticated users
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      if (
-        isAuthenticated &&
-        user &&
-        !user.isGuest &&
-        !onboarding.hasCompletedOnboarding
-      ) {
+      if (isAuthenticated && user && !user.isGuest) {
         try {
           const response = await OnboardingAPI.getOnboardingStatus()
           if (
@@ -52,26 +47,21 @@ function AppContent() {
             setTimeout(() => showOnboarding(), 1000) // Delay for smooth UX
           }
         } catch {
-          // Fallback to local storage for offline scenarios
-          const localStatus = OnboardingAPI.getLocalOnboardingStatus(user.id)
-          if (!localStatus) {
-            setTimeout(() => showOnboarding(), 1000)
-          }
+          // Show onboarding if API fails - let server be source of truth
+          setTimeout(() => showOnboarding(), 1000)
         }
       }
     }
 
     checkOnboardingStatus()
-  }, [isAuthenticated, user, onboarding.hasCompletedOnboarding, showOnboarding])
+  }, [isAuthenticated, user, showOnboarding])
 
   const handleOnboardingComplete = async () => {
     if (user && !user.isGuest) {
       try {
         await OnboardingAPI.updateOnboardingStatus(true)
-        OnboardingAPI.setLocalOnboardingStatus(user.id, true)
       } catch {
-        // Still complete locally even if API fails
-        OnboardingAPI.setLocalOnboardingStatus(user.id, true)
+        // API failed but still complete in app state
       }
     }
     completeOnboarding()

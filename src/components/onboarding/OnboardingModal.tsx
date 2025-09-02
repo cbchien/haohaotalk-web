@@ -95,28 +95,12 @@ export const OnboardingModal = ({
         <div className="p-6 text-center">
           {/* Illustration */}
           <div className="mb-6 flex justify-center">
-            <div className="w-32 h-32 bg-gradient-to-br from-blue-10 to-blue-25 rounded-2xl flex items-center justify-center">
+            <div className="w-48 h-48 bg-gradient-to-br from-blue-10 to-blue-25 rounded-2xl flex items-center justify-center">
               <img
                 src={currentIllustration}
                 alt={currentStepContent.title}
-                className="w-24 h-24 object-contain"
-                onError={e => {
-                  // Fallback to placeholder when AI-generated images aren't ready
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  target.nextElementSibling?.classList.remove('hidden')
-                }}
+                className="w-40 h-40 object-contain"
               />
-              {/* Fallback placeholder */}
-              <div className="hidden w-24 h-24 bg-blue-55/30 rounded-xl flex items-center justify-center">
-                <span className="text-3xl">
-                  {currentStep === 0 && '🔍'}
-                  {currentStep === 1 && '👤'}
-                  {currentStep === 2 && '💬'}
-                  {currentStep === 3 && '📊'}
-                  {currentStep === 4 && '💡'}
-                </span>
-              </div>
             </div>
           </div>
 
