@@ -67,11 +67,11 @@ export const HeroSection = () => {
           </svg>
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-100 to-gray-800 bg-clip-text text-transparent mb-6 leading-tight">
+        <h1 className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-100 to-gray-800 bg-clip-text text-transparent mb-6 leading-tight">
           {t.landing.heroTitle}
         </h1>
 
-        <p className="text-xl md:text-2xl text-gray-700 mb-10 max-w-3xl leading-relaxed font-medium">
+        <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-3xl leading-relaxed font-medium">
           {t.landing.heroSubtitle}
         </p>
 
@@ -80,7 +80,7 @@ export const HeroSection = () => {
           <div className="absolute -inset-1 bg-gradient-to-r from-blue-100 to-blue-75 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
           <button
             onClick={handleGetStarted}
-            className="relative bg-gradient-to-r from-blue-100 to-blue-75 text-white px-12 py-5 rounded-2xl text-xl font-semibold hover:from-blue-75 hover:to-blue-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1"
+            className="relative bg-gradient-to-r from-blue-100 to-blue-75 text-white px-12 py-5 rounded-2xl text-lg font-semibold hover:from-blue-75 hover:to-blue-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1"
           >
             {t.landing.startPracticing}
             <svg
