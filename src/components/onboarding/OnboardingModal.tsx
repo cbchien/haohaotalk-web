@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   XMarkIcon,
   ChevronLeftIcon,
@@ -29,6 +29,15 @@ export const OnboardingModal = ({
 
   const isFirstStep = currentStep === 0
   const isLastStep = currentStep === onboardingStepKeys.length - 1
+
+  useEffect(() => {
+    if (isVisible) {
+      onboardingIllustrations.forEach(src => {
+        const img = new Image()
+        img.src = src
+      })
+    }
+  }, [isVisible])
 
   const handleNext = () => {
     if (isLastStep) {
