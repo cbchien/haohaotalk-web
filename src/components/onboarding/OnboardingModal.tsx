@@ -136,7 +136,9 @@ export const OnboardingModal = ({
             }`}
           >
             <ChevronLeftIcon className="w-4 h-4" />
-            <span className="text-sm sm:text-base">{t.onboarding.previous}</span>
+            <span className="text-sm sm:text-base">
+              {t.onboarding.previous}
+            </span>
           </button>
 
           <div className="flex space-x-2">

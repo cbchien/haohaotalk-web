@@ -78,23 +78,25 @@
     .hover-scale:hover {
       transform: scale(1.02);
     }
-    
+
     .hover-scale-lg:hover {
       transform: scale(1.05);
     }
-    
+
     .hover-bg-gray:hover {
       background-color: rgb(243 244 246);
     }
-    
+
     .hover-bg-blue:hover {
       background-color: rgb(59 130 246);
     }
-    
+
     .hover-shadow:hover {
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      box-shadow:
+        0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1);
     }
-    
+
     .hover-text-gray:hover {
       color: rgb(75 85 99);
     }
@@ -106,15 +108,15 @@
     .hover-scale-lg:active {
       transform: scale(0.98);
     }
-    
+
     .hover-bg-gray:active {
       background-color: rgb(229 231 235);
     }
-    
+
     .hover-bg-blue:active {
       background-color: rgb(37 99 235);
     }
-    
+
     /* Hide complex hover animations on mobile */
     .group:active .group-hover\\:opacity-40 {
       opacity: 0.3;

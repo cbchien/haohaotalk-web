@@ -19,18 +19,56 @@ import { useAuthStore, useAppStore } from './store'
 import { OnboardingAPI } from './services/onboardingApi'
 
 // Lazy load heavy components
-const ChatScreen = lazy(() => import('./components/chat').then(module => ({ default: module.ChatScreen })))
-const SessionInsightsPage = lazy(() => import('./screens/SessionInsightsPage').then(module => ({ default: module.SessionInsightsPage })))
-const SessionPerfComparisonPage = lazy(() => import('./screens/SessionPerfComparisonPage').then(module => ({ default: module.SessionPerfComparisonPage })))
+const ChatScreen = lazy(() =>
+  import('./components/chat').then(module => ({ default: module.ChatScreen }))
+)
+const SessionInsightsPage = lazy(() =>
+  import('./screens/SessionInsightsPage').then(module => ({
+    default: module.SessionInsightsPage,
+  }))
+)
+const SessionPerfComparisonPage = lazy(() =>
+  import('./screens/SessionPerfComparisonPage').then(module => ({
+    default: module.SessionPerfComparisonPage,
+  }))
+)
 
 // Lazy load profile pages (less frequently used)
-const HowToUsePage = lazy(() => import('./screens/HowToUsePage').then(module => ({ default: module.HowToUsePage })))
-const ConnectionScorePage = lazy(() => import('./screens/ConnectionScorePage').then(module => ({ default: module.ConnectionScorePage })))
-const PrivacyPolicyPage = lazy(() => import('./screens/PrivacyPolicyPage').then(module => ({ default: module.PrivacyPolicyPage })))
-const TermsOfUsePage = lazy(() => import('./screens/TermsOfUsePage').then(module => ({ default: module.TermsOfUsePage })))
-const ContactUsPage = lazy(() => import('./screens/ContactUsPage').then(module => ({ default: module.ContactUsPage })))
-const LanguagePage = lazy(() => import('./screens/LanguagePage').then(module => ({ default: module.LanguagePage })))
-const DeleteAccountPage = lazy(() => import('./screens/DeleteAccountPage').then(module => ({ default: module.DeleteAccountPage })))
+const HowToUsePage = lazy(() =>
+  import('./screens/HowToUsePage').then(module => ({
+    default: module.HowToUsePage,
+  }))
+)
+const ConnectionScorePage = lazy(() =>
+  import('./screens/ConnectionScorePage').then(module => ({
+    default: module.ConnectionScorePage,
+  }))
+)
+const PrivacyPolicyPage = lazy(() =>
+  import('./screens/PrivacyPolicyPage').then(module => ({
+    default: module.PrivacyPolicyPage,
+  }))
+)
+const TermsOfUsePage = lazy(() =>
+  import('./screens/TermsOfUsePage').then(module => ({
+    default: module.TermsOfUsePage,
+  }))
+)
+const ContactUsPage = lazy(() =>
+  import('./screens/ContactUsPage').then(module => ({
+    default: module.ContactUsPage,
+  }))
+)
+const LanguagePage = lazy(() =>
+  import('./screens/LanguagePage').then(module => ({
+    default: module.LanguagePage,
+  }))
+)
+const DeleteAccountPage = lazy(() =>
+  import('./screens/DeleteAccountPage').then(module => ({
+    default: module.DeleteAccountPage,
+  }))
+)
 
 function AppContent() {
   const location = useLocation()
