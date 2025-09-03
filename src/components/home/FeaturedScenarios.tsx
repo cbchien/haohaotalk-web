@@ -184,9 +184,6 @@ export const ScenarioGrid = () => {
                 <span className="px-2 py-1 bg-blue-10 text-blue-100 text-xs rounded-full border">
                   {scenario.category}
                 </span>
-                <span className="px-2 py-1 bg-green-10 text-green-100 text-xs rounded-full border">
-                  {scenario.difficulty_level}
-                </span>
                 {scenario.tags &&
                   scenario.tags.map((tag, index) => (
                     <span
