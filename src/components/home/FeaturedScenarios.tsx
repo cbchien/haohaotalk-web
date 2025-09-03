@@ -146,7 +146,7 @@ export const ScenarioGrid = () => {
           <div
             key={scenario.id}
             onClick={() => handleScenarioClick(scenario)}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer break-inside-avoid mb-3"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm hover-shadow transition-smooth cursor-pointer break-inside-avoid mb-3 tap-highlight"
           >
             {/* Illustration - Same height for all cards */}
             <div className="h-32 bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 flex items-center justify-center">

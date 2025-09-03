@@ -85,7 +85,7 @@ export const BottomTabBar = () => {
                 ${
                   isActive
                     ? 'text-blue-100 scale-105'
-                    : 'text-gray-500 hover:text-gray-700 active:text-blue-100 hover:scale-102'
+                    : 'text-gray-500 hover-text-gray active:text-blue-100 hover-scale tap-highlight'
                 }
               `}
             >

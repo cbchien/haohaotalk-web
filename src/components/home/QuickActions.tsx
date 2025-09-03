@@ -65,7 +65,7 @@ export const QuickActions = () => {
           return (
             <button
               key={action.id}
-              className={`p-4 rounded-2xl border-2 text-left transition-all hover:scale-105 active:scale-95 ${getColorClasses(action.color)}`}
+              className={`p-4 rounded-2xl border-2 text-left transition-smooth hover-scale-lg active:scale-95 tap-highlight ${getColorClasses(action.color)}`}
             >
               <Icon className="w-6 h-6 mb-3" />
               <h3 className="font-semibold text-sm mb-1">{action.title}</h3>
