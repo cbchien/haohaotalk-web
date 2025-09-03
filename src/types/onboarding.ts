@@ -5,11 +5,11 @@ export interface OnboardingState {
 }
 
 export const onboardingIllustrations = [
-  '/images/onboarding/step-1-search.png',
-  '/images/onboarding/step-2-roles.png',
-  '/images/onboarding/step-3-chat.png',
-  '/images/onboarding/step-4-score.png',
-  '/images/onboarding/step-5-insights.png',
+  'https://res.cloudinary.com/haohaotalk/image/upload/v1756873767/onboarding/step-1-search.png',
+  'https://res.cloudinary.com/haohaotalk/image/upload/v1756873767/onboarding/step-2-roles.png',
+  'https://res.cloudinary.com/haohaotalk/image/upload/v1756873767/onboarding/step-3-chat.png',
+  'https://res.cloudinary.com/haohaotalk/image/upload/v1756873767/onboarding/step-4-score.png',
+  'https://res.cloudinary.com/haohaotalk/image/upload/v1756873767/onboarding/step-5-insights.png',
 ]
 
 export const onboardingStepKeys = [

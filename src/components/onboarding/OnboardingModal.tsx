@@ -100,6 +100,8 @@ export const OnboardingModal = ({
                 src={currentIllustration}
                 alt={currentStepContent.title}
                 className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
+                loading="eager"
+                decoding="async"
               />
             </div>
           </div>

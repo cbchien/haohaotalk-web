@@ -155,6 +155,8 @@ export const ScenarioGrid = () => {
                   src={scenario.image_url}
                   alt={scenario.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <div className="w-16 h-10 bg-white bg-opacity-90 rounded-lg flex items-center justify-center border border-gray-200">
