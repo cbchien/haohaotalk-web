@@ -66,7 +66,7 @@ export const ScenarioGrid = () => {
       className="bg-white rounded-2xl overflow-hidden shadow-sm break-inside-avoid mb-3"
     >
       {/* Image skeleton */}
-      <div className="h-32 bg-gray-200 animate-pulse" />
+      <div className="h-32 sm:h-[186px] bg-gray-200 animate-pulse" />
 
       {/* Content skeleton */}
       <div className="p-4">
@@ -102,7 +102,7 @@ export const ScenarioGrid = () => {
     return (
       <div className="px-4 pb-4">
         {/* Pinterest-style masonry layout with skeletons */}
-        <div className="columns-2 gap-3">
+        <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3">
           {Array.from({ length: 6 }).map((_, index) =>
             renderScenarioSkeleton(index)
           )}
@@ -141,7 +141,7 @@ export const ScenarioGrid = () => {
   return (
     <div className="px-4 pb-4">
       {/* Pinterest-style masonry layout using CSS columns */}
-      <div className="columns-2 gap-3">
+      <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3">
         {scenarios.map(scenario => (
           <div
             key={scenario.id}
@@ -149,7 +149,7 @@ export const ScenarioGrid = () => {
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover-shadow transition-smooth cursor-pointer break-inside-avoid mb-3 tap-highlight"
           >
             {/* Illustration - Same height for all cards */}
-            <div className="h-32 bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 flex items-center justify-center">
+            <div className="h-32 sm:h-[186px] bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 flex items-center justify-center">
               {scenario.image_url ? (
                 <img
                   src={scenario.image_url}
