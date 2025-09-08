@@ -66,7 +66,7 @@ export const ChatBubble = ({
 
         {/* Message bubble */}
         <div
-          className={`max-w-[280px] p-4 rounded-2xl ${
+          className={`max-w-[360px] p-4 rounded-2xl ${
             isUser
               ? 'bg-blue-100 text-white'
               : 'bg-white text-gray-900 mr-12 border border-gray-200'

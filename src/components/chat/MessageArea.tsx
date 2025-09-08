@@ -119,7 +119,7 @@ export const MessageArea = ({
   }
 
   return (
-    <div className="w-full">
+    <div>
       <div className="px-4 pt-4 pb-4 space-y-4 min-h-full">
         <ScenarioContext />
 

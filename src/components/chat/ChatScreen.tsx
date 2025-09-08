@@ -493,7 +493,7 @@ export const ChatScreen = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 sm:bg-gray-100">
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 z-10 bg-white">
         <ScreenHeader
@@ -526,7 +526,7 @@ export const ChatScreen = () => {
 
       {/* Scrollable Content Area - Account for fixed header and message input */}
       <div className="flex-1 pt-32 pb-16 overflow-hidden">
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto max-w-xl mx-auto sm:pt-8 sm:bg-gray-50 sm:rounded-t-2xl sm:shadow-xl">
           <MessageArea
             messages={messages}
             scenario={scenario}
@@ -553,7 +553,8 @@ export const ChatScreen = () => {
 
       {/* Fixed Message Input - No bottom nav, so position at bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        <MessageInput
+        <div className="max-w-xl mx-auto sm:bg-white sm:rounded-b-2xl sm:shadow-xl">
+          <MessageInput
           onSend={handleSendMessage}
           disabled={
             isTyping ||
@@ -569,7 +570,8 @@ export const ChatScreen = () => {
               return Boolean(maxTurns && currentTurn && currentTurn >= maxTurns)
             })()
           }
-        />
+          />
+        </div>
       </div>
 
       {showCompletion && session && sessionId && (
