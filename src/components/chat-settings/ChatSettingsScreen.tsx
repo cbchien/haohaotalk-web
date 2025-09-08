@@ -209,7 +209,7 @@ export const ChatSettingsScreen = () => {
         onBack={handleBack}
       />
 
-      <div className="space-y-4 p-4 pb-20">
+      <div className="space-y-4 p-4 sm:pt-8 pb-20 max-w-md mx-auto">
         <ScenarioContext scenario={scenario} />
 
         <ScenarioObjective scenario={scenario} />
