@@ -56,6 +56,7 @@ export const AuthGuard = ({
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
+        redirectPath={location.pathname + location.search}
       />
     </>
   )

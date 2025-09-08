@@ -117,6 +117,7 @@ export interface Translations {
       sessionCreationFailed: string
       invalidConfiguration: string
       pleaseLogin: string
+      sessionExpired: string
       noPermission: string
       tooManySessions: string
       serverError: string
@@ -428,6 +429,8 @@ export const translations: Record<Language, Translations> = {
         invalidConfiguration:
           'Invalid configuration. Please check your selections.',
         pleaseLogin: 'Please log in to start a practice session.',
+        sessionExpired:
+          'Your session has expired. Please refresh and try again.',
         noPermission: "You don't have permission to access this scenario.",
         tooManySessions:
           'Too many sessions created. Please wait before starting another.',
@@ -742,6 +745,7 @@ export const translations: Record<Language, Translations> = {
         sessionCreationFailed: '無法建立對話',
         invalidConfiguration: '配置無效，請檢查您的選擇。',
         pleaseLogin: '請登入以開始練習對話。',
+        sessionExpired: '您的登入已過期，請重新整理頁面。',
         noPermission: '您無權限存取此情境。',
         tooManySessions: '建立對話次數過多，請稍後再試。',
         serverError: '伺服器錯誤，請稍後再試。',

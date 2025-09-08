@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService } from '@/services'
@@ -9,12 +9,14 @@ import { useTranslation } from '@/utils/translations'
 interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
+  redirectPath?: string
 }
 
 type AuthMode = 'login' | 'register' | 'guest'
 
-export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+export const AuthModal = ({ isOpen, onClose, redirectPath }: AuthModalProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [mode, setMode] = useState<AuthMode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,6 +32,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   // Helper to check if any authentication is in progress
   const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
+  
+  // Helper to determine where to redirect after authentication
+  const getRedirectPath = () => {
+    if (redirectPath) return redirectPath
+    
+    // If user is already on a specific page and it's not the landing page, stay there
+    if (location.pathname !== '/') {
+      return location.pathname + location.search
+    }
+    
+    // Default to home for new users or landing page
+    return '/home'
+  }
 
   // Validation functions
   const validateEmail = (email: string) => {
@@ -83,7 +98,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/home')
+        navigate(getRedirectPath())
       } else {
         // Fall back to local guest creation for development
         const guestUser = {
@@ -95,7 +110,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(guestUser)
         onClose()
-        navigate('/home')
+        navigate(getRedirectPath())
       }
     } catch {
       // Guest access failed, but continue with fallback
@@ -109,7 +124,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       }
       setUser(guestUser)
       onClose()
-      navigate('/')
+      navigate(getRedirectPath())
     } finally {
       setIsGuestLoading(false)
       setLoading(false)
@@ -150,7 +165,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         // Immediately set user and close modal - loading page will show
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/home')
+        navigate(getRedirectPath())
       } else {
         setErrors({
           general: response.error || t.auth.errors.authenticationFailed,
@@ -185,7 +200,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
         onClose()
-        navigate('/home')
+        navigate(getRedirectPath())
       } else {
         // Use Google user data directly if backend call fails
         const user = {
@@ -199,7 +214,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         }
         setUser(user)
         onClose()
-        navigate('/home')
+        navigate(getRedirectPath())
       }
     } catch (error) {
       const errorMessage =

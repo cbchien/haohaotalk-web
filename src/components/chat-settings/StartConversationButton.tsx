@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAppStore } from '@/store'
+import { useAppStore, useAuthStore } from '@/store'
 import { useTranslation, type Translations } from '@/utils/translations'
 import { sessionsApiService, type Scenario } from '@/services'
 
@@ -13,9 +13,6 @@ const getSessionCreationErrorMessage = (
   // Parse HTTP status codes and provide user-friendly messages
   if (errorMessage.includes('HTTP 400')) {
     return t.chatSettings.errors.invalidConfiguration
-  }
-  if (errorMessage.includes('HTTP 401')) {
-    return t.chatSettings.errors.pleaseLogin
   }
   if (errorMessage.includes('HTTP 403')) {
     return t.chatSettings.errors.noPermission
@@ -50,6 +47,7 @@ export const StartConversationButton = ({
   onSessionCreated,
 }: StartConversationButtonProps) => {
   const { currentLanguage } = useAppStore()
+  const { clearUser, setShowAuthModal } = useAuthStore()
   const t = useTranslation(currentLanguage)
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -71,6 +69,14 @@ export const StartConversationButton = ({
       if (response.success && response.data) {
         onSessionCreated(response.data.id)
       } else {
+        // Check for session expiry/unauthorized access
+        if (response.error && response.error.includes('HTTP 401')) {
+          // Clear user state and show auth modal
+          clearUser()
+          setShowAuthModal(true)
+          return
+        }
+        
         // Enhanced error handling based on API response
         const errorMessage = getSessionCreationErrorMessage(response.error, t)
         setError(errorMessage)
