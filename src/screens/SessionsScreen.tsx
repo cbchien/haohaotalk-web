@@ -120,7 +120,7 @@ export const SessionsScreen = () => {
           </h1>
         </div>
 
-        <div className="p-4">
+        <div className="p-4 max-w-xl mx-auto sm:pt-8">
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, index) => (
               <div key={`initial-skeleton-${index}`}>
@@ -141,7 +141,7 @@ export const SessionsScreen = () => {
         </h1>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 max-w-xl mx-auto sm:pt-8">
         {isError || error ? (
           <div className="text-center py-12">
             <p className="text-gray-600 mb-4">
