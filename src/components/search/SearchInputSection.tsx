@@ -41,6 +41,7 @@ export const SearchInputSection = ({
 
   return (
     <div className="px-4 py-3 bg-white">
+      <div className="max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative">
           <input
@@ -121,6 +122,7 @@ export const SearchInputSection = ({
           </div>
         </div>
       </form>
+      </div>
     </div>
   )
 }

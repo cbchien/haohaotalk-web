@@ -22,6 +22,7 @@ export const TagsSection = ({
   if (isLoading) {
     return (
       <div className="px-4 py-3 bg-white border-t border-gray-100">
+        <div className="max-w-2xl mx-auto">
         <div className="flex flex-wrap gap-2">
           {Array.from({ length: 8 }).map((_, index) => (
             <div
@@ -30,6 +31,7 @@ export const TagsSection = ({
               style={{ width: `${Math.random() * 60 + 60}px` }}
             />
           ))}
+        </div>
         </div>
       </div>
     )
@@ -41,6 +43,7 @@ export const TagsSection = ({
 
   return (
     <div className="px-4 py-3 bg-white border-t border-gray-100">
+      <div className="max-w-2xl mx-auto">
       <div className="flex flex-wrap gap-2 max-h-24 overflow-hidden">
         {tags.map(tag => (
           <button
@@ -86,6 +89,7 @@ export const TagsSection = ({
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

@@ -59,7 +59,7 @@ export const ResultsSection = ({
 
   if (isLoading) {
     return (
-      <div className="px-4 py-3">
+      <div className="px-4 py-3 max-w-2xl mx-auto sm:pt-8">
         <h2 className="text-xl font-bold text-gray-900 mb-4">
           {getSectionTitle()}
         </h2>
@@ -89,7 +89,7 @@ export const ResultsSection = ({
 
   if (results.length === 0) {
     return (
-      <div className="px-4 py-3">
+      <div className="px-4 py-3 max-w-2xl mx-auto sm:pt-8">
         <h2 className="text-xl font-bold text-gray-900 mb-4">
           {getSectionTitle()}
         </h2>
@@ -123,7 +123,7 @@ export const ResultsSection = ({
   }
 
   return (
-    <div className="px-4 py-3">
+    <div className="px-4 py-3 max-w-2xl mx-auto sm:pt-8">
       <h2 className="text-xl font-bold text-gray-900 mb-4">
         {getSectionTitle()}
       </h2>
