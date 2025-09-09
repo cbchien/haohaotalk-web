@@ -555,21 +555,23 @@ export const ChatScreen = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
         <div className="max-w-xl mx-auto sm:bg-white sm:rounded-b-2xl sm:shadow-xl">
           <MessageInput
-          onSend={handleSendMessage}
-          disabled={
-            isTyping ||
-            showCompletion ||
-            isEndingSession ||
-            sessionEndCalled ||
-            session?.is_completed ||
-            session?.status === 'completed' ||
-            // Also disable if max turns reached (extra safety)
-            (() => {
-              const maxTurns = session?.max_turns || scenario?.max_turns
-              const currentTurn = session?.current_turn
-              return Boolean(maxTurns && currentTurn && currentTurn >= maxTurns)
-            })()
-          }
+            onSend={handleSendMessage}
+            disabled={
+              isTyping ||
+              showCompletion ||
+              isEndingSession ||
+              sessionEndCalled ||
+              session?.is_completed ||
+              session?.status === 'completed' ||
+              // Also disable if max turns reached (extra safety)
+              (() => {
+                const maxTurns = session?.max_turns || scenario?.max_turns
+                const currentTurn = session?.current_turn
+                return Boolean(
+                  maxTurns && currentTurn && currentTurn >= maxTurns
+                )
+              })()
+            }
           />
         </div>
       </div>

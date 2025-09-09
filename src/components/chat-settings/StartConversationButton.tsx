@@ -76,7 +76,7 @@ export const StartConversationButton = ({
           setShowAuthModal(true)
           return
         }
-        
+
         // Enhanced error handling based on API response
         const errorMessage = getSessionCreationErrorMessage(response.error, t)
         setError(errorMessage)

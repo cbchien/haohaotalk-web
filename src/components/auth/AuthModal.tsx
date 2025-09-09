@@ -14,7 +14,11 @@ interface AuthModalProps {
 
 type AuthMode = 'login' | 'register' | 'guest'
 
-export const AuthModal = ({ isOpen, onClose, redirectPath }: AuthModalProps) => {
+export const AuthModal = ({
+  isOpen,
+  onClose,
+  redirectPath,
+}: AuthModalProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const [mode, setMode] = useState<AuthMode>('login')
@@ -32,16 +36,16 @@ export const AuthModal = ({ isOpen, onClose, redirectPath }: AuthModalProps) => 
 
   // Helper to check if any authentication is in progress
   const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
-  
+
   // Helper to determine where to redirect after authentication
   const getRedirectPath = () => {
     if (redirectPath) return redirectPath
-    
+
     // If user is already on a specific page and it's not the landing page, stay there
     if (location.pathname !== '/') {
       return location.pathname + location.search
     }
-    
+
     // Default to home for new users or landing page
     return '/home'
   }
