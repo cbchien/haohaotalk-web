@@ -69,7 +69,7 @@ export const ProfileScreen = () => {
   return (
     <>
       <div className="min-h-screen bg-gray-50">
-        <div className="p-4">
+        <div className="p-4 max-w-2xl mx-auto sm:pt-8">
           <ProfileHeader />
 
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
