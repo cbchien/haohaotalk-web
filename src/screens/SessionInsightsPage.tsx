@@ -40,7 +40,7 @@ export const SessionInsightsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">{t.common.loading}</p>
@@ -52,7 +52,7 @@ export const SessionInsightsPage = () => {
   // Show error state
   if (isError || error) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-gray-600 mb-4">
             {error?.message || 'Failed to load session data'}
@@ -69,7 +69,7 @@ export const SessionInsightsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-blue-25">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">

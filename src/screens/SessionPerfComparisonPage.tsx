@@ -38,7 +38,7 @@ export const SessionPerfComparisonPage = () => {
   // Show auth loading state
   if (isAuthLoading) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">{t.common.loading}</p>
@@ -50,7 +50,7 @@ export const SessionPerfComparisonPage = () => {
   // Show auth error
   if (isNotAuthenticated) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-gray-600 mb-4">
             Please log in to view performance
@@ -76,7 +76,7 @@ export const SessionPerfComparisonPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">{t.common.loading}</p>
@@ -88,7 +88,7 @@ export const SessionPerfComparisonPage = () => {
   // Show data loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">{t.common.loading}</p>
@@ -100,7 +100,7 @@ export const SessionPerfComparisonPage = () => {
   // Show error state
   if (isError || error) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-gray-600 mb-4">
             {error?.message || 'Comparison data not available'}
@@ -119,7 +119,7 @@ export const SessionPerfComparisonPage = () => {
   // Show no data state
   if (!performance) {
     return (
-      <div className="min-h-screen bg-blue-25 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-gray-600 mb-4">No performance data available</p>
           <button
@@ -158,7 +158,7 @@ export const SessionPerfComparisonPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-blue-25">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
