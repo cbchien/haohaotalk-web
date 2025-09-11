@@ -107,7 +107,7 @@ export const SessionInsightsPage = () => {
 
       <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8">
         {/* Connection Score Chart */}
-        <div className="bg-white rounded-xl p-4">
+        <div className="bg-white rounded-xl p-4 border border-gray-300">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
             {t.performance.connectionProgression}
           </h2>
@@ -116,7 +116,7 @@ export const SessionInsightsPage = () => {
 
         {/* What Went Well */}
         {insights?.what_went_well && insights.what_went_well.length > 0 && (
-          <div className="bg-white rounded-xl p-4">
+          <div className="bg-white rounded-xl p-4 border border-gray-300">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
               {t.performance.whatWentWell}
             </h3>
@@ -135,7 +135,7 @@ export const SessionInsightsPage = () => {
 
         {/* Key Moments */}
         {insights?.key_moments && insights.key_moments.length > 0 && (
-          <div className="bg-white rounded-xl p-4">
+          <div className="bg-white rounded-xl p-4 border border-gray-300">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
               {t.performance.keyMoments}
             </h3>
@@ -155,7 +155,7 @@ export const SessionInsightsPage = () => {
         {/* Things to Try Next */}
         {insights?.things_to_try_next &&
           insights.things_to_try_next.length > 0 && (
-            <div className="bg-white rounded-xl p-4">
+            <div className="bg-white rounded-xl p-4 border border-gray-300">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 {t.performance.thingsToTryNext}
               </h3>

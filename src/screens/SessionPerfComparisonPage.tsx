@@ -199,7 +199,7 @@ export const SessionPerfComparisonPage = () => {
 
       <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8">
         {/* Score Distribution Chart */}
-        <div className="bg-white rounded-xl p-4">
+        <div className="bg-white rounded-xl p-4 border border-gray-300">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
             {t.performance.relativeToOthers}
           </h2>

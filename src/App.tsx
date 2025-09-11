@@ -126,7 +126,7 @@ function AppContent() {
       <main className={hideBottomNav ? '' : 'pb-16'}>
         <Suspense
           fallback={
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex items-center justify-center min-h-screen bg-white">
               <div className="flex flex-col items-center space-y-4">
                 <div className="w-8 h-8 border-4 border-blue-100 border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-gray-500 text-sm">Loading...</p>
