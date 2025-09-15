@@ -99,6 +99,31 @@ export const SessionPerfComparisonPage = () => {
 
   // Show error state
   if (isError || error) {
+    // Check if it's a 403/404 error (session doesn't exist or access denied)
+    const errorMessage = error?.message || ''
+    const is403or404 = errorMessage.includes('403') || errorMessage.includes('404') || errorMessage.includes('Forbidden') || errorMessage.includes('Not Found')
+    
+    if (is403or404) {
+      return (
+        <div className="min-h-screen bg-white flex items-center justify-center p-4">
+          <div className="text-center">
+            <p className="text-gray-600 mb-2">
+              {t.common.sessionNotAvailable}
+            </p>
+            <p className="text-gray-500 text-sm mb-4">
+              {t.common.sessionNotAvailableDesc}
+            </p>
+            <button
+              onClick={handleBack}
+              className="px-4 py-2 bg-blue-100 text-white rounded-lg"
+            >
+              {t.common.goBack}
+            </button>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
@@ -116,12 +141,17 @@ export const SessionPerfComparisonPage = () => {
     )
   }
 
-  // Show no data state
+  // Show no data state (session may have been deleted)
   if (!performance) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">No performance data available</p>
+          <p className="text-gray-600 mb-2">
+            {t.common.sessionNotAvailable}
+          </p>
+          <p className="text-gray-500 text-sm mb-4">
+            {t.common.sessionNotAvailableDesc}
+          </p>
           <button
             onClick={handleBack}
             className="px-4 py-2 bg-blue-100 text-white rounded-lg"

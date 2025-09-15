@@ -325,6 +325,8 @@ export interface Translations {
     error: string
     retry: string
     next: string
+    sessionNotAvailable: string
+    sessionNotAvailableDesc: string
   }
 }
 
@@ -653,6 +655,8 @@ export const translations: Record<Language, Translations> = {
       error: 'Error',
       retry: 'Retry',
       next: 'Next',
+      sessionNotAvailable: 'This session is no longer available',
+      sessionNotAvailableDesc: 'The session you are looking for may have been deleted or is no longer accessible.',
     },
   },
   zh: {
@@ -952,6 +956,8 @@ export const translations: Record<Language, Translations> = {
       error: '錯誤',
       retry: '重試',
       next: '下一步',
+      sessionNotAvailable: '此會話已不可用',
+      sessionNotAvailableDesc: '您查找的會話可能已被刪除或無法存取。',
     },
   },
 }
