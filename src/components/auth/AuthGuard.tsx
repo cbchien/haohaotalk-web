@@ -15,7 +15,9 @@ export const AuthGuard = ({
   const location = useLocation()
   const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } =
     useAuthStore()
-  const isLandingPage = location.pathname === '/'
+  
+  const PUBLIC_PAGES = ['/', '/user-testing']
+  const isPublicPage = PUBLIC_PAGES.includes(location.pathname)
 
   useEffect(() => {
     // Check if we need to show authentication
@@ -33,13 +35,13 @@ export const AuthGuard = ({
   }, [requireAuth, isAuthenticated, user, setLoading, setShowAuthModal])
 
   // Show auth modal on app start if no user, hide when authenticated
-  // Skip auto auth modal on landing page
+  // Skip auto auth modal on public pages
   useEffect(() => {
     if (user) {
       // User is authenticated, make sure modal is closed
       setShowAuthModal(false)
-    } else if (!isLandingPage) {
-      // No user and not on landing page, show modal after brief delay
+    } else if (!isPublicPage) {
+      // No user and not on public page, show modal after brief delay
       const timer = setTimeout(() => {
         if (!user && !showAuthModal) {
           setShowAuthModal(true)
@@ -48,7 +50,7 @@ export const AuthGuard = ({
 
       return () => clearTimeout(timer)
     }
-  }, [user, showAuthModal, isLandingPage, setShowAuthModal])
+  }, [user, showAuthModal, isPublicPage, setShowAuthModal])
 
   return (
     <>
