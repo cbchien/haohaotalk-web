@@ -130,6 +130,8 @@ export interface Translations {
     conversation: string
     connectionScore: string
     turn: string
+    objectiveNotification: string
+    begin: string
     scenarioContext: string
     storyBackground: string
     typeResponse: string
@@ -443,6 +445,8 @@ export const translations: Record<Language, Translations> = {
       conversation: 'Conversation',
       connectionScore: 'Connection Score',
       turn: 'Turn',
+      objectiveNotification: 'Reach the objective in {maxTurns} turns',
+      begin: 'Begin',
       scenarioContext: 'This conversation simulates drama.',
       storyBackground: 'Story Background:',
       typeResponse: 'Type your response...',
@@ -758,6 +762,8 @@ export const translations: Record<Language, Translations> = {
       conversation: '對話',
       connectionScore: '連結強度',
       turn: '回合',
+      objectiveNotification: '在 {maxTurns} 回合內達成目標',
+      begin: '開始',
       scenarioContext: '本對話純屬模擬劇情。',
       storyBackground: '故事背景：',
       typeResponse: '輸入回覆...',

@@ -15,6 +15,7 @@ import { ConnectionScoreBar } from './ConnectionScoreBar'
 import { MessageArea } from './MessageArea'
 import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
+import { Notification } from '@/components/common/Notification'
 
 const SESSION_ENDING_MESSAGE_DISPLAY_DURATION = 1000
 const AI_TYPING_ANIMATION_DURATION = 1100
@@ -49,6 +50,7 @@ export const ChatScreen = () => {
   const [isEndingSession, setIsEndingSession] = useState(false)
   const [sessionEndCalled, setSessionEndCalled] = useState(false)
   const [showEndConfirmation, setShowEndConfirmation] = useState(false)
+  const [showObjectiveNotification, setShowObjectiveNotification] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const loadedSessionRef = useRef<string | null>(null)
@@ -125,6 +127,9 @@ export const ChatScreen = () => {
                     character_emotion: 'neutral',
                   },
                 ])
+                
+                // Show objective notification for new conversations
+                setShowObjectiveNotification(true)
               }
             }
           }
@@ -388,6 +393,15 @@ export const ChatScreen = () => {
     setSession(updatedSession)
   }
 
+  const getObjectiveTitle = () => {
+    const maxTurns = session?.max_turns || scenario?.max_turns || 0
+    return t.chat.objectiveNotification.replace('{maxTurns}', maxTurns.toString())
+  }
+
+  const getObjectiveBody = () => {
+    return scenario?.objective || ''
+  }
+
   const handleConfirmEndSession = async () => {
     if (!sessionId || sessionEndCalled) return
 
@@ -623,6 +637,18 @@ export const ChatScreen = () => {
           </div>
         </div>
       )}
+
+      {/* Objective Notification Modal */}
+      <Notification
+        title={getObjectiveTitle()}
+        message={getObjectiveBody()}
+        type="info"
+        mode="modal"
+        isVisible={showObjectiveNotification}
+        onDismiss={() => setShowObjectiveNotification(false)}
+        dismissible={true}
+        buttonText={t.chat.begin}
+      />
     </div>
   )
 }
