@@ -12,9 +12,11 @@ export const useHomeScenarios = (
     queryKey: cacheKeys.scenarios.home(category, language),
     queryFn: async (): Promise<Scenario[]> => {
       const response = await scenariosApiService.getScenarios({
-        category: category === 'featured' ? undefined : category,
+        category,
         language,
         limit: 20,
+        sortBy: 'display_order',
+        sortOrder: 'asc',
       })
       if (!response.success || !response.data) {
         throw new Error(response.error || 'Failed to load home scenarios')
