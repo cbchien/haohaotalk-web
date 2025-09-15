@@ -98,8 +98,8 @@ export const MessageArea = ({
 
         {/* Scenario description */}
         {scenario.context && (
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <p className="text-sm text-gray-800 leading-relaxed">
+          <div className="bg-gray-50 p-4">
+            <p className="text-sm text-gray-700 leading-relaxed">
               <strong>{t.chat.storyBackground}</strong> {scenario.context}
             </p>
           </div>
@@ -131,12 +131,12 @@ export const MessageArea = ({
 
             return (
               <div key={message.id} className="flex justify-center mb-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 max-w-xs">
+                <div className="bg-gray-50 px-4 py-2 max-w-xs">
                   <div className="flex items-center justify-center space-x-2">
                     {isSessionEnding && (
                       <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
                     )}
-                    <p className="text-sm text-blue-800 text-center">
+                    <p className="text-sm text-gray-600 text-center">
                       {message.content}
                     </p>
                   </div>
