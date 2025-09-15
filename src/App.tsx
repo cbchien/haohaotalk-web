@@ -15,8 +15,10 @@ import { SearchScreen } from './screens/SearchScreen'
 import { SessionsScreen } from './screens/SessionsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { ChatSettingsScreen } from './components/chat-settings'
+import { UserTestingPage } from './screens/UserTestingPage'
 import { useAuthStore, useAppStore } from './store'
 import { OnboardingAPI } from './services/onboardingApi'
+import { initializeLanguageFromURL } from './utils/urlLanguage'
 
 // Lazy load heavy components
 const ChatScreen = lazy(() =>
@@ -73,7 +75,12 @@ const DeleteAccountPage = lazy(() =>
 function AppContent() {
   const location = useLocation()
   const { authLoadingType, user, isAuthenticated } = useAuthStore()
-  const { onboarding, showOnboarding, completeOnboarding } = useAppStore()
+  const { onboarding, showOnboarding, completeOnboarding, setLanguage } = useAppStore()
+
+  // Initialize language from URL parameter
+  useEffect(() => {
+    initializeLanguageFromURL(setLanguage)
+  }, [setLanguage])
 
   // Check onboarding status for authenticated users
   useEffect(() => {
@@ -114,10 +121,11 @@ function AppContent() {
     return <AuthLoadingPage type={authLoadingType} />
   }
 
-  // Hide bottom navigation on fullscreen routes (chat, analytics, and landing page)
+  // Hide bottom navigation on fullscreen routes (chat, analytics, landing page, and user-testing)
   const hiddenBottomNavRoutes = ['/session/', '/chat']
   const hideBottomNav =
     location.pathname === '/' ||
+    location.pathname === '/user-testing' ||
     hiddenBottomNavRoutes.some(route => location.pathname.includes(route))
 
   return (
@@ -136,6 +144,7 @@ function AppContent() {
         >
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/user-testing" element={<UserTestingPage />} />
             <Route path="/home" element={<HomeScreen />} />
             <Route path="/search" element={<SearchScreen />} />
             <Route path="/sessions" element={<SessionsScreen />} />
