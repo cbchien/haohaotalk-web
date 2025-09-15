@@ -7,6 +7,7 @@ import type { Scenario } from '@/services'
 import { useTranslation } from '@/utils/translations'
 import { useHomeScenarios } from '@/hooks/useHomeQueries'
 import { cacheKeys } from '@/utils/cacheKeys'
+import { MasonryGrid } from './MasonryGrid'
 
 const CONTEXT_DISPLAY_CHARACTER_COUNT = 100
 
@@ -101,12 +102,11 @@ export const ScenarioGrid = () => {
   if (loading) {
     return (
       <div className="px-4 pb-4">
-        {/* Pinterest-style masonry layout with skeletons */}
-        <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3">
+        <MasonryGrid gap={12} minColumnWidth={280}>
           {Array.from({ length: 6 }).map((_, index) =>
             renderScenarioSkeleton(index)
           )}
-        </div>
+        </MasonryGrid>
       </div>
     )
   }
@@ -140,13 +140,12 @@ export const ScenarioGrid = () => {
 
   return (
     <div className="px-4 pb-4">
-      {/* Pinterest-style masonry layout using CSS columns */}
-      <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3">
+      <MasonryGrid gap={12} minColumnWidth={280}>
         {scenarios.map(scenario => (
           <div
             key={scenario.id}
             onClick={() => handleScenarioClick(scenario)}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm hover-shadow transition-smooth cursor-pointer break-inside-avoid mb-3 tap-highlight"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm hover-shadow transition-smooth cursor-pointer mb-3 tap-highlight"
           >
             {/* Illustration - Same height for all cards */}
             <div className="h-32 sm:h-[186px] bg-gradient-to-br from-blue-10 via-green-10 to-yellow-10 flex items-center justify-center">
@@ -209,7 +208,7 @@ export const ScenarioGrid = () => {
             </div>
           </div>
         ))}
-      </div>
+      </MasonryGrid>
     </div>
   )
 }
