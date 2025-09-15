@@ -447,7 +447,7 @@ export const translations: Record<Language, Translations> = {
       turn: 'Turn',
       objectiveNotification: 'Reach the objective in {maxTurns} turns',
       begin: 'Begin',
-      scenarioContext: 'This conversation simulates drama.',
+      scenarioContext: 'This conversation is purly fictional.',
       storyBackground: 'Story Background:',
       typeResponse: 'Type your response...',
       conversationComplete: 'Conversation Complete!',

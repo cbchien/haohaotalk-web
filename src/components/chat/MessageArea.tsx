@@ -81,13 +81,13 @@ export const MessageArea = ({
 
     return (
       <div className="mb-6 px-4">
-        <div className="text-center mb-4 text-gray-600 text-sm">
+        <div className="text-center mt-3 text-gray-600 text-sm">
           {t.chat.scenarioContext}
         </div>
 
         {/* Scenario illustration */}
         {scenario.image_url && (
-          <div className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
+          <div className="bg-gray-50 p-4">
             <img
               src={scenario.image_url}
               alt={scenario.title}
