@@ -101,7 +101,7 @@ export const ScenarioGrid = () => {
 
   if (loading) {
     return (
-      <div className="px-4 pb-4">
+      <div className="px-4 py-4">
         <MasonryGrid gap={12} minColumnWidth={280}>
           {Array.from({ length: 6 }).map((_, index) =>
             renderScenarioSkeleton(index)
@@ -113,7 +113,7 @@ export const ScenarioGrid = () => {
 
   if (isError || error) {
     return (
-      <div className="px-4 pb-4 flex justify-center items-center h-32">
+      <div className="px-4 py-4 flex justify-center items-center h-32">
         <div className="text-center">
           <p className="text-gray-600 mb-4">
             {error?.message || 'Failed to load scenarios'}
@@ -132,14 +132,14 @@ export const ScenarioGrid = () => {
 
   if (!scenarios || scenarios.length === 0) {
     return (
-      <div className="px-4 pb-4 flex justify-center items-center h-32">
+      <div className="px-4 py-4 flex justify-center items-center h-32">
         <div className="text-gray-500">{t.scenarios.noScenariosAvailable}</div>
       </div>
     )
   }
 
   return (
-    <div className="px-4 pb-4">
+    <div className="px-4 py-4">
       <MasonryGrid gap={12} minColumnWidth={280}>
         {scenarios.map(scenario => (
           <div
