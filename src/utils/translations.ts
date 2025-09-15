@@ -129,6 +129,7 @@ export interface Translations {
     loading: string
     conversation: string
     connectionScore: string
+    turn: string
     scenarioContext: string
     storyBackground: string
     typeResponse: string
@@ -441,6 +442,7 @@ export const translations: Record<Language, Translations> = {
       loading: 'Loading conversation...',
       conversation: 'Conversation',
       connectionScore: 'Connection Score',
+      turn: 'Turn',
       scenarioContext: 'This conversation simulates drama.',
       storyBackground: 'Story Background:',
       typeResponse: 'Type your response...',
@@ -755,6 +757,7 @@ export const translations: Record<Language, Translations> = {
       loading: '載入對話中...',
       conversation: '對話',
       connectionScore: '連結強度',
+      turn: '回合',
       scenarioContext: '本對話純屬模擬劇情。',
       storyBackground: '故事背景：',
       typeResponse: '輸入回覆...',

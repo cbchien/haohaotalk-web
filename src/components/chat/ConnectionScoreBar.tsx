@@ -3,9 +3,11 @@ import { useAppStore } from '@/store'
 
 interface ConnectionScoreBarProps {
   score: number // Score from -5 to +5
+  currentTurn?: number
+  maxTurns?: number
 }
 
-export const ConnectionScoreBar = ({ score }: ConnectionScoreBarProps) => {
+export const ConnectionScoreBar = ({ score, currentTurn, maxTurns }: ConnectionScoreBarProps) => {
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
@@ -21,9 +23,12 @@ export const ConnectionScoreBar = ({ score }: ConnectionScoreBarProps) => {
   return (
     <div className="bg-white border-b border-gray-200 sm:bg-gray-100 sm:border-transparent">
       <div className="max-w-xl mx-auto px-4 py-3 sm:bg-white sm:border-b sm:border-gray-200">
-        <div className="flex items-center mb-1">
+        <div className="flex items-center justify-between mb-1">
           <span className="text-sm text-gray-600">
             {t.chat.connectionScore}
+          </span>
+          <span className="text-sm text-gray-600">
+            {t.chat.turn} {currentTurn || 0} / {maxTurns || 0}
           </span>
         </div>
 

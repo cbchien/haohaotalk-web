@@ -521,7 +521,11 @@ export const ChatScreen = () => {
           }
           onBack={handleBack}
         />
-        <ConnectionScoreBar score={connectionScore} />
+        <ConnectionScoreBar 
+          score={connectionScore} 
+          currentTurn={session?.current_turn}
+          maxTurns={session?.max_turns || scenario?.max_turns}
+        />
       </div>
 
       {/* Scrollable Content Area - Account for fixed header and message input */}
