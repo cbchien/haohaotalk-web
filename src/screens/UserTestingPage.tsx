@@ -116,7 +116,7 @@ export const UserTestingPage = () => {
 
                     {step.number === 2 && (
                       <a
-                        href="#" // Replace with actual form URL
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSfxJPMqVtQ5lWEpeti9g8HR8RcKgMdmye1kF5oNSHGvspTy-w/viewform?usp=header"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-6 py-2 bg-blue-100 text-white font-medium rounded-lg hover:bg-blue-200 transition-colors"
