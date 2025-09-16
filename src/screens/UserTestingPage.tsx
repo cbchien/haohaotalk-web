@@ -15,7 +15,9 @@ export const UserTestingPage = () => {
     {
       number: 1,
       title:
-        currentLanguage === 'zh' ? '註冊並探索應用' : 'Sign Up & Explore App',
+        currentLanguage === 'zh'
+          ? '註冊帳號並開啟練習'
+          : 'Sign Up & Explore App',
       description:
         currentLanguage === 'zh'
           ? '註冊帳戶並花幾分鐘探索「好好說」的功能，以及嘗試一些對話練習。'
@@ -30,7 +32,7 @@ export const UserTestingPage = () => {
         currentLanguage === 'zh' ? '完成回饋表單' : 'Complete Feedback Form',
       description:
         currentLanguage === 'zh'
-          ? '分享您的體驗和想法，幫助我們改善應用。'
+          ? '分享您的體驗和想法，幫助一起改善「好好說」的體驗。'
           : 'Share your experience and thoughts to help us improve the app.',
       duration: currentLanguage === 'zh' ? '~2 分鐘' : '~2 minutes',
       icon: ClockIcon,
@@ -141,7 +143,7 @@ export const UserTestingPage = () => {
           <div className="text-gray-600">
             <p className="mb-3">
               {currentLanguage === 'zh'
-                ? '完成以上兩個步驟，即可自動參加抽獎活動。感謝您的參與和寶貴建議！'
+                ? '完成以上兩個步驟，即可自動參加抽獎活動。感謝您的參與和寶貴的建議！'
                 : 'Complete both steps above to be automatically entered into our prize draw! Thank you for your participation and valuable feedback!'}
             </p>
           </div>
