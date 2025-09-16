@@ -3,10 +3,11 @@ import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/authStore'
-import { useSessionComparisonData } from '@/hooks/useSessionQueries'
+import { useSessionComparisonData, useScenarioTips } from '@/hooks/useSessionQueries'
 import { ScoreDistributionChart } from '@/components/sessions/charts/ScoreDistributionChart'
 import { RecommendationItem } from '@/components/sessions/insights/RecommendationItem'
 import { calculateUserPercentile } from '@/utils/percentileCalculator'
+import type { ScenarioTip } from '@/services'
 
 export const SessionPerfComparisonPage = () => {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -30,6 +31,18 @@ export const SessionPerfComparisonPage = () => {
 
   // Use session data from navigation state or fetched data
   const currentSessionData = sessionData || sessionDetail
+
+
+  // Get scenario ID for fetching tips
+  const scenarioId = 
+    currentScenario?.id ||
+    (currentSessionData as any)?.session_info?.scenario_key ||
+    (sessionDetail as any)?.session_info?.scenario_key ||
+    currentSessionData?.scenario_role?.scenario?.id ||
+    sessionData?.scenario_role?.scenario?.id
+
+  // Fetch scenario-specific tips
+  const scenarioTipsQuery = useScenarioTips(scenarioId)
 
   // Handle auth-related loading and errors
   const isAuthLoading = authLoading || !isInitialized
@@ -163,29 +176,36 @@ export const SessionPerfComparisonPage = () => {
     )
   }
 
-  // Generic recommendations (placeholder until backend provides them)
-  const recommendations = [
+  // Generic recommendations (fallback when no scenario-specific tips available)
+  const genericRecommendations = [
     {
-      category: t.performance.neutralDescription,
+      title: t.performance.neutralDescription,
       description: t.performance.neutralDescriptionDetail,
     },
     {
-      category: t.performance.expressEmotions,
+      title: t.performance.expressEmotions,
       description: t.performance.expressEmotionsDetail,
     },
     {
-      category: t.performance.clarifyNeeds,
+      title: t.performance.clarifyNeeds,
       description: t.performance.clarifyNeedsDetail,
     },
     {
-      category: t.performance.positiveResponse,
+      title: t.performance.positiveResponse,
       description: t.performance.positiveResponseDetail,
     },
     {
-      category: t.performance.understandNeeds,
+      title: t.performance.understandNeeds,
       description: t.performance.understandNeedsDetail,
     },
   ]
+
+  // Use scenario-specific tips if available, otherwise fall back to generic recommendations
+  const hasScenarioTips = scenarioTipsQuery.data?.tips && scenarioTipsQuery.data.tips.length > 0
+  const recommendations: ScenarioTip[] = hasScenarioTips
+    ? scenarioTipsQuery.data!.tips
+    : genericRecommendations
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -289,7 +309,7 @@ export const SessionPerfComparisonPage = () => {
           <RecommendationItem
             key={index}
             icon="🔵"
-            category={recommendation.category}
+            category={recommendation.title}
             description={recommendation.description}
           />
         ))}

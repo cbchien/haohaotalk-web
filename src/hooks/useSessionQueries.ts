@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { SessionPerformanceAPI } from '@/services/sessionPerformanceApi'
 import { sessionsApiService } from '@/services/sessionsApi'
+import { scenariosApiService } from '@/services/scenariosApi'
 import { cacheKeys, cacheTime, staleTime } from '@/utils/cacheKeys'
 import { useAuthStore } from '@/store'
 import type {
@@ -8,6 +9,7 @@ import type {
   SessionInsights,
   SessionListItem,
 } from '@/types/sessionPerformance'
+import type { ScenarioTipsResponse } from '@/services/scenariosApi'
 
 // High Priority: Session Performance Hook
 export const useSessionPerformance = (sessionId: string | undefined) => {
@@ -189,6 +191,38 @@ export const useRateSession = () => {
       queryClient.invalidateQueries({
         queryKey: cacheKeys.sessions.performance(variables.sessionId),
       })
+    },
+  })
+}
+
+// Scenario tips hook - used by session performance pages
+export const useScenarioTips = (scenarioId: string | undefined) => {
+  return useQuery({
+    queryKey: cacheKeys.scenarios.tips(scenarioId),
+    queryFn: async (): Promise<ScenarioTipsResponse> => {
+      if (!scenarioId) {
+        throw new Error('Scenario ID is required')
+      }
+      const response = await scenariosApiService.getScenarioTips(scenarioId)
+      if (!response.success || !response.data) {
+        throw new Error(response.error || 'Failed to load scenario tips')
+      }
+      return response.data
+    },
+    // Only run query if scenarioId is provided
+    enabled: !!scenarioId,
+    // Cache tips for long time since they rarely change
+    staleTime: staleTime.LONG,
+    gcTime: cacheTime.LONG,
+    // Don't refetch on focus since tips are fairly static
+    refetchOnWindowFocus: false,
+    // Retry on error, but not for 404s (tips might not exist)
+    retry: (failureCount, error) => {
+      const errorMessage = error?.message || ''
+      if (errorMessage.includes('404') || errorMessage.includes('SCENARIO_TIPS_NOT_FOUND')) {
+        return false
+      }
+      return failureCount < 2
     },
   })
 }

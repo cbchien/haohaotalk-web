@@ -50,6 +50,10 @@ export const cacheKeys = {
     // Home page scenarios by category: ['scenarios', 'home', category, language]
     home: (category: string | undefined, language: string) =>
       ['scenarios', 'home', category || 'featured', language] as const,
+
+    // Scenario tips: ['scenarios', scenarioId, 'tips']
+    tips: (scenarioId: string | undefined) =>
+      ['scenarios', scenarioId, 'tips'] as const,
   },
 
   // Tags related queries

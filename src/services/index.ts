@@ -14,6 +14,8 @@ export { scenariosApiService } from './scenariosApi'
 export type {
   Scenario,
   ScenarioRole,
+  ScenarioTip,
+  ScenarioTipsResponse,
   ScenariosListParams,
   ScenariosListResponse,
 } from './scenariosApi'

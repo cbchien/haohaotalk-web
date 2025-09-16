@@ -30,3 +30,4 @@ export const useHomeScenarios = (
     refetchOnWindowFocus: true,
   })
 }
+

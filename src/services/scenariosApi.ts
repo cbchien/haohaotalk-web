@@ -8,6 +8,19 @@ export interface ScenarioTag {
   created_at: string
 }
 
+export interface ScenarioTip {
+  title: string
+  description: string
+}
+
+export interface ScenarioTipsResponse {
+  id: string
+  scenario_id: string
+  tips: ScenarioTip[]
+  created_at: string
+  updated_at: string
+}
+
 export interface Scenario {
   id: string
   scenario_key: string
@@ -151,6 +164,10 @@ class ScenariosApiService {
 
   async getTags(): Promise<ApiResponse<ScenarioTag[]>> {
     return apiClient.get<ScenarioTag[]>('tags')
+  }
+
+  async getScenarioTips(scenarioId: string): Promise<ApiResponse<ScenarioTipsResponse>> {
+    return apiClient.get<ScenarioTipsResponse>(`scenarios/${scenarioId}/tips`)
   }
 }
 
