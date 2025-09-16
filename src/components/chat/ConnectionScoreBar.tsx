@@ -28,7 +28,7 @@ export const ConnectionScoreBar = ({ score, currentTurn, maxTurns }: ConnectionS
             {t.chat.connectionScore}
           </span>
           <span className="text-sm text-gray-600">
-            {t.chat.turn} {currentTurn || 0} / {maxTurns || 0}
+            {t.chat.turn} {Math.min((currentTurn || 0) + 1, maxTurns || 0)} / {maxTurns || 0}
           </span>
         </div>
 
