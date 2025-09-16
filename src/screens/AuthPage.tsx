@@ -1,26 +1,14 @@
-import { useState } from 'react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useAppStore } from '@/store'
 import { googleAuthService } from '@/services/googleAuth'
 import { authApiService } from '@/services'
 import { useTranslation } from '@/utils/translations'
 
-interface AuthModalProps {
-  isOpen: boolean
-  onClose: () => void
-  redirectPath?: string
-}
-
 type AuthMode = 'login' | 'register' | 'guest'
 
-export const AuthModal = ({
-  isOpen,
-  onClose,
-  redirectPath,
-}: AuthModalProps) => {
+export const AuthPage = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const [mode, setMode] = useState<AuthMode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -29,31 +17,19 @@ export const AuthModal = ({
   const [isEmailLoading, setIsEmailLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [successMessage, setSuccessMessage] = useState('')
-  const { setUser, setLoading, setAuthLoading } = useAuthStore()
+  const { user, setUser, setLoading, setAuthLoading } = useAuthStore()
   const { currentLanguage } = useAppStore()
   const t = useTranslation(currentLanguage)
 
+  // If user is already authenticated, redirect to home
+  useEffect(() => {
+    if (user) {
+      navigate('/home')
+    }
+  }, [user, navigate])
+
   // Helper to check if any authentication is in progress
   const isAnyLoading = isGuestLoading || isEmailLoading || isGoogleLoading
-
-  // Helper to determine where to redirect after authentication
-  const getRedirectPath = () => {
-    if (redirectPath) return redirectPath
-
-    // If user accessed /auth directly, always redirect to home
-    if (location.pathname === '/auth') {
-      return '/home'
-    }
-
-    // If user is already on a specific page and it's not the landing page, stay there
-    if (location.pathname !== '/') {
-      return location.pathname + location.search
-    }
-
-    // Default to home for new users or landing page
-    return '/home'
-  }
 
   // Validation functions
   const validateEmail = (email: string) => {
@@ -106,34 +82,29 @@ export const AuthModal = ({
 
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
-        onClose()
-        navigate(getRedirectPath())
+        navigate('/home')
       } else {
-        // Fall back to local guest creation for development
         const guestUser = {
           id: `guest_${Date.now()}`,
           displayName: guestName,
-          email: '', // Guest users don't have email
+          email: '',
           isGuest: true,
           createdAt: new Date().toISOString(),
         }
         setUser(guestUser)
-        onClose()
-        navigate(getRedirectPath())
+        navigate('/home')
       }
     } catch {
-      // Guest access failed, but continue with fallback
       const guestName = `Guest${Math.floor(Math.random() * 1000)}`
       const guestUser = {
         id: `guest_${Date.now()}`,
         displayName: guestName,
-        email: '', // Guest users don't have email
+        email: '',
         isGuest: true,
         createdAt: new Date().toISOString(),
       }
       setUser(guestUser)
-      onClose()
-      navigate(getRedirectPath())
+      navigate('/home')
     } finally {
       setIsGuestLoading(false)
       setLoading(false)
@@ -144,7 +115,6 @@ export const AuthModal = ({
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrors({})
-    setSuccessMessage('')
 
     if (!validateForm()) {
       return
@@ -171,10 +141,8 @@ export const AuthModal = ({
       }
 
       if (response.success && response.data) {
-        // Immediately set user and close modal - loading page will show
         setUser(response.data.user, response.data.token)
-        onClose()
-        navigate(getRedirectPath())
+        navigate('/home')
       } else {
         setErrors({
           general: response.error || t.auth.errors.authenticationFailed,
@@ -201,17 +169,14 @@ export const AuthModal = ({
 
       const { user: googleUser, credential } = await googleAuthService.signIn()
 
-      // Send Google credential to backend
       const response = await authApiService.googleAuth({
         idToken: credential,
       })
 
       if (response.success && response.data) {
         setUser(response.data.user, response.data.token)
-        onClose()
-        navigate(getRedirectPath())
+        navigate('/home')
       } else {
-        // Use Google user data directly if backend call fails
         const user = {
           id: googleUser.id,
           displayName: googleUser.name,
@@ -222,8 +187,7 @@ export const AuthModal = ({
           avatarUrl: googleUser.picture,
         }
         setUser(user)
-        onClose()
-        navigate(getRedirectPath())
+        navigate('/home')
       }
     } catch (error) {
       const errorMessage =
@@ -238,13 +202,11 @@ export const AuthModal = ({
     }
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-gray-50 flex items-center justify-center p-4 z-50">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-sm border border-gray-200 shadow-sm">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-center mb-6">
           <h2 className="text-xl font-bold text-gray-900">
             {mode === 'guest'
               ? t.auth.continueAsGuest
@@ -252,12 +214,6 @@ export const AuthModal = ({
                 ? t.auth.createAccount
                 : t.auth.signIn}
           </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <XMarkIcon className="w-5 h-5 text-gray-500" />
-          </button>
         </div>
 
         {/* Content */}
@@ -441,16 +397,10 @@ export const AuthModal = ({
                 {t.auth.continueAsGuest}
               </button>
 
-              {/* Error/Success Messages */}
+              {/* Error Messages */}
               {errors.general && (
                 <div className="bg-pink-25 text-pink-100 border border-pink-100 rounded-lg p-3 text-sm">
                   {errors.general}
-                </div>
-              )}
-
-              {successMessage && (
-                <div className="bg-green-25 text-green-100 border border-green-100 rounded-lg p-3 text-sm">
-                  {successMessage}
                 </div>
               )}
             </>

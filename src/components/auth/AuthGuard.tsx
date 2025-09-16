@@ -16,7 +16,7 @@ export const AuthGuard = ({
   const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } =
     useAuthStore()
   
-  const PUBLIC_PAGES = ['/', '/user-testing']
+  const PUBLIC_PAGES = ['/', '/auth', '/user-testing']
   const isPublicPage = PUBLIC_PAGES.includes(location.pathname)
 
   useEffect(() => {

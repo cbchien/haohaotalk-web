@@ -16,6 +16,7 @@ import { SessionsScreen } from './screens/SessionsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { ChatSettingsScreen } from './components/chat-settings'
 import { UserTestingPage } from './screens/UserTestingPage'
+import { AuthPage } from './screens/AuthPage'
 import { useAuthStore, useAppStore } from './store'
 import { OnboardingAPI } from './services/onboardingApi'
 import { initializeLanguageFromURL } from './utils/urlLanguage'
@@ -121,12 +122,12 @@ function AppContent() {
     return <AuthLoadingPage type={authLoadingType} />
   }
 
-  // Hide bottom navigation on fullscreen routes (chat, analytics, landing page, and user-testing)
-  const hiddenBottomNavRoutes = ['/session/', '/chat']
+  // Hide bottom navigation on fullscreen routes
+  const HIDDEN_BOTTOM_NAV_PAGES = ['/', '/auth', '/user-testing']
+  const HIDDEN_BOTTOM_NAV_ROUTES = ['/session/', '/chat']
   const hideBottomNav =
-    location.pathname === '/' ||
-    location.pathname === '/user-testing' ||
-    hiddenBottomNavRoutes.some(route => location.pathname.includes(route))
+    HIDDEN_BOTTOM_NAV_PAGES.includes(location.pathname) ||
+    HIDDEN_BOTTOM_NAV_ROUTES.some(route => location.pathname.includes(route))
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -144,6 +145,7 @@ function AppContent() {
         >
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="/user-testing" element={<UserTestingPage />} />
             <Route path="/home" element={<HomeScreen />} />
             <Route path="/search" element={<SearchScreen />} />
