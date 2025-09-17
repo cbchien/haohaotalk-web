@@ -24,7 +24,8 @@ export const LoadingWithTips = ({
   // Get tips - scenario-specific or generic fallback
   const scenarioTips = scenarioId ? getScenarioTips(scenarioId) : undefined
   const genericTips = getGenericConversationTips(t)
-  const tips = scenarioTips && scenarioTips.length > 0 ? scenarioTips : genericTips
+  const tips =
+    scenarioTips && scenarioTips.length > 0 ? scenarioTips : genericTips
 
   // Rotate tips every 4.5 seconds
   useEffect(() => {
@@ -33,7 +34,7 @@ export const LoadingWithTips = ({
     const interval = setInterval(() => {
       setCurrentTipIndex(prev => (prev + 1) % tips.length)
     }, 4500)
-    
+
     setIntervalId(interval)
 
     return () => {
@@ -71,7 +72,9 @@ export const LoadingWithTips = ({
   const currentTip = tips[currentTipIndex]
 
   return (
-    <div className={`min-h-screen bg-gray-50 sm:bg-gray-100 flex items-center justify-center p-4 ${className}`}>
+    <div
+      className={`min-h-screen bg-gray-50 sm:bg-gray-100 flex items-center justify-center p-4 ${className}`}
+    >
       <div className="w-full max-w-md mx-auto sm:max-w-xl text-center space-y-6 sm:bg-gray-50 sm:rounded-2xl sm:shadow-xl sm:p-8">
         {/* Loading spinner */}
         <div className="flex justify-center">
@@ -108,8 +111,18 @@ export const LoadingWithTips = ({
                     className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 p-2 hover:text-blue-100 transition-colors z-10"
                     aria-label="Previous tip"
                   >
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
                     </svg>
                   </button>
                   <button
@@ -117,15 +130,25 @@ export const LoadingWithTips = ({
                     className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 p-2 hover:text-blue-100 transition-colors z-10"
                     aria-label="Next tip"
                   >
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   </button>
                 </>
               )}
 
               {/* Current tip with fade transition */}
-              <div 
+              <div
                 key={currentTipIndex}
                 className="animate-[fadeIn_0.5s_ease-in-out] px-6"
               >
@@ -139,7 +162,6 @@ export const LoadingWithTips = ({
             </div>
           </div>
         </div>
-
       </div>
     </div>
   )
