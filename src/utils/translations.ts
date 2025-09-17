@@ -327,6 +327,8 @@ export interface Translations {
     next: string
     sessionNotAvailable: string
     sessionNotAvailableDesc: string
+    appUpdated: string
+    refresh: string
   }
 }
 
@@ -658,6 +660,8 @@ export const translations: Record<Language, Translations> = {
       sessionNotAvailable: 'This session is no longer available',
       sessionNotAvailableDesc:
         'The session you are looking for may have been deleted or is no longer accessible.',
+      appUpdated: 'App updated.',
+      refresh: 'Refresh',
     },
   },
   zh: {
@@ -959,6 +963,8 @@ export const translations: Record<Language, Translations> = {
       next: '下一步',
       sessionNotAvailable: '此會話已不可用',
       sessionNotAvailableDesc: '您查找的會話可能已被刪除或無法存取。',
+      appUpdated: '網站有新的更新。',
+      refresh: '重新整理',
     },
   },
 }
