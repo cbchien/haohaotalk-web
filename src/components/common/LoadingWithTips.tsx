@@ -26,13 +26,13 @@ export const LoadingWithTips = ({
   const genericTips = getGenericConversationTips(t)
   const tips = scenarioTips && scenarioTips.length > 0 ? scenarioTips : genericTips
 
-  // Rotate tips every 4 seconds
+  // Rotate tips every 4.5 seconds
   useEffect(() => {
     if (tips.length <= 1) return
 
     const interval = setInterval(() => {
       setCurrentTipIndex(prev => (prev + 1) % tips.length)
-    }, 4000)
+    }, 4500)
     
     setIntervalId(interval)
 
@@ -57,12 +57,12 @@ export const LoadingWithTips = ({
       }
     })
 
-    // Restart interval after a short delay (reset the 4-second timer)
+    // Restart interval after a short delay (reset the 4.5-second timer)
     setTimeout(() => {
       if (tips.length > 1) {
         const newInterval = setInterval(() => {
           setCurrentTipIndex(prev => (prev + 1) % tips.length)
-        }, 4000)
+        }, 4500)
         setIntervalId(newInterval)
       }
     }, 100)
@@ -127,7 +127,7 @@ export const LoadingWithTips = ({
               {/* Current tip with fade transition */}
               <div 
                 key={currentTipIndex}
-                className="animate-[fadeIn_0.5s_ease-in-out] px-4"
+                className="animate-[fadeIn_0.5s_ease-in-out] px-6"
               >
                 <h3 className="font-semibold text-gray-900 mb-2 text-left">
                   💡 {currentTip.title}
