@@ -16,6 +16,7 @@ import { MessageArea } from './MessageArea'
 import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
 import { Notification } from '@/components/common/Notification'
+import { LoadingWithTips } from '@/components/common/LoadingWithTips'
 
 const SESSION_ENDING_MESSAGE_DISPLAY_DURATION = 1000
 const AI_TYPING_ANIMATION_DURATION = 1100
@@ -73,7 +74,12 @@ export const ChatScreen = () => {
         setSessionEndCalled(false)
         setShowCompletion(false)
 
-        const response = await sessionsApiService.getSession(sessionId)
+        // Start both the API call and minimum timeout simultaneously
+        const [response] = await Promise.all([
+          sessionsApiService.getSession(sessionId),
+          // 7-second minimum timeout to allow users to read tips
+          new Promise(resolve => setTimeout(resolve, 7000))
+        ])
 
         if (response.success && response.data) {
           setSession(response.data)
@@ -477,14 +483,10 @@ export const ChatScreen = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col h-screen bg-gray-50">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">{t.chat.loading}</p>
-          </div>
-        </div>
-      </div>
+      <LoadingWithTips 
+        scenarioId={currentScenario?.id || session?.scenario_id} 
+        loadingText={t.chat.loading}
+      />
     )
   }
 

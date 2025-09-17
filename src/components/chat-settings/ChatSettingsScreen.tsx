@@ -25,6 +25,8 @@ export const ChatSettingsScreen = () => {
     setAvailableRoles: setGlobalAvailableRoles,
     setSelectedRole: setGlobalSelectedRole,
     setRelationshipLevel: setGlobalRelationshipLevel,
+    setScenarioTips,
+    setTipsLoading,
   } = useAppStore()
   const t = useTranslation(currentLanguage)
 
@@ -80,6 +82,22 @@ export const ChatSettingsScreen = () => {
         }
 
         if (scenarioData) {
+          // Fetch tips in parallel with roles (non-blocking)
+          const fetchTips = async () => {
+            try {
+              setTipsLoading(true)
+              const tipsResponse = await scenariosApiService.getScenarioTips(scenarioId)
+              if (tipsResponse.success && tipsResponse.data?.tips) {
+                setScenarioTips(scenarioId, tipsResponse.data.tips)
+              }
+            } catch {
+              // Tips are optional - don't block loading if they fail
+            } finally {
+              setTipsLoading(false)
+            }
+          }
+          fetchTips()
+
           // Fetch roles for this scenario first, only set scenario if roles load successfully
           try {
             const rolesResponse = await scenariosApiService.getScenarioRoles(

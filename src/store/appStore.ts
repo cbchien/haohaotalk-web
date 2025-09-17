@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { ChatSession } from './types'
-import type { Scenario, ScenarioRole } from '@/services'
+import type { Scenario, ScenarioRole, ScenarioTip } from '@/services'
 import { getDefaultLanguage } from '@/utils/browserLanguage'
 import type { OnboardingState } from '@/types/onboarding'
 
@@ -34,6 +34,10 @@ interface AppState {
   // Onboarding
   onboarding: OnboardingState
 
+  // Tips
+  scenarioTips: Record<string, ScenarioTip[]>
+  isLoadingTips: boolean
+
   // Actions
   setLanguage: (language: 'en' | 'zh') => void
   setOfflineStatus: (isOffline: boolean) => void
@@ -64,6 +68,11 @@ interface AppState {
   hideOnboarding: () => void
   setOnboardingStep: (step: number) => void
   completeOnboarding: () => void
+
+  // Tips actions
+  setScenarioTips: (scenarioId: string, tips: ScenarioTip[]) => void
+  setTipsLoading: (loading: boolean) => void
+  getScenarioTips: (scenarioId: string) => ScenarioTip[] | undefined
 }
 
 export const useAppStore = create<AppState>()(
@@ -91,6 +100,8 @@ export const useAppStore = create<AppState>()(
           currentStep: 0,
           hasCompletedOnboarding: false,
         },
+        scenarioTips: {},
+        isLoadingTips: false,
 
         // Actions
         setLanguage: language => set({ currentLanguage: language }),
@@ -153,6 +164,20 @@ export const useAppStore = create<AppState>()(
               hasCompletedOnboarding: true,
             },
           })),
+
+        // Tips actions
+        setScenarioTips: (scenarioId, tips) =>
+          set(state => ({
+            scenarioTips: {
+              ...state.scenarioTips,
+              [scenarioId]: tips,
+            },
+          })),
+        setTipsLoading: loading => set({ isLoadingTips: loading }),
+        getScenarioTips: (scenarioId: string): ScenarioTip[] | undefined => {
+          const state = useAppStore.getState()
+          return state.scenarioTips[scenarioId]
+        },
       }),
       {
         name: 'haohaotalk-app',

@@ -7,6 +7,7 @@ import { useSessionComparisonData, useScenarioTips } from '@/hooks/useSessionQue
 import { ScoreDistributionChart } from '@/components/sessions/charts/ScoreDistributionChart'
 import { RecommendationItem } from '@/components/sessions/insights/RecommendationItem'
 import { calculateUserPercentile } from '@/utils/percentileCalculator'
+import { getGenericConversationTips } from '@/utils/conversationTips'
 import type { ScenarioTip } from '@/services'
 
 export const SessionPerfComparisonPage = () => {
@@ -36,8 +37,8 @@ export const SessionPerfComparisonPage = () => {
   // Get scenario ID for fetching tips
   const scenarioId = 
     currentScenario?.id ||
-    (currentSessionData as any)?.session_info?.scenario_key ||
-    (sessionDetail as any)?.session_info?.scenario_key ||
+    (currentSessionData as { session_info?: { scenario_key?: string } })?.session_info?.scenario_key ||
+    (sessionDetail as { session_info?: { scenario_key?: string } })?.session_info?.scenario_key ||
     currentSessionData?.scenario_role?.scenario?.id ||
     sessionData?.scenario_role?.scenario?.id
 
@@ -177,28 +178,7 @@ export const SessionPerfComparisonPage = () => {
   }
 
   // Generic recommendations (fallback when no scenario-specific tips available)
-  const genericRecommendations = [
-    {
-      title: t.performance.neutralDescription,
-      description: t.performance.neutralDescriptionDetail,
-    },
-    {
-      title: t.performance.expressEmotions,
-      description: t.performance.expressEmotionsDetail,
-    },
-    {
-      title: t.performance.clarifyNeeds,
-      description: t.performance.clarifyNeedsDetail,
-    },
-    {
-      title: t.performance.positiveResponse,
-      description: t.performance.positiveResponseDetail,
-    },
-    {
-      title: t.performance.understandNeeds,
-      description: t.performance.understandNeedsDetail,
-    },
-  ]
+  const genericRecommendations = getGenericConversationTips(t)
 
   // Use scenario-specific tips if available, otherwise fall back to generic recommendations
   const hasScenarioTips = scenarioTipsQuery.data?.tips && scenarioTipsQuery.data.tips.length > 0
