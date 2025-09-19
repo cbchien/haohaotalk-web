@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { StarIcon } from '@heroicons/react/24/solid'
+import {
+  StarIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/24/solid'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useSessionsList } from '@/hooks/useSessionQueries'
@@ -15,6 +19,9 @@ export const SessionsScreen = () => {
   const t = useTranslation(currentLanguage)
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
   const [isRetrying, setIsRetrying] = useState(false)
+  const [expandedScenarios, setExpandedScenarios] = useState<Set<string>>(
+    new Set()
+  )
 
   // Use React Query for cached sessions list
   const {
@@ -24,6 +31,50 @@ export const SessionsScreen = () => {
     isError,
     isFetching,
   } = useSessionsList(20)
+
+  // Group sessions by scenario
+  const sessionsByScenario = useMemo(() => {
+    const grouped = sessions.reduce(
+      (acc, session) => {
+        const scenarioKey = session.scenario?.id || 'unknown'
+        if (!acc[scenarioKey]) {
+          acc[scenarioKey] = {
+            scenario: session.scenario,
+            sessions: [],
+          }
+        }
+        acc[scenarioKey].sessions.push(session)
+        return acc
+      },
+      {} as Record<
+        string,
+        { scenario: SessionListItem['scenario']; sessions: SessionListItem[] }
+      >
+    )
+
+    // Sort sessions within each scenario by most recent first
+    Object.values(grouped).forEach(group => {
+      group.sessions.sort((a, b) => {
+        const dateA = a.completed_at || a.started_at
+        const dateB = b.completed_at || b.started_at
+        return new Date(dateB).getTime() - new Date(dateA).getTime()
+      })
+    })
+
+    return grouped
+  }, [sessions])
+
+  const toggleScenario = (scenarioId: string) => {
+    setExpandedScenarios(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(scenarioId)) {
+        newSet.delete(scenarioId)
+      } else {
+        newSet.add(scenarioId)
+      }
+      return newSet
+    })
+  }
 
   const handleSessionClick = (session: SessionListItem) => {
     navigate(`/session/${session.id}/insights`, {
@@ -38,15 +89,28 @@ export const SessionsScreen = () => {
     if (!dateString) return ''
     const date = new Date(dateString)
     if (isNaN(date.getTime())) return ''
-    return date.toLocaleDateString(
-      currentLanguage === 'zh' ? 'zh-CN' : 'en-US',
-      {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }
-    )
+
+    if (currentLanguage === 'zh') {
+      return date
+        .toLocaleDateString('zh-CN', {
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+        .replace(/\//g, '/')
+        .replace(' ', ' ')
+    } else {
+      return date
+        .toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: false,
+        })
+        .replace(',', '')
+    }
   }
 
   const formatScore = (score?: number) => {
@@ -88,6 +152,76 @@ export const SessionsScreen = () => {
       </div>
     )
   }
+
+  const renderSession = (session: SessionListItem) => (
+    <div
+      key={session.id}
+      onClick={() => handleSessionClick(session)}
+      className="bg-gray-50 rounded-lg border border-gray-100 p-3 cursor-pointer hover:bg-white hover:border-blue-40 transition-all active:scale-98"
+    >
+      <div className="flex items-center gap-3">
+        {/* Column 1: Avatar (Fixed) */}
+        <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center flex-shrink-0">
+          {session.scenario_role?.avatar_url &&
+          !failedImages.has(session.scenario_role.avatar_url) ? (
+            <img
+              src={session.scenario_role.avatar_url}
+              alt={session.scenario_role.role_name}
+              className="w-full h-full object-cover"
+              onError={() => handleImageError(session.scenario_role.avatar_url)}
+            />
+          ) : session.scenario_role?.avatar_url &&
+            failedImages.has(session.scenario_role.avatar_url) ? (
+            <span className="text-lg">🗣️</span>
+          ) : (
+            <span className="text-lg">💬</span>
+          )}
+        </div>
+
+        {/* Column 2: Title and Date (Flexible) */}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-900 truncate text-sm">
+            {session.scenario_role?.role_name || t.sessions.practiceSession}
+          </h3>
+          <p className="text-xs text-gray-400 mt-1 whitespace-nowrap">
+            {session.completed_at
+              ? formatDate(session.completed_at)
+              : formatDate(session.started_at)}
+          </p>
+          <span className="text-xs text-gray-500">
+            {session.current_turn} turns
+          </span>
+        </div>
+
+        {/* Column 3: Connection Score and Rating (Auto-width) */}
+        <div className="flex flex-col items-end space-y-1 flex-shrink-0">
+          <div className="px-2 py-1 bg-blue-10 rounded-full">
+            <span className="text-xs font-medium text-blue-100">
+              {formatScore(session.connection_score)}%
+            </span>
+          </div>
+          {session.user_rating && renderStars(session.user_rating)}
+        </div>
+
+        {/* Column 4: Arrow Icon (Minimal width) */}
+        <div className="flex-shrink-0">
+          <svg
+            className="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  )
 
   const renderSessionSkeleton = () => (
     <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -189,81 +323,53 @@ export const SessionsScreen = () => {
               </div>
             )}
             {(!isFetching || sessions.length === 0) &&
-              sessions.map(session => (
-                <div
-                  key={session.id}
-                  onClick={() => handleSessionClick(session)}
-                  className="bg-white rounded-xl border border-gray-200 p-4 cursor-pointer hover:border-blue-40 transition-colors active:scale-98"
-                >
-                  <div className="flex items-start space-x-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                      {session.scenario_role?.avatar_url &&
-                      !failedImages.has(session.scenario_role.avatar_url) ? (
-                        <img
-                          src={session.scenario_role.avatar_url}
-                          alt={session.scenario_role.role_name}
-                          className="w-full h-full object-cover"
-                          onError={() =>
-                            handleImageError(session.scenario_role.avatar_url)
-                          }
-                        />
-                      ) : session.scenario_role?.avatar_url &&
-                        failedImages.has(session.scenario_role.avatar_url) ? (
-                        <span className="text-lg">🗣️</span>
-                      ) : (
-                        <span className="text-lg">💬</span>
+              Object.entries(sessionsByScenario).map(([scenarioId, group]) => (
+                <div key={scenarioId} className="space-y-2">
+                  {/* Scenario Header */}
+                  <div
+                    onClick={() => toggleScenario(scenarioId)}
+                    className="bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          {expandedScenarios.has(scenarioId) ? (
+                            <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+                          ) : (
+                            <ChevronRightIcon className="w-5 h-5 text-gray-500" />
+                          )}
+                        </div>
+                        <div>
+                          <h2 className="font-semibold text-gray-900">
+                            {group.scenario?.title || 'Unknown Scenario'}
+                          </h2>
+                          <p className="text-sm text-gray-500">
+                            {group.sessions.length} session
+                            {group.sessions.length !== 1 ? 's' : ''}
+                          </p>
+                        </div>
+                      </div>
+                      {group.scenario?.image_url && (
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                          <img
+                            src={group.scenario.image_url}
+                            alt={group.scenario.title}
+                            className="w-full h-full object-cover"
+                            onError={e => {
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-1">
-                        <h3 className="font-semibold text-gray-900 truncate">
-                          {session.scenario?.title ||
-                            t.sessions.practiceSession}
-                        </h3>
-                        <div className="text-gray-400 ml-2">
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-500 truncate">
-                        {session.scenario_role?.role_name}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-400">
-                          {session.completed_at
-                            ? formatDate(session.completed_at)
-                            : formatDate(session.started_at)}
-                        </span>
-                        <div className="flex items-center space-x-3">
-                          <span className="text-xs text-gray-500">
-                            {session.current_turn} turns
-                          </span>
-                          <div className="px-2 py-1 bg-blue-10 rounded-full">
-                            <span className="text-xs font-medium text-blue-100">
-                              {formatScore(session.connection_score)}%
-                            </span>
-                          </div>
-                        </div>
-                        {/* Rating display */}
-                        {session.user_rating && (
-                          <div className="mt-2">
-                            {renderStars(session.user_rating)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
                   </div>
+
+                  {/* Sessions List */}
+                  {expandedScenarios.has(scenarioId) && (
+                    <div className="ml-4 space-y-2">
+                      {group.sessions.map(session => renderSession(session))}
+                    </div>
+                  )}
                 </div>
               ))}
           </div>
