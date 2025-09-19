@@ -159,7 +159,7 @@ export const SessionsScreen = () => {
     <div
       key={session.id}
       onClick={() => handleSessionClick(session)}
-      className="bg-gray-50 rounded-lg border border-gray-100 p-3 cursor-pointer hover:bg-white hover:border-blue-40 transition-all active:scale-98"
+      className="bg-white rounded-lg border-l-4 border-l-blue-50 shadow-sm p-3 cursor-pointer hover:shadow-md hover:border-l-blue-100 transition-all active:scale-98"
     >
       <div className="flex items-center gap-3">
         {/* Column 1: Avatar (Fixed) */}
