@@ -51,7 +51,8 @@ export const ChatScreen = () => {
   const [isEndingSession, setIsEndingSession] = useState(false)
   const [sessionEndCalled, setSessionEndCalled] = useState(false)
   const [showEndConfirmation, setShowEndConfirmation] = useState(false)
-  const [showObjectiveNotification, setShowObjectiveNotification] = useState(false)
+  const [showObjectiveNotification, setShowObjectiveNotification] =
+    useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const loadedSessionRef = useRef<string | null>(null)
@@ -78,7 +79,7 @@ export const ChatScreen = () => {
         const [response] = await Promise.all([
           sessionsApiService.getSession(sessionId),
           // 7-second minimum timeout to allow users to read tips
-          new Promise(resolve => setTimeout(resolve, 7000))
+          new Promise(resolve => setTimeout(resolve, 7000)),
         ])
 
         if (response.success && response.data) {
@@ -133,7 +134,7 @@ export const ChatScreen = () => {
                     character_emotion: 'neutral',
                   },
                 ])
-                
+
                 // Show objective notification for new conversations
                 setShowObjectiveNotification(true)
               }
@@ -401,7 +402,10 @@ export const ChatScreen = () => {
 
   const getObjectiveTitle = () => {
     const maxTurns = session?.max_turns || scenario?.max_turns || 0
-    return t.chat.objectiveNotification.replace('{maxTurns}', maxTurns.toString())
+    return t.chat.objectiveNotification.replace(
+      '{maxTurns}',
+      maxTurns.toString()
+    )
   }
 
   const getObjectiveBody = () => {
@@ -483,8 +487,8 @@ export const ChatScreen = () => {
 
   if (isLoading) {
     return (
-      <LoadingWithTips 
-        scenarioId={currentScenario?.id || session?.scenario_id} 
+      <LoadingWithTips
+        scenarioId={currentScenario?.id || session?.scenario_id}
         loadingText={t.chat.loading}
       />
     )
@@ -537,8 +541,8 @@ export const ChatScreen = () => {
           }
           onBack={handleBack}
         />
-        <ConnectionScoreBar 
-          score={connectionScore} 
+        <ConnectionScoreBar
+          score={connectionScore}
           currentTurn={session?.current_turn}
           maxTurns={session?.max_turns || scenario?.max_turns}
         />

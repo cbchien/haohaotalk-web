@@ -86,7 +86,8 @@ export const ChatSettingsScreen = () => {
           const fetchTips = async () => {
             try {
               setTipsLoading(true)
-              const tipsResponse = await scenariosApiService.getScenarioTips(scenarioId)
+              const tipsResponse =
+                await scenariosApiService.getScenarioTips(scenarioId)
               if (tipsResponse.success && tipsResponse.data?.tips) {
                 setScenarioTips(scenarioId, tipsResponse.data.tips)
               }

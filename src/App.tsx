@@ -76,7 +76,8 @@ const DeleteAccountPage = lazy(() =>
 function AppContent() {
   const location = useLocation()
   const { authLoadingType, user, isAuthenticated } = useAuthStore()
-  const { onboarding, showOnboarding, completeOnboarding, setLanguage } = useAppStore()
+  const { onboarding, showOnboarding, completeOnboarding, setLanguage } =
+    useAppStore()
 
   // Initialize language from URL parameter
   useEffect(() => {

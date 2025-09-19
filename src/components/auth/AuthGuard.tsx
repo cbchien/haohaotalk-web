@@ -15,7 +15,7 @@ export const AuthGuard = ({
   const location = useLocation()
   const { user, isAuthenticated, setLoading, showAuthModal, setShowAuthModal } =
     useAuthStore()
-  
+
   const PUBLIC_PAGES = ['/', '/auth', '/user-testing']
   const isPublicPage = PUBLIC_PAGES.includes(location.pathname)
 

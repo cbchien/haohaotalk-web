@@ -26,7 +26,7 @@ export const Notification = ({
   dismissible = true,
   icon,
   className = '',
-  buttonText = 'Got it'
+  buttonText = 'Got it',
 }: NotificationProps) => {
   if (!isVisible) return null
 
@@ -69,7 +69,9 @@ export const Notification = ({
           }
         }}
       >
-        <div className={`bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl ${className}`}>
+        <div
+          className={`bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl ${className}`}
+        >
           <div className="text-center">
             {title && (
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -102,14 +104,8 @@ export const Notification = ({
             <span className="text-lg">{displayIcon}</span>
           </div>
           <div className="flex-1">
-            {title && (
-              <h4 className="font-semibold mb-1">
-                {title}
-              </h4>
-            )}
-            <p className="text-sm">
-              {message}
-            </p>
+            {title && <h4 className="font-semibold mb-1">{title}</h4>}
+            <p className="text-sm">{message}</p>
           </div>
           {dismissible && onDismiss && (
             <button
@@ -132,14 +128,8 @@ export const Notification = ({
           <span className="text-base">{displayIcon}</span>
         </div>
         <div className="flex-1">
-          {title && (
-            <h5 className="font-medium text-sm mb-1">
-              {title}
-            </h5>
-          )}
-          <p className="text-sm">
-            {message}
-          </p>
+          {title && <h5 className="font-medium text-sm mb-1">{title}</h5>}
+          <p className="text-sm">{message}</p>
         </div>
         {dismissible && onDismiss && (
           <button

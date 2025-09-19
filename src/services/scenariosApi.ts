@@ -166,7 +166,9 @@ class ScenariosApiService {
     return apiClient.get<ScenarioTag[]>('tags')
   }
 
-  async getScenarioTips(scenarioId: string): Promise<ApiResponse<ScenarioTipsResponse>> {
+  async getScenarioTips(
+    scenarioId: string
+  ): Promise<ApiResponse<ScenarioTipsResponse>> {
     return apiClient.get<ScenarioTipsResponse>(`scenarios/${scenarioId}/tips`)
   }
 }

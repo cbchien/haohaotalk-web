@@ -30,7 +30,7 @@ export const MasonryGrid = ({
     // Get all child elements
     const items = Array.from(container.children) as HTMLElement[]
 
-    items.forEach((item) => {
+    items.forEach(item => {
       // Skip if this is not a scenario card (might be loading states, etc.)
       if (!item.classList.contains('masonry-item')) return
 

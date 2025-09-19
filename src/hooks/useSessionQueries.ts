@@ -219,7 +219,10 @@ export const useScenarioTips = (scenarioId: string | undefined) => {
     // Retry on error, but not for 404s (tips might not exist)
     retry: (failureCount, error) => {
       const errorMessage = error?.message || ''
-      if (errorMessage.includes('404') || errorMessage.includes('SCENARIO_TIPS_NOT_FOUND')) {
+      if (
+        errorMessage.includes('404') ||
+        errorMessage.includes('SCENARIO_TIPS_NOT_FOUND')
+      ) {
         return false
       }
       return failureCount < 2
