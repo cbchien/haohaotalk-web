@@ -32,34 +32,36 @@ export const SessionsScreen = () => {
     isFetching,
   } = useSessionsList(20)
 
-  // Group sessions by scenario
+  // Group sessions by scenario, filtering out sessions with 0 turns
   const sessionsByScenario = useMemo(() => {
-    const grouped = sessions.reduce(
-      (acc, session) => {
-        const scenarioKey = session.scenario?.id || 'unknown'
-        if (!acc[scenarioKey]) {
-          acc[scenarioKey] = {
-            scenario: session.scenario,
-            sessions: [],
-          }
+    const grouped: Record<
+      string,
+      { scenario: SessionListItem['scenario']; sessions: SessionListItem[] }
+    > = {}
+
+    // Single pass: filter, group, and collect sessions
+    for (const session of sessions) {
+      // Skip sessions with no turns
+      if (session.current_turn <= 0) continue
+
+      const scenarioKey = session.scenario?.id || 'unknown'
+      if (!grouped[scenarioKey]) {
+        grouped[scenarioKey] = {
+          scenario: session.scenario,
+          sessions: [],
         }
-        acc[scenarioKey].sessions.push(session)
-        return acc
-      },
-      {} as Record<
-        string,
-        { scenario: SessionListItem['scenario']; sessions: SessionListItem[] }
-      >
-    )
+      }
+      grouped[scenarioKey].sessions.push(session)
+    }
 
     // Sort sessions within each scenario by most recent first
-    Object.values(grouped).forEach(group => {
+    for (const group of Object.values(grouped)) {
       group.sessions.sort((a, b) => {
         const dateA = a.completed_at || a.started_at
         const dateB = b.completed_at || b.started_at
         return new Date(dateB).getTime() - new Date(dateA).getTime()
       })
-    })
+    }
 
     return grouped
   }, [sessions])
