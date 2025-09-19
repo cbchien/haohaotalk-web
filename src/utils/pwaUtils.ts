@@ -14,9 +14,9 @@ export const clearAllCaches = async (): Promise<void> => {
       )
     }
 
-    console.log('All caches cleared and service worker unregistered')
+    console.log('All caches cleared and service worker unregistered') // eslint-disable-line no-console
   } catch (error) {
-    console.error('Error clearing caches:', error)
+    console.error('Error clearing caches:', error) // eslint-disable-line no-console
   }
 }
 
@@ -34,7 +34,7 @@ export const checkForUpdates = async (): Promise<boolean> => {
       await registration.update()
       return registration.waiting !== null
     } catch (error) {
-      console.error('Error checking for updates:', error)
+      console.error('Error checking for updates:', error) // eslint-disable-line no-console
       return false
     }
   }
@@ -43,7 +43,14 @@ export const checkForUpdates = async (): Promise<boolean> => {
 
 // For debugging - add to window object in development
 if (import.meta.env.DEV) {
-  (window as any).PWAUtils = {
+  const globalWindow = window as typeof window & {
+    PWAUtils: {
+      clearAllCaches: typeof clearAllCaches
+      forceReload: typeof forceReload
+      checkForUpdates: typeof checkForUpdates
+    }
+  }
+  globalWindow.PWAUtils = {
     clearAllCaches,
     forceReload,
     checkForUpdates,
