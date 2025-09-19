@@ -3,11 +3,15 @@ import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/utils/translations'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/authStore'
-import { useSessionComparisonData, useScenarioTips } from '@/hooks/useSessionQueries'
+import {
+  useSessionComparisonData,
+  useScenarioTips,
+} from '@/hooks/useSessionQueries'
 import { ScoreDistributionChart } from '@/components/sessions/charts/ScoreDistributionChart'
 import { RecommendationItem } from '@/components/sessions/insights/RecommendationItem'
 import { calculateUserPercentile } from '@/utils/percentileCalculator'
 import { getGenericConversationTips } from '@/utils/conversationTips'
+import { FloatingCTAButtons } from '@/components/common/FloatingCTAButtons'
 import type { ScenarioTip } from '@/services'
 
 export const SessionPerfComparisonPage = () => {
@@ -33,12 +37,13 @@ export const SessionPerfComparisonPage = () => {
   // Use session data from navigation state or fetched data
   const currentSessionData = sessionData || sessionDetail
 
-
   // Get scenario ID for fetching tips
-  const scenarioId = 
+  const scenarioId =
     currentScenario?.id ||
-    (currentSessionData as { session_info?: { scenario_key?: string } })?.session_info?.scenario_key ||
-    (sessionDetail as { session_info?: { scenario_key?: string } })?.session_info?.scenario_key ||
+    (currentSessionData as { session_info?: { scenario_key?: string } })
+      ?.session_info?.scenario_key ||
+    (sessionDetail as { session_info?: { scenario_key?: string } })
+      ?.session_info?.scenario_key ||
     currentSessionData?.scenario_role?.scenario?.id ||
     sessionData?.scenario_role?.scenario?.id
 
@@ -115,15 +120,17 @@ export const SessionPerfComparisonPage = () => {
   if (isError || error) {
     // Check if it's a 403/404 error (session doesn't exist or access denied)
     const errorMessage = error?.message || ''
-    const is403or404 = errorMessage.includes('403') || errorMessage.includes('404') || errorMessage.includes('Forbidden') || errorMessage.includes('Not Found')
-    
+    const is403or404 =
+      errorMessage.includes('403') ||
+      errorMessage.includes('404') ||
+      errorMessage.includes('Forbidden') ||
+      errorMessage.includes('Not Found')
+
     if (is403or404) {
       return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4">
           <div className="text-center">
-            <p className="text-gray-600 mb-2">
-              {t.common.sessionNotAvailable}
-            </p>
+            <p className="text-gray-600 mb-2">{t.common.sessionNotAvailable}</p>
             <p className="text-gray-500 text-sm mb-4">
               {t.common.sessionNotAvailableDesc}
             </p>
@@ -160,9 +167,7 @@ export const SessionPerfComparisonPage = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-gray-600 mb-2">
-            {t.common.sessionNotAvailable}
-          </p>
+          <p className="text-gray-600 mb-2">{t.common.sessionNotAvailable}</p>
           <p className="text-gray-500 text-sm mb-4">
             {t.common.sessionNotAvailableDesc}
           </p>
@@ -181,11 +186,11 @@ export const SessionPerfComparisonPage = () => {
   const genericRecommendations = getGenericConversationTips(t)
 
   // Use scenario-specific tips if available, otherwise fall back to generic recommendations
-  const hasScenarioTips = scenarioTipsQuery.data?.tips && scenarioTipsQuery.data.tips.length > 0
+  const hasScenarioTips =
+    scenarioTipsQuery.data?.tips && scenarioTipsQuery.data.tips.length > 0
   const recommendations: ScenarioTip[] = hasScenarioTips
     ? scenarioTipsQuery.data!.tips
     : genericRecommendations
-
 
   return (
     <div className="min-h-screen bg-white">
@@ -227,7 +232,7 @@ export const SessionPerfComparisonPage = () => {
         </div>
       </div>
 
-      <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8">
+      <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8 pb-20">
         {/* Score Distribution Chart */}
         <div className="bg-white rounded-xl p-4 border border-gray-300">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
@@ -294,6 +299,15 @@ export const SessionPerfComparisonPage = () => {
           />
         ))}
       </div>
+
+      {/* Floating CTA Buttons */}
+      <FloatingCTAButtons
+        scenarioId={
+          currentScenario?.id ||
+          currentSessionData?.scenario?.id ||
+          sessionData?.scenario?.id
+        }
+      />
     </div>
   )
 }

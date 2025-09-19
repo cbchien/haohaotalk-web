@@ -5,6 +5,7 @@ import { useAppStore } from '@/store'
 import { useSessionInsightsData } from '@/hooks/useSessionQueries'
 import { ConnectionScoreChart } from '@/components/sessions/charts/ConnectionScoreChart'
 import { InsightItem } from '@/components/sessions/insights/InsightItem'
+import { FloatingCTAButtons } from '@/components/common/FloatingCTAButtons'
 
 export const SessionInsightsPage = () => {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>()
@@ -53,15 +54,17 @@ export const SessionInsightsPage = () => {
   if (isError || error) {
     // Check if it's a 403/404 error (session doesn't exist or access denied)
     const errorMessage = error?.message || ''
-    const is403or404 = errorMessage.includes('403') || errorMessage.includes('404') || errorMessage.includes('Forbidden') || errorMessage.includes('Not Found')
-    
+    const is403or404 =
+      errorMessage.includes('403') ||
+      errorMessage.includes('404') ||
+      errorMessage.includes('Forbidden') ||
+      errorMessage.includes('Not Found')
+
     if (is403or404) {
       return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4">
           <div className="text-center">
-            <p className="text-gray-600 mb-2">
-              {t.common.sessionNotAvailable}
-            </p>
+            <p className="text-gray-600 mb-2">{t.common.sessionNotAvailable}</p>
             <p className="text-gray-500 text-sm mb-4">
               {t.common.sessionNotAvailableDesc}
             </p>
@@ -130,7 +133,7 @@ export const SessionInsightsPage = () => {
         </div>
       </div>
 
-      <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8">
+      <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8 pb-20">
         {/* Connection Score Chart */}
         <div className="bg-white rounded-xl p-4 border border-gray-300">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
@@ -197,6 +200,11 @@ export const SessionInsightsPage = () => {
             </div>
           )}
       </div>
+
+      {/* Floating CTA Buttons */}
+      <FloatingCTAButtons
+        scenarioId={sessionData?.scenario?.id || currentScenario?.id}
+      />
     </div>
   )
 }
