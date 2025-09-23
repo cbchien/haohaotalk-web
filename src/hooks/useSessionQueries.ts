@@ -8,6 +8,7 @@ import type {
   SessionPerformance,
   SessionInsights,
   SessionListItem,
+  SessionDetailResponse,
 } from '@/types/sessionPerformance'
 import type { ScenarioTipsResponse } from '@/services/scenariosApi'
 
@@ -91,18 +92,13 @@ export const useSessionDetail = (sessionId: string | undefined) => {
 
   return useQuery({
     queryKey: sessionId ? cacheKeys.sessions.detail(sessionId) : [],
-    queryFn: async (): Promise<SessionListItem> => {
+    queryFn: async (): Promise<SessionDetailResponse> => {
       if (!sessionId) throw new Error('Session ID required')
       const response = await SessionPerformanceAPI.getSession(sessionId)
       if (!response.success || !response.data) {
         throw new Error(response.error || 'Failed to load session details')
       }
-      // API returns array, we want first item
-      const data = Array.isArray(response.data)
-        ? response.data[0]
-        : response.data
-      if (!data) throw new Error('Session not found')
-      return data as SessionListItem
+      return response.data
     },
     enabled: !!sessionId && isInitialized && isAuthenticated,
     // Medium cache time for session metadata
@@ -111,19 +107,31 @@ export const useSessionDetail = (sessionId: string | undefined) => {
   })
 }
 
-// Combined hook for Insights Page (loads both performance and insights)
+// Combined hook for Insights Page (loads performance, insights, and session detail with turns)
 export const useSessionInsightsData = (sessionId: string | undefined) => {
   const performanceQuery = useSessionPerformance(sessionId)
   const insightsQuery = useSessionInsights(sessionId)
+  const sessionDetailQuery = useSessionDetail(sessionId)
 
   return {
     performance: performanceQuery.data,
     insights: insightsQuery.data,
-    isLoading: performanceQuery.isLoading || insightsQuery.isLoading,
-    error: performanceQuery.error || insightsQuery.error,
-    isError: performanceQuery.isError || insightsQuery.isError,
-    // Both queries succeeded
-    isSuccess: performanceQuery.isSuccess && insightsQuery.isSuccess,
+    turns: sessionDetailQuery.data?.turns || [],
+    isLoading:
+      performanceQuery.isLoading ||
+      insightsQuery.isLoading ||
+      sessionDetailQuery.isLoading,
+    error:
+      performanceQuery.error || insightsQuery.error || sessionDetailQuery.error,
+    isError:
+      performanceQuery.isError ||
+      insightsQuery.isError ||
+      sessionDetailQuery.isError,
+    // All queries succeeded
+    isSuccess:
+      performanceQuery.isSuccess &&
+      insightsQuery.isSuccess &&
+      sessionDetailQuery.isSuccess,
   }
 }
 

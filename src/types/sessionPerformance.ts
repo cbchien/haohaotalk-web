@@ -58,6 +58,49 @@ export interface UserPercentile {
   better_than_percentage: number
 }
 
+// Session turn from API (actual structure)
+export interface SessionTurn {
+  id: string
+  session_id: string
+  turn_number: number
+  user_message: string
+  ai_response: string
+  connection_score_change: number
+  ai_rationale: string
+  character_state: Record<string, unknown>
+  created_at: string
+}
+
+// Session detail response from API
+export interface SessionDetailResponse {
+  session_info: {
+    id: string
+    scenario_key: string
+    status: string
+    current_turn: number
+    connection_score: number
+    user_rating?: number
+    user_feedback?: string
+    started_at: string
+    completed_at?: string
+  }
+  participants: {
+    user: {
+      role_name: string
+      avatar_url: string
+    }
+    ai: {
+      role_name: string
+      avatar_url: string
+    }
+  }
+  turns: SessionTurn[]
+  cumulative_scores: Array<{
+    turn_number: number
+    current_score: number
+  }>
+}
+
 // Session History Types (based on actual API response)
 export interface SessionListItem {
   id: string

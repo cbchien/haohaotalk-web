@@ -4,6 +4,7 @@ import {
   SessionPerformance,
   SessionInsights,
   SessionListItem,
+  SessionDetailResponse,
 } from '@/types/sessionPerformance'
 
 class SessionPerformanceApiService {
@@ -45,7 +46,9 @@ class SessionPerformanceApiService {
   }
 
   // Get single session by ID
-  async getSession(sessionId: string): Promise<ApiResponse<SessionListItem>> {
+  async getSession(
+    sessionId: string
+  ): Promise<ApiResponse<SessionDetailResponse>> {
     return apiClient.get(`sessions/${sessionId}`)
   }
 

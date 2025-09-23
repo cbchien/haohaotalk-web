@@ -186,10 +186,10 @@ export interface Translations {
   sessions: {
     sessionInsights: string
     conversationAnalysis: string
-    completedSession: string
     practiceSession: string
     browseScenarios: string
     pastPracticeSessions: string
+    conversationHistory: string
   }
 
   // Performance
@@ -500,10 +500,10 @@ export const translations: Record<Language, Translations> = {
     sessions: {
       sessionInsights: 'Session Insights',
       conversationAnalysis: 'Conversation Analysis',
-      completedSession: 'Completed Session',
       practiceSession: 'Practice Session',
       browseScenarios: 'Browse Scenarios',
       pastPracticeSessions: 'Past practice sessions',
+      conversationHistory: 'Conversation History',
     },
     performance: {
       performanceComparison: 'Performance Comparison',
@@ -819,10 +819,10 @@ export const translations: Record<Language, Translations> = {
     sessions: {
       sessionInsights: '對話練習結果',
       conversationAnalysis: '對話分析',
-      completedSession: '已完成練習',
       practiceSession: '練習對話',
       browseScenarios: '探索情境',
       pastPracticeSessions: '練習記錄',
+      conversationHistory: '對話記錄',
     },
     performance: {
       performanceComparison: '表現比較',

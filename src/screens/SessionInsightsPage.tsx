@@ -6,6 +6,7 @@ import { useSessionInsightsData } from '@/hooks/useSessionQueries'
 import { ConnectionScoreChart } from '@/components/sessions/charts/ConnectionScoreChart'
 import { InsightItem } from '@/components/sessions/insights/InsightItem'
 import { FloatingCTAButtons } from '@/components/common/FloatingCTAButtons'
+import { ChatHistory } from '@/components/sessions/ChatHistory'
 
 export const SessionInsightsPage = () => {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>()
@@ -23,7 +24,7 @@ export const SessionInsightsPage = () => {
   const sessionId = urlSessionId || stateSessionId
 
   // Use React Query for cached data fetching
-  const { performance, insights, isLoading, error, isError } =
+  const { performance, insights, turns, isLoading, error, isError } =
     useSessionInsightsData(sessionId)
 
   const handleBack = () => {
@@ -134,6 +135,13 @@ export const SessionInsightsPage = () => {
       </div>
 
       <div className="p-4 space-y-6 max-w-xl mx-auto sm:pt-8 pb-20">
+        {/* Chat History */}
+        <ChatHistory
+          turns={turns || []}
+          initialMessage={sessionData?.scenario_role?.initial_message}
+          isLoading={isLoading}
+        />
+
         {/* Connection Score Chart */}
         <div className="bg-white rounded-xl p-4 border border-gray-300">
           <h2 className="text-center font-semibold mb-4 text-gray-900">
