@@ -469,7 +469,7 @@ export const translations: Record<Language, Translations> = {
       practiceSessionEnded:
         '🎉 Practice session complete! Saving your progress...',
       sessionEndError: '⚠️ Session ended, but failed to save progress.',
-      sessionEnding: 'Max turn reached. Session ending...',
+      sessionEnding: 'Session ending...',
       sessionEndingEarly: 'Ending conversation early...',
       endSessionEarly: 'End Session',
       endSessionConfirmTitle: 'End Session Early?',
@@ -793,7 +793,7 @@ export const translations: Record<Language, Translations> = {
       backToHome: '回到首頁',
       practiceSessionEnded: '練習結束！',
       sessionEndError: '進度儲存失敗...。',
-      sessionEnding: '已達最大回合數，對話結束中...',
+      sessionEnding: '結束對話中...',
       sessionEndingEarly: '提前結束對話中...',
       endSessionEarly: '結束對話',
       endSessionConfirmTitle: '提前結束對話？',
