@@ -151,6 +151,10 @@ export interface Translations {
     endSessionConfirmMessage: string
     endSessionConfirm: string
     cancel: string
+    turnLimitModalTitle: string
+    turnLimitModalMessage: string
+    continueButton: string
+    endButton: string
 
     // Rating
     rating: {
@@ -473,6 +477,10 @@ export const translations: Record<Language, Translations> = {
         'Are you sure you want to end this practice session?',
       endSessionConfirm: 'End Session',
       cancel: 'Cancel',
+      turnLimitModalTitle: 'Recommended turn reached',
+      turnLimitModalMessage: 'Do you want to continue or end the conversation?',
+      continueButton: 'Continue',
+      endButton: 'End',
       rating: {
         title: 'Rate this practice session',
         subtitle: 'How was your conversation practice?',
@@ -792,6 +800,10 @@ export const translations: Record<Language, Translations> = {
       endSessionConfirmMessage: '確定要結束此練習對話嗎？',
       endSessionConfirm: '結束對話',
       cancel: '取消',
+      turnLimitModalTitle: '已達建議回合數',
+      turnLimitModalMessage: '您想繼續對話還是結束對話？',
+      continueButton: '繼續',
+      endButton: '結束',
       rating: {
         title: '為這次練習評分',
         subtitle: '這次對話練習如何？',

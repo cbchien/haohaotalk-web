@@ -15,6 +15,7 @@ import { ConnectionScoreBar } from './ConnectionScoreBar'
 import { MessageArea } from './MessageArea'
 import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
+import { TurnLimitModal } from './TurnLimitModal'
 import { Notification } from '@/components/common/Notification'
 import { LoadingWithTips } from '@/components/common/LoadingWithTips'
 
@@ -51,6 +52,9 @@ export const ChatScreen = () => {
   const [isEndingSession, setIsEndingSession] = useState(false)
   const [sessionEndCalled, setSessionEndCalled] = useState(false)
   const [showEndConfirmation, setShowEndConfirmation] = useState(false)
+  const [showTurnLimitModal, setShowTurnLimitModal] = useState(false)
+  const [allowContinueAfterMaxTurns, setAllowContinueAfterMaxTurns] =
+    useState(false)
   const [showObjectiveNotification, setShowObjectiveNotification] =
     useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -210,9 +214,9 @@ export const ChatScreen = () => {
     )
       return
 
-    // Additional check: prevent sending if max turns already reached
+    // Additional check: prevent sending if max turns already reached (unless user chose to continue)
     const maxTurns = session?.max_turns || scenario?.max_turns
-    if (maxTurns) {
+    if (maxTurns && !allowContinueAfterMaxTurns) {
       const currentUserTurns = messages.filter(
         msg => msg.type === 'user'
       ).length
@@ -288,69 +292,14 @@ export const ChatScreen = () => {
           const maxTurns = updatedSession.max_turns || scenario?.max_turns
           const currentTurn = updatedSession.current_turn
 
-          if (maxTurns && currentTurn >= maxTurns && !sessionEndCalled) {
-            // We've reached max turns - show session ending message and disable input
-            setSessionEndCalled(true)
-            setIsEndingSession(true)
-
-            // Add immediate "session ending..." message
-            setMessages(prevMsgs => [
-              ...prevMsgs,
-              {
-                id: `session-ending-${Date.now()}`,
-                content: t.chat.sessionEnding,
-                type: 'system',
-                timestamp: new Date(),
-              } as Message,
-            ])
-
-            // Call endSession API after a brief delay to show the ending message
-            setTimeout(async () => {
-              try {
-                await sessionsApiService.endSession(sessionId)
-
-                // Invalidate sessions list cache
-                queryClient.invalidateQueries({
-                  queryKey: cacheInvalidation.sessionsList(),
-                })
-
-                // Replace ending message with completion message
-                setMessages(prevMsgs => [
-                  ...prevMsgs.filter(
-                    msg => !msg.id.startsWith('session-ending-')
-                  ),
-                  {
-                    id: `session-end-notification-${Date.now()}`,
-                    content: t.chat.practiceSessionEnded,
-                    type: 'system',
-                    timestamp: new Date(),
-                  } as Message,
-                ])
-
-                // Show completion modal
-                setIsEndingSession(false)
-                setShowCompletion(true)
-              } catch (error) {
-                console.error('Failed to end session:', error) // eslint-disable-line no-console
-
-                // Replace ending message with error message
-                setMessages(prevMsgs => [
-                  ...prevMsgs.filter(
-                    msg => !msg.id.startsWith('session-ending-')
-                  ),
-                  {
-                    id: `session-end-error-${Date.now()}`,
-                    content: t.chat.sessionEndError,
-                    type: 'system',
-                    timestamp: new Date(),
-                  } as Message,
-                ])
-
-                // Show modal anyway after error
-                setIsEndingSession(false)
-                setShowCompletion(true)
-              }
-            }, SESSION_ENDING_MESSAGE_DISPLAY_DURATION)
+          if (
+            maxTurns &&
+            currentTurn >= maxTurns &&
+            !sessionEndCalled &&
+            !allowContinueAfterMaxTurns
+          ) {
+            // We've reached max turns - show modal instead of auto-ending
+            setShowTurnLimitModal(true)
           } else if (updatedSession.is_completed && !sessionEndCalled) {
             // Backend already completed the session (for other reasons)
             setSessionEndCalled(true)
@@ -410,6 +359,74 @@ export const ChatScreen = () => {
 
   const getObjectiveBody = () => {
     return scenario?.objective || ''
+  }
+
+  const handleTurnLimitContinue = () => {
+    setShowTurnLimitModal(false)
+    setAllowContinueAfterMaxTurns(true)
+  }
+
+  const handleTurnLimitEnd = async () => {
+    if (!sessionId || sessionEndCalled) return
+
+    setShowTurnLimitModal(false)
+    setSessionEndCalled(true)
+    setIsEndingSession(true)
+
+    // Add immediate "session ending..." message
+    setMessages(prev => [
+      ...prev,
+      {
+        id: `session-ending-${Date.now()}`,
+        content: t.chat.sessionEnding,
+        type: 'system',
+        timestamp: new Date(),
+      } as Message,
+    ])
+
+    // Call endSession API after a brief delay to show the ending message
+    setTimeout(async () => {
+      try {
+        await sessionsApiService.endSession(sessionId)
+
+        // Invalidate sessions list cache
+        queryClient.invalidateQueries({
+          queryKey: cacheInvalidation.sessionsList(),
+        })
+
+        // Replace ending message with completion message
+        setMessages(prevMsgs => [
+          ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
+          {
+            id: `session-end-notification-${Date.now()}`,
+            content: t.chat.practiceSessionEnded,
+            type: 'system',
+            timestamp: new Date(),
+          } as Message,
+        ])
+
+        // Show completion modal
+        setIsEndingSession(false)
+        setShowCompletion(true)
+      } catch (error) {
+        console.error('Failed to end session:', error) // eslint-disable-line no-console
+
+        // Replace ending message with error message
+        setMessages(prevMsgs => [
+          ...prevMsgs.filter(msg => !msg.id.startsWith('session-ending-')),
+          {
+            id: `session-end-error-${Date.now()}`,
+            content: t.chat.sessionEndError,
+            type: 'system',
+            timestamp: new Date(),
+          } as Message,
+        ])
+
+        // Show modal anyway after error
+        setIsEndingSession(false)
+        setShowCompletion(true)
+      }
+    }, SESSION_ENDING_MESSAGE_DISPLAY_DURATION)
   }
 
   const handleConfirmEndSession = async () => {
@@ -587,8 +604,9 @@ export const ChatScreen = () => {
               sessionEndCalled ||
               session?.is_completed ||
               session?.status === 'completed' ||
-              // Also disable if max turns reached (extra safety)
+              // Also disable if max turns reached (extra safety) unless user chose to continue
               (() => {
+                if (allowContinueAfterMaxTurns) return false
                 const maxTurns = session?.max_turns || scenario?.max_turns
                 const currentTurn = session?.current_turn
                 return Boolean(
@@ -609,6 +627,13 @@ export const ChatScreen = () => {
           sessionId={sessionId}
         />
       )}
+
+      {/* Turn Limit Modal */}
+      <TurnLimitModal
+        isVisible={showTurnLimitModal}
+        onContinue={handleTurnLimitContinue}
+        onEnd={handleTurnLimitEnd}
+      />
 
       {/* End Session Confirmation Modal */}
       {showEndConfirmation && (
