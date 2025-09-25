@@ -24,6 +24,16 @@ export const ConnectionScoreBar = ({
   // Use consistent theme blue for all scores
   const scoreColor = 'bg-blue-100'
 
+  // Calculate turn display text
+  const getTurnDisplay = () => {
+    const current = (currentTurn || 0) + 1
+    const max = maxTurns || 0
+    if (max > 0 && current <= max) {
+      return `${t.chat.turn} ${current} / ${max}`
+    }
+    return `${t.chat.turn} ${current}`
+  }
+
   return (
     <div className="bg-white border-b border-gray-200 sm:bg-gray-100 sm:border-transparent">
       <div className="max-w-xl mx-auto px-4 py-3 sm:bg-white sm:border-b sm:border-gray-200">
@@ -31,10 +41,7 @@ export const ConnectionScoreBar = ({
           <span className="text-sm text-gray-600">
             {t.chat.connectionScore}
           </span>
-          <span className="text-sm text-gray-600">
-            {t.chat.turn} {Math.min((currentTurn || 0) + 1, maxTurns || 0)} /{' '}
-            {maxTurns || 0}
-          </span>
+          <span className="text-sm text-gray-600">{getTurnDisplay()}</span>
         </div>
 
         <div className="relative">
