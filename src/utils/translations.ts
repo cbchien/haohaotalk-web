@@ -145,7 +145,6 @@ export interface Translations {
     practiceSessionEnded: string
     sessionEndError: string
     sessionEnding: string
-    sessionEndingEarly: string
     endSessionEarly: string
     endSessionConfirmTitle: string
     endSessionConfirmMessage: string
@@ -470,7 +469,6 @@ export const translations: Record<Language, Translations> = {
         '🎉 Practice session complete! Saving your progress...',
       sessionEndError: '⚠️ Session ended, but failed to save progress.',
       sessionEnding: 'Session ending...',
-      sessionEndingEarly: 'Ending conversation early...',
       endSessionEarly: 'End Session',
       endSessionConfirmTitle: 'End Session Early?',
       endSessionConfirmMessage:
@@ -794,7 +792,6 @@ export const translations: Record<Language, Translations> = {
       practiceSessionEnded: '練習結束！',
       sessionEndError: '進度儲存失敗...。',
       sessionEnding: '結束對話中...',
-      sessionEndingEarly: '提前結束對話中...',
       endSessionEarly: '結束對話',
       endSessionConfirmTitle: '提前結束對話？',
       endSessionConfirmMessage: '確定要結束此練習對話嗎？',

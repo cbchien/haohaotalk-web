@@ -441,7 +441,7 @@ export const ChatScreen = () => {
       ...prev,
       {
         id: `session-ending-early-${Date.now()}`,
-        content: t.chat.sessionEndingEarly,
+        content: t.chat.sessionEnding,
         type: 'system',
         timestamp: new Date(),
       } as Message,
