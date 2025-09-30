@@ -523,9 +523,9 @@ export const translations: Record<Language, Translations> = {
       chartDataPreparing: 'Chart data preparing',
       scoreRange: 'Score Range',
       userCount: 'User Count',
-      whatWentWell: 'What Went Well',
+      whatWentWell: 'Patterns That Emerged',
       keyMoments: 'Key Moments',
-      thingsToTryNext: 'Things to Try Next',
+      thingsToTryNext: 'Others have tried',
       neutralDescription: 'Use neutral descriptions instead of accusations',
       neutralDescriptionDetail:
         'Try: "When you ask what to do, I feel a bit lost because I waited for an hour" to reduce confrontational tone.',
@@ -845,9 +845,9 @@ export const translations: Record<Language, Translations> = {
       chartDataPreparing: '圖表資料準備中',
       scoreRange: '分數範圍',
       userCount: '使用者數量',
-      whatWentWell: '做得很好的地方',
+      whatWentWell: '對話中的一些片段',
       keyMoments: '關鍵時刻',
-      thingsToTryNext: '下次可以嘗試',
+      thingsToTryNext: '其他人也嘗試了',
       neutralDescription: '用中性描述取代情緒化用語',
       neutralDescriptionDetail:
         '可以改成：「你一來就問我要去吃什麼，我有點錯愕，因為我等了一個小時」來降低衝突感。',
