@@ -16,6 +16,7 @@ import { MessageArea } from './MessageArea'
 import { MessageInput } from './MessageInput'
 import { CompletionModal } from './CompletionModal'
 import { TurnLimitModal } from './TurnLimitModal'
+import { TipsModal } from './TipsModal'
 import { Notification } from '@/components/common/Notification'
 import { LoadingWithTips } from '@/components/common/LoadingWithTips'
 
@@ -57,6 +58,7 @@ export const ChatScreen = () => {
     useState(false)
   const [showObjectiveNotification, setShowObjectiveNotification] =
     useState(false)
+  const [showTipsModal, setShowTipsModal] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const loadedSessionRef = useRef<string | null>(null)
@@ -537,24 +539,32 @@ export const ChatScreen = () => {
           title={scenario?.title || t.chat.conversation}
           leftContent={scenarioImage}
           rightContent={
-            !isEndingSession && (
+            <div className="flex items-center space-x-2">
               <button
-                onClick={
-                  sessionEndCalled ||
-                  session?.is_completed ||
-                  session?.status === 'completed'
-                    ? handleShowInsights
-                    : handleEndSessionEarly
-                }
+                onClick={() => setShowTipsModal(true)}
                 className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
               >
-                {sessionEndCalled ||
-                session?.is_completed ||
-                session?.status === 'completed'
-                  ? t.sessions.sessionInsights
-                  : t.chat.endSessionEarly}
+                {t.chat.tips}
               </button>
-            )
+              {!isEndingSession && (
+                <button
+                  onClick={
+                    sessionEndCalled ||
+                    session?.is_completed ||
+                    session?.status === 'completed'
+                      ? handleShowInsights
+                      : handleEndSessionEarly
+                  }
+                  className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  {sessionEndCalled ||
+                  session?.is_completed ||
+                  session?.status === 'completed'
+                    ? t.sessions.sessionInsights
+                    : t.chat.endSessionEarly}
+                </button>
+              )}
+            </div>
           }
           onBack={handleBack}
         />
@@ -633,6 +643,13 @@ export const ChatScreen = () => {
         isVisible={showTurnLimitModal}
         onContinue={handleTurnLimitContinue}
         onEnd={handleTurnLimitEnd}
+      />
+
+      {/* Tips Modal */}
+      <TipsModal
+        isVisible={showTipsModal}
+        onClose={() => setShowTipsModal(false)}
+        scenarioId={currentScenario?.id || session?.scenario_id}
       />
 
       {/* End Session Confirmation Modal */}

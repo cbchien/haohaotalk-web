@@ -150,6 +150,7 @@ export interface Translations {
     endSessionConfirmMessage: string
     endSessionConfirm: string
     cancel: string
+    tips: string
     turnLimitModalTitle: string
     turnLimitModalMessage: string
     continueButton: string
@@ -332,6 +333,7 @@ export interface Translations {
     sessionNotAvailableDesc: string
     appUpdated: string
     refresh: string
+    close: string
   }
 }
 
@@ -475,6 +477,7 @@ export const translations: Record<Language, Translations> = {
         'Are you sure you want to end this practice session?',
       endSessionConfirm: 'End Session',
       cancel: 'Cancel',
+      tips: 'Tips',
       turnLimitModalTitle: 'Recommended turn reached',
       turnLimitModalMessage: 'Do you want to continue or end the conversation?',
       continueButton: 'Continue',
@@ -668,6 +671,7 @@ export const translations: Record<Language, Translations> = {
         'The session you are looking for may have been deleted or is no longer accessible.',
       appUpdated: 'App updated.',
       refresh: 'Refresh',
+      close: 'Close',
     },
   },
   zh: {
@@ -797,6 +801,7 @@ export const translations: Record<Language, Translations> = {
       endSessionConfirmMessage: '確定要結束此練習對話嗎？',
       endSessionConfirm: '結束對話',
       cancel: '取消',
+      tips: '提示',
       turnLimitModalTitle: '已達建議回合數',
       turnLimitModalMessage: '您想繼續對話還是結束對話？',
       continueButton: '繼續',
@@ -974,6 +979,7 @@ export const translations: Record<Language, Translations> = {
       sessionNotAvailableDesc: '您查找的會話可能已被刪除或無法存取。',
       appUpdated: '網站有新的更新。',
       refresh: '重新整理',
+      close: '關閉',
     },
   },
 }
