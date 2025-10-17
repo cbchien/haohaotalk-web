@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 import { getGenericConversationTips } from '@/utils/conversationTips'
@@ -21,11 +21,20 @@ export const LoadingWithTips = ({
 
   const defaultLoadingText = loadingText || t.scenarios.loading
 
-  // Get tips - scenario-specific or generic fallback
+  // Get tips - scenario-specific or generic fallback, then shuffle them
   const scenarioTips = scenarioId ? getScenarioTips(scenarioId) : undefined
   const genericTips = getGenericConversationTips(t)
-  const tips =
+  const baseTips =
     scenarioTips && scenarioTips.length > 0 ? scenarioTips : genericTips
+
+  const tips = useMemo(() => {
+    const shuffled = [...baseTips]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }, [baseTips])
 
   // Rotate tips every 4.5 seconds
   useEffect(() => {
