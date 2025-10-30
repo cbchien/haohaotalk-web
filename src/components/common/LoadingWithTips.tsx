@@ -170,7 +170,7 @@ export const LoadingWithTips = ({
               {/* Current tip with fade transition */}
               <div
                 key={currentTipIndex}
-                className="animate-[fadeIn_0.5s_ease-in-out] px-6"
+                className="animate-[fadeIn_0.5s_ease-in-out] px-6 min-h-36 flex flex-col justify-center"
               >
                 <h3 className="font-semibold text-gray-900 mb-2 text-left">
                   💡 {currentTip.title}
