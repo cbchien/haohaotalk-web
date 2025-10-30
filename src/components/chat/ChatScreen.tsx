@@ -49,6 +49,7 @@ export const ChatScreen = () => {
   const [connectionScore, setConnectionScore] = useState(0)
   const [isTyping, setIsTyping] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSessionReady, setIsSessionReady] = useState(false)
   const [showCompletion, setShowCompletion] = useState(false)
   const [isEndingSession, setIsEndingSession] = useState(false)
   const [sessionEndCalled, setSessionEndCalled] = useState(false)
@@ -196,13 +197,19 @@ export const ChatScreen = () => {
       } catch {
         setError(t.chat.errors.loadingFailed)
       } finally {
-        setIsLoading(false)
+        // Session data is loaded, now ready for user to begin
+        setIsSessionReady(true)
       }
     }
 
     loadSession()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId])
+
+  const handleBeginSession = () => {
+    setIsLoading(false)
+    setShowObjectiveNotification(true)
+  }
 
   const handleSendMessage = async (content: string) => {
     if (!sessionId || !content.trim()) return
@@ -509,6 +516,10 @@ export const ChatScreen = () => {
       <LoadingWithTips
         scenarioId={currentScenario?.id || session?.scenario_id}
         loadingText={t.chat.loading}
+        showButton={true}
+        buttonText={isSessionReady ? t.chat.begin : t.chat.loading}
+        isButtonLoading={!isSessionReady}
+        onButtonClick={isSessionReady ? handleBeginSession : undefined}
       />
     )
   }

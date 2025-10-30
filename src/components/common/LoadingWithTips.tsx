@@ -7,12 +7,20 @@ interface LoadingWithTipsProps {
   scenarioId?: string
   loadingText?: string
   className?: string
+  showButton?: boolean
+  buttonText?: string
+  isButtonLoading?: boolean
+  onButtonClick?: () => void
 }
 
 export const LoadingWithTips = ({
   scenarioId,
   loadingText,
   className = '',
+  showButton = false,
+  buttonText,
+  isButtonLoading = false,
+  onButtonClick,
 }: LoadingWithTipsProps) => {
   const { currentLanguage, getScenarioTips } = useAppStore()
   const t = useTranslation(currentLanguage)
@@ -20,6 +28,7 @@ export const LoadingWithTips = ({
   const [intervalId, setIntervalId] = useState<number | null>(null)
 
   const defaultLoadingText = loadingText || t.scenarios.loading
+  const defaultButtonText = buttonText || t.chat.begin
 
   // Get tips - scenario-specific or generic fallback, then shuffle them
   const scenarioTips = scenarioId ? getScenarioTips(scenarioId) : undefined
@@ -85,13 +94,15 @@ export const LoadingWithTips = ({
       className={`min-h-screen bg-gray-50 sm:bg-gray-100 flex items-center justify-center p-4 ${className}`}
     >
       <div className="w-full max-w-md mx-auto sm:max-w-xl text-center space-y-6 sm:bg-gray-50 sm:rounded-2xl sm:shadow-xl sm:p-8">
-        {/* Loading spinner */}
-        <div className="flex justify-center">
-          <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin" />
-        </div>
+        {!showButton && (
+          <div className="flex justify-center">
+            <div className="w-8 h-8 border-2 border-blue-100 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
 
-        {/* Loading text */}
-        <p className="text-gray-600 text-lg">{defaultLoadingText}</p>
+        {!showButton && (
+          <p className="text-gray-600 text-lg">{defaultLoadingText}</p>
+        )}
 
         {/* Tips section */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -171,6 +182,28 @@ export const LoadingWithTips = ({
             </div>
           </div>
         </div>
+
+        {/* Begin button */}
+        {showButton && (
+          <button
+            onClick={onButtonClick}
+            disabled={isButtonLoading}
+            className={`w-full max-w-xs mx-auto px-6 py-3 rounded-xl font-semibold transition-all ${
+              isButtonLoading
+                ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-100 text-white hover:bg-blue-200'
+            }`}
+          >
+            {isButtonLoading ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                <span>{defaultButtonText}</span>
+              </div>
+            ) : (
+              defaultButtonText
+            )}
+          </button>
+        )}
       </div>
     </div>
   )
