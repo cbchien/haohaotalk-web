@@ -22,6 +22,7 @@ import { LoadingWithTips } from '@/components/common/LoadingWithTips'
 
 const SESSION_ENDING_MESSAGE_DISPLAY_DURATION = 1000
 const AI_TYPING_ANIMATION_DURATION = 1100
+const MINIMUM_TIMEOUT = 4000
 
 interface Message {
   id: string
@@ -85,8 +86,7 @@ export const ChatScreen = () => {
         // Start both the API call and minimum timeout simultaneously
         const [response] = await Promise.all([
           sessionsApiService.getSession(sessionId),
-          // 7-second minimum timeout to allow users to read tips
-          new Promise(resolve => setTimeout(resolve, 7000)),
+          new Promise(resolve => setTimeout(resolve, MINIMUM_TIMEOUT)),
         ])
 
         if (response.success && response.data) {
