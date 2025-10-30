@@ -3,6 +3,8 @@ import { useAppStore } from '@/store'
 import { useTranslation } from '@/utils/translations'
 import { getGenericConversationTips } from '@/utils/conversationTips'
 
+const TIP_ROTATION_INTERVAL = 5000
+
 interface LoadingWithTipsProps {
   scenarioId?: string
   loadingText?: string
@@ -45,13 +47,12 @@ export const LoadingWithTips = ({
     return shuffled
   }, [baseTips])
 
-  // Rotate tips every 4.5 seconds
   useEffect(() => {
     if (tips.length <= 1) return
 
     const interval = setInterval(() => {
       setCurrentTipIndex(prev => (prev + 1) % tips.length)
-    }, 4500)
+    }, TIP_ROTATION_INTERVAL)
 
     setIntervalId(interval)
 
@@ -76,12 +77,12 @@ export const LoadingWithTips = ({
       }
     })
 
-    // Restart interval after a short delay (reset the 4.5-second timer)
+    // Restart interval after a short delay
     setTimeout(() => {
       if (tips.length > 1) {
         const newInterval = setInterval(() => {
           setCurrentTipIndex(prev => (prev + 1) % tips.length)
-        }, 4500)
+        }, TIP_ROTATION_INTERVAL)
         setIntervalId(newInterval)
       }
     }, 100)
