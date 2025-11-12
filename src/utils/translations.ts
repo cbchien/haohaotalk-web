@@ -236,6 +236,14 @@ export interface Translations {
       text: string
       author: string
     }>
+    showcase: {
+      title: string
+      subtitle: string
+      features: Array<{
+        title: string
+        description: string
+      }>
+    }
   }
 
   // Conversion
@@ -877,19 +885,19 @@ export const translations: Record<Language, Translations> = {
       heroSubtitle: '練習實際的情境，建立日常互動中的信心。',
       startPracticing: '開始練習',
       tryFreeSubtitle: '免費試用',
-      userCount: '加入 100+ 名正在提升對話技巧的用戶',
+      userCount: '和其他 100+ 使用者一起提升對話技巧',
       testimonials: [
         {
-          text: '好好說幫助我在面試中充滿自信。練習情境非常真實。',
-          author: '- Sarah M.',
+          text: '好好說幫助我在與男朋友溝通的時候比較有自信。練習情境非常真實。',
+          author: '- Sarah',
         },
         {
-          text: '我以前在工作中很難處理困難對話。現在透過練習，我能輕鬆應對了。',
-          author: '- David L.',
+          text: '我以前在工作中很難處理困難對話。現在透過練習，我能比較輕鬆應對了。',
+          author: '- 王先生',
         },
         {
-          text: '關係情境練習幫助我與伴侶溝通得更好。我們的對話現在更有建設性。',
-          author: '- Jessica K.',
+          text: '關係情境練習幫助我與伴侶溝通得更好。我現在不會這麼緊張了。',
+          author: '- 陳小姐',
         },
       ],
     },
