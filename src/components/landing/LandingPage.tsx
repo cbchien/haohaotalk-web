@@ -1,6 +1,7 @@
 import { HeroSection } from './HeroSection'
 import { ProductShowcase } from './ProductShowcase'
 import { TrustIndicators } from './TrustIndicators'
+import { Footer } from './Footer'
 
 export const LandingPage = () => {
   return (
@@ -8,6 +9,7 @@ export const LandingPage = () => {
       <HeroSection />
       <ProductShowcase />
       <TrustIndicators />
+      <Footer />
     </div>
   )
 }

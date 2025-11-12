@@ -246,6 +246,12 @@ export interface Translations {
     }
   }
 
+  // Footer
+  footer: {
+    copyright: string
+    guidedCorner: string
+  }
+
   // Conversion
   conversion: {
     secureYourProgress: string
@@ -627,6 +633,10 @@ export const translations: Record<Language, Translations> = {
         ],
       },
     },
+    footer: {
+      copyright: 'Copyright © 2023 Guided Learning Technologies Co., Ltd.',
+      guidedCorner: 'Guided Corner',
+    },
     conversion: {
       secureYourProgress: 'Secure Your Progress',
       createAccount: 'Create Account',
@@ -991,6 +1001,10 @@ export const translations: Record<Language, Translations> = {
           },
         ],
       },
+    },
+    footer: {
+      copyright: '版權所有 © 2023 嚮學知識科技股份有限公司',
+      guidedCorner: 'Guided Corner',
     },
     conversion: {
       secureYourProgress: '保護您的進度',
