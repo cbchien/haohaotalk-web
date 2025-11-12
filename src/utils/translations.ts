@@ -32,6 +32,7 @@ export interface Translations {
     email: string
     password: string
     continueAsGuest: string
+    tryFreeHeader: string
     signIn: string
     createAccount: string
     continueWithGoogle: string
@@ -229,6 +230,7 @@ export interface Translations {
     heroTitle: string
     heroSubtitle: string
     startPracticing: string
+    tryFreeSubtitle: string
     userCount: string
     testimonials: Array<{
       text: string
@@ -364,6 +366,7 @@ export const translations: Record<Language, Translations> = {
       email: 'Email',
       password: 'Password',
       continueAsGuest: 'Continue as Guest',
+      tryFreeHeader: 'Try free',
       signIn: 'Sign In',
       createAccount: 'Create Account',
       continueWithGoogle: 'Continue with Google',
@@ -550,6 +553,7 @@ export const translations: Record<Language, Translations> = {
       heroSubtitle:
         'Practice real-world scenarios and build confidence in every day interaction',
       startPracticing: 'Start Practicing',
+      tryFreeSubtitle: 'Try free',
       userCount: 'Join 100+ users improving their conversation skills',
       testimonials: [
         {
@@ -699,6 +703,7 @@ export const translations: Record<Language, Translations> = {
       email: '電子郵件',
       password: '密碼',
       continueAsGuest: '以訪客身份繼續',
+      tryFreeHeader: '免費試用',
       signIn: '登入',
       createAccount: '建立帳戶',
       continueWithGoogle: '使用 Google 繼續',
@@ -871,6 +876,7 @@ export const translations: Record<Language, Translations> = {
       heroTitle: '掌握每一次對話',
       heroSubtitle: '練習實際的情境，建立日常互動中的信心。',
       startPracticing: '開始練習',
+      tryFreeSubtitle: '免費試用',
       userCount: '加入 100+ 名正在提升對話技巧的用戶',
       testimonials: [
         {

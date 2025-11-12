@@ -76,27 +76,32 @@ export const HeroSection = () => {
         </p>
 
         {/* Enhanced CTA button */}
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-100 to-blue-75 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-          <button
-            onClick={handleGetStarted}
-            className="relative bg-gradient-to-r from-blue-100 to-blue-75 text-white px-12 py-5 rounded-2xl text-lg font-semibold hover:from-blue-75 hover:to-blue-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1"
-          >
-            {t.landing.startPracticing}
-            <svg
-              className="inline-block ml-2 w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        <div className="flex flex-col items-center">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-100 to-blue-75 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+            <button
+              onClick={handleGetStarted}
+              className="relative bg-gradient-to-r from-blue-100 to-blue-75 text-white px-12 py-5 rounded-2xl text-lg font-semibold hover:from-blue-75 hover:to-blue-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </button>
+              {t.landing.startPracticing}
+              <svg
+                className="inline-block ml-2 w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </button>
+          </div>
+          <p className="text-gray-600 text-sm mt-3 font-medium">
+            {t.landing.tryFreeSubtitle}
+          </p>
         </div>
       </div>
     </div>

@@ -264,9 +264,14 @@ export const AuthModal = ({
         <div className="space-y-4">
           {mode === 'guest' ? (
             <>
-              <p className="text-gray-600 text-sm">
-                {t.profile.guestModeMessage}
-              </p>
+              <div className="text-center mb-4">
+                <p className="text-blue-100 text-sm font-semibold mb-1">
+                  {t.auth.tryFreeHeader}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  {t.profile.guestModeMessage}
+                </p>
+              </div>
               <button
                 onClick={handleGuestAccess}
                 disabled={isAnyLoading}
@@ -374,7 +379,7 @@ export const AuthModal = ({
                   {isEmailLoading
                     ? t.scenarios.loading
                     : mode === 'register'
-                      ? t.auth.createAccount
+                      ? `${t.auth.createAccount} - ${t.auth.tryFreeHeader}`
                       : t.auth.signIn}
                 </button>
               </form>
