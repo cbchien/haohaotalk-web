@@ -576,6 +576,18 @@ export const translations: Record<Language, Translations> = {
           text: 'The relationship scenarios helped me communicate better with my partner. Our conversations are much more productive now.',
           author: '- Jessica K.',
         },
+        {
+          text: 'The instant feedback feature helped me identify my weak spots. I can see exactly where I need to improve in real-time.',
+          author: '- Michael R.',
+        },
+        {
+          text: 'I love how I can practice anytime on my phone. The flexible schedule fits perfectly with my busy life.',
+          author: '- Lisa M.',
+        },
+        {
+          text: 'The progress tracking is amazing. Seeing my improvement over time keeps me motivated to continue practicing.',
+          author: '- Alex T.',
+        },
       ],
       showcase: {
         title: 'See HaoHaoTalk in Action',
@@ -935,6 +947,18 @@ export const translations: Record<Language, Translations> = {
         {
           text: '關係情境練習幫助我與伴侶溝通得更好。我現在不會這麼緊張了。',
           author: '- 陳小姐',
+        },
+        {
+          text: '即時回饋功能幫助我找出弱點。我能即時看到需要改進的地方。',
+          author: '- 林先生',
+        },
+        {
+          text: '我很喜歡可以隨時用手機練習。彈性的時間安排完美配合我忙碌的生活。',
+          author: '- 張小姐',
+        },
+        {
+          text: '進度追蹤功能很棒。看到自己的改善讓我有動力繼續練習。',
+          author: '- 王同學',
         },
       ],
       showcase: {
