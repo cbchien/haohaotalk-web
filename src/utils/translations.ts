@@ -577,6 +577,43 @@ export const translations: Record<Language, Translations> = {
           author: '- Jessica K.',
         },
       ],
+      showcase: {
+        title: 'See HaoHaoTalk in Action',
+        subtitle:
+          'Discover how our conversation practice platform helps you build confidence through real-world scenarios',
+        features: [
+          {
+            title: 'Practice Real Scenarios',
+            description:
+              'Engage in lifelike conversation situations tailored to your personal and professional needs',
+          },
+          {
+            title: 'Get Instant Feedback',
+            description:
+              'Receive real-time analysis and suggestions to improve your communication skills',
+          },
+          {
+            title: 'Track Your Progress',
+            description:
+              'Monitor your improvement with detailed insights and performance metrics',
+          },
+          {
+            title: 'Build Confidence',
+            description:
+              'Practice in a safe environment until you feel ready for real conversations',
+          },
+          {
+            title: 'Personalized Learning',
+            description:
+              'AI adapts to your communication style and helps you overcome specific challenges',
+          },
+          {
+            title: 'Flexible Practice',
+            description:
+              'Practice anytime, anywhere at your own pace with scenarios that matter to you',
+          },
+        ],
+      },
     },
     conversion: {
       secureYourProgress: 'Secure Your Progress',
@@ -900,6 +937,36 @@ export const translations: Record<Language, Translations> = {
           author: '- 陳小姐',
         },
       ],
+      showcase: {
+        title: '好好說實際操作',
+        subtitle: '發現我們的對話練習平台如何透過真實情境幫助您建立自信',
+        features: [
+          {
+            title: '練習真實情境',
+            description: '參與針對您個人和職業需求量身打造的逼真對話情況',
+          },
+          {
+            title: '獲得即時回饋',
+            description: '接收即時分析和建議，提升您的溝通技巧',
+          },
+          {
+            title: '追蹤您的進步',
+            description: '透過詳細見解和表現指標監控您的改善情況',
+          },
+          {
+            title: '建立自信',
+            description: '在安全環境中練習，直到您準備好進行真實對話',
+          },
+          {
+            title: '個人化學習',
+            description: 'AI 適應您的溝通風格，幫助您克服特定挑戰',
+          },
+          {
+            title: '彈性練習',
+            description: '隨時隨地按照自己的節奏練習對您重要的情境',
+          },
+        ],
+      },
     },
     conversion: {
       secureYourProgress: '保護您的進度',
