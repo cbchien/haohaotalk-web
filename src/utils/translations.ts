@@ -634,7 +634,8 @@ export const translations: Record<Language, Translations> = {
       },
     },
     footer: {
-      copyright: 'Copyright © 2023 Guided Learning Technologies Co., Ltd.',
+      copyright:
+        'Copyright © 2023 Guided Corner Learning Technologies Co., Ltd.',
       guidedCorner: 'Guided Corner',
     },
     conversion: {
@@ -1004,7 +1005,7 @@ export const translations: Record<Language, Translations> = {
     },
     footer: {
       copyright: '版權所有 © 2023 嚮學知識科技股份有限公司',
-      guidedCorner: 'Guided Corner',
+      guidedCorner: '嚮學教育',
     },
     conversion: {
       secureYourProgress: '保護您的進度',
